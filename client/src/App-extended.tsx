@@ -27,6 +27,7 @@ function Router() {
       <Route path={"/checkout"} component={Checkout} />
       <Route path={"/payment-success"} component={PaymentSuccess} />
       <Route path={"/404"} component={NotFound} />
+      {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
   );
@@ -35,7 +36,9 @@ function Router() {
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="light">
+      <ThemeProvider
+        defaultTheme="light"
+      >
         <TooltipProvider>
           <Toaster />
           <Router />
