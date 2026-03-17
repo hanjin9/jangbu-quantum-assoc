@@ -18,8 +18,8 @@ router.post('/checkout', async (req: Request, res: Response) => {
     const session = await createCheckoutSession(
       user.id,
       tierId,
-      user.email,
-      user.name,
+      user.email || '',
+      user.name || '',
       req.headers.origin || 'http://localhost:3000'
     );
 
@@ -134,7 +134,9 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req: R
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
-        await handleCheckoutSessionCompleted(session);
+        const userEmail = session.customer_email || '';
+        const userName = '';
+        await handleCheckoutSessionCompleted(session, userEmail, userName);
         break;
       }
 

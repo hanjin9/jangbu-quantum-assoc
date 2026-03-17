@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { sendEmail, generatePaymentConfirmationEmail, generateWelcomeEmail, generateSubscriptionRenewalEmail } from './email-service';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
 
@@ -70,13 +71,28 @@ export async function createCheckoutSession(
   return session;
 }
 
-export async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
+export async function handleCheckoutSessionCompleted(
+  session: Stripe.Checkout.Session,
+  userEmail: string,
+  userName: string
+) {
   const userId = parseInt(session.client_reference_id || '0');
   const tierId = (session.metadata?.tier_id as string) || 'gold';
 
   if (!userId) return;
 
   try {
+    const tierNames: Record<string, string> = {
+      silver: 'Silver Wellness',
+      gold: 'Gold Wellness',
+      platinum: 'Platinum Elite',
+      diamond: 'Diamond Quantum'
+    };
+
+    const tierName = tierNames[tierId] || tierId;
+    const amount = ((session.amount_total || 0) / 100).toFixed(2);
+    const date = new Date().toLocaleDateString('ko-KR');
+
     // TODO: Create order record in database
     console.log(`✓ Order created for user ${userId}`);
 
@@ -85,6 +101,21 @@ export async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Se
       const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
       console.log(`✓ Subscription created: ${subscription.id}`);
     }
+
+    // Send payment confirmation email
+    const paymentTemplate = generatePaymentConfirmationEmail({
+      orderId: userId,
+      tierName,
+      amount: `$${amount}`,
+      date,
+      invoiceUrl: `https://jangbu-assoc.com/invoices/${session.id}`
+    });
+
+    await sendEmail(userEmail, paymentTemplate, 'payment_confirmation', userId);
+
+    // Send welcome email for new members
+    const welcomeTemplate = generateWelcomeEmail(userName);
+    await sendEmail(userEmail, welcomeTemplate, 'welcome', userId);
 
     console.log(`✓ Order and subscription created for user ${userId}`);
   } catch (error) {
@@ -108,6 +139,50 @@ export async function handleSubscriptionDeleted(subscription: Stripe.Subscriptio
     console.log(`✓ Subscription cancelled: ${subscription.id}`);
   } catch (error) {
     console.error('Error cancelling subscription:', error);
+  }
+}
+
+export async function handleSubscriptionRenewal(
+  subscription: Stripe.Subscription,
+  userEmail: string,
+  userName: string
+) {
+  try {
+    const tierNames: Record<string, string> = {
+      silver: 'Silver Wellness',
+      gold: 'Gold Wellness',
+      platinum: 'Platinum Elite',
+      diamond: 'Diamond Quantum'
+    };
+
+    const metadata = subscription.metadata as any;
+    const tierId = metadata?.tier_id || 'gold';
+    const tierName = tierNames[tierId] || tierId;
+    
+    const renewalDate = new Date((subscription as any).current_period_end * 1000).toLocaleDateString('ko-KR');
+    
+    // Get subscription amount from invoice
+    const invoices = await stripe.invoices.list({
+      subscription: subscription.id,
+      limit: 1
+    });
+
+    const amount = invoices.data[0] ? `$${(invoices.data[0].amount_paid / 100).toFixed(2)}` : '$0.00';
+
+    // Send renewal reminder email
+    const renewalTemplate = generateSubscriptionRenewalEmail({
+      tierId,
+      tierName,
+      renewalDate,
+      amount
+    });
+
+    const userId = parseInt(metadata?.user_id || '0');
+    await sendEmail(userEmail, renewalTemplate, 'subscription_renewal', userId);
+
+    console.log(`✓ Renewal reminder sent for subscription ${subscription.id}`);
+  } catch (error) {
+    console.error('Error handling subscription renewal:', error);
   }
 }
 
