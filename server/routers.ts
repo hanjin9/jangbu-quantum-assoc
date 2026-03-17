@@ -52,6 +52,33 @@ export const appRouter = router({
     sendSMS: protectedProcedure.input(z.object({ phoneNumber: z.string(), message: z.string(), type: z.enum(['appointment', 'payment', 'reminder', 'alert']) })).mutation(async ({ input }) => ({ success: true, messageId: Math.random().toString(36), phoneNumber: input.phoneNumber, type: input.type, sentAt: new Date(), status: 'sent' })),
     getSMSHistory: protectedProcedure.query(async ({ ctx }) => ({ userId: ctx.user?.id, smsHistory: [{ id: 1, phoneNumber: '010-****-5678', message: '상담 예약이 확정되었습니다.', type: 'appointment', sentAt: new Date(), status: 'delivered' }] })),
     updatePhoneNumber: protectedProcedure.input(z.object({ phoneNumber: z.string() })).mutation(async ({ input, ctx }) => ({ userId: ctx.user?.id, phoneNumber: input.phoneNumber, verified: false, updatedAt: new Date() }))
+  }),
+  qrcode: router({
+    generateQRCode: protectedProcedure.input(z.object({ certificateNumber: z.string(), certificationName: z.string() })).mutation(async ({ input }) => ({ success: true, qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(input.certificateNumber)}`, certificateNumber: input.certificateNumber, generatedAt: new Date() })),
+    verifyCertificateQR: publicProcedure.input(z.object({ qrData: z.string() })).query(async ({ input }) => ({ isValid: true, certificateNumber: input.qrData, certificationName: '양자요법 자격증', issueDate: new Date(), status: 'active' }))
+  }),
+  livestream: router({
+    listLiveStreams: publicProcedure.query(async () => [
+      { id: 1, title: '기초 양자요법 이론 라이브', instructor: '김전문가', startTime: new Date(Date.now() + 3600000), duration: 120, viewers: 234, status: 'upcoming' },
+      { id: 2, title: '에너지 치유 실습 세션', instructor: '이전문가', startTime: new Date(Date.now() + 7200000), duration: 90, viewers: 156, status: 'upcoming' },
+      { id: 3, title: '양자요법 Q&A 라운드', instructor: '박전문가', startTime: new Date(Date.now() - 1800000), duration: 60, viewers: 89, status: 'live' }
+    ]),
+    joinLiveStream: protectedProcedure.input(z.object({ streamId: z.number() })).mutation(async ({ input, ctx }) => ({ success: true, streamId: input.streamId, userId: ctx.user?.id, joinedAt: new Date(), streamUrl: `https://stream.example.com/live/${input.streamId}` })),
+    getStreamHistory: protectedProcedure.query(async ({ ctx }) => ({ userId: ctx.user?.id, history: [{ id: 1, title: '기초 양자요법 이론', instructor: '김전문가', watchedAt: new Date(), duration: 120, completed: true }] }))
+  }),
+  chatbot: router({
+    sendMessage: publicProcedure.input(z.object({ message: z.string(), userId: z.string().optional() })).mutation(async ({ input }) => {
+      const responses: Record<string, string> = {
+        '가입': '멤버십 가입은 홈페이지의 "멤버십 가입하기" 버튼을 클릭하시면 됩니다. Silver, Gold, Platinum, Diamond 4가지 플랜이 있습니다.',
+        '상담': '상담 예약은 "상담 예약하기" 메뉴에서 원하는 날짜와 시간을 선택하시면 됩니다. 전문 관리사가 1:1 상담을 제공합니다.',
+        '자격증': '양자요법 자격증은 실기시험에 합격하면 발급됩니다. 시험은 기초, 중급, 고급 3단계로 구성되어 있습니다.',
+        '시험': '실기시험은 "실기시험" 메뉴에서 응시할 수 있습니다. 합격선은 75점 이상입니다.',
+        '비용': '멤버십 비용은 플랜별로 다릅니다. Silver는 월 29,900원, Gold는 49,900원, Platinum은 79,900원, Diamond는 무제한입니다.'
+      };
+      const response = Object.entries(responses).find(([key]) => input.message.includes(key))?.[1] || '안녕하세요! 양자요법 관리사 협회입니다. 궁금한 점이 있으시면 "가입", "상담", "자격증", "시험", "비용" 등을 입력해주세요.';
+      return { success: true, message: response, timestamp: new Date(), conversationId: Math.random().toString(36) };
+    }),
+    getChatHistory: protectedProcedure.query(async ({ ctx }) => ({ userId: ctx.user?.id, messages: [{ id: 1, role: 'user', content: '가입하고 싶어요', timestamp: new Date() }, { id: 2, role: 'bot', content: '멤버십 가입은...', timestamp: new Date() }] }))
   })
 });
 

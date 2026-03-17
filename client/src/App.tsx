@@ -13,6 +13,9 @@ import Community from "./pages/Community";
 import PracticalExam from "./pages/PracticalExam";
 import Checkout from "./pages/Checkout";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import CertificateVerification from "./pages/CertificateVerification";
+import LiveStream from "./pages/LiveStream";
+import ChatBot from "./pages/ChatBot";
 
 function Router() {
   return (
@@ -26,6 +29,9 @@ function Router() {
       <Route path={"/exam"} component={PracticalExam} />
       <Route path={"/checkout"} component={Checkout} />
       <Route path={"/payment-success"} component={PaymentSuccess} />
+      <Route path={"/verify-certificate"} component={CertificateVerification} />
+      <Route path={"/livestream"} component={LiveStream} />
+      <Route path={"/chatbot"} component={ChatBot} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
