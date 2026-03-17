@@ -1,328 +1,354 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle2, Heart, Zap, Users, ArrowRight, Menu, X } from "lucide-react";
-import { useState } from "react";
-
-const LOGO_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/logo-jangbu-quantum-n3qap7ovY3jWLvdsE7qXYB.webp";
-const HERO_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/hero-quantum-wellness-6axHUfUtzzm7yj6XrwXh93.webp";
-const ABOUT_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/section-about-quantum-RanunNKBVa3WzhHiis6bRh.webp";
+import { useAuth } from '@/_core/hooks/useAuth';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { useLocation } from 'wouter';
+import { ChevronRight, Calendar, BarChart3, Users, Heart, Zap, Award } from 'lucide-react';
 
 export default function Home() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, isAuthenticated } = useAuth();
+  const [, setLocation] = useLocation();
 
-  const membershipTiers = [
-    {
-      name: "Silver Wellness",
-      price: "$299",
-      period: "/month",
-      description: "Basic quantum therapy access",
-      features: ["Basic quantum sessions", "Monthly newsletter", "Community access", "Email support"],
-      highlighted: false
-    },
-    {
-      name: "Gold Wellness",
-      price: "$599",
-      period: "/month",
-      description: "Premium quantum therapy with personalized care",
-      features: ["All Silver features", "Priority sessions", "Personalized plan", "Monthly consultation", "Priority support"],
-      highlighted: true
-    },
-    {
-      name: "Platinum Elite",
-      price: "$999",
-      period: "/month",
-      description: "Ultimate quantum healing experience",
-      features: ["All Gold features", "Unlimited sessions", "VIP lounge", "Weekly calls", "Dedicated manager", "24/7 support"],
-      highlighted: false
-    },
-    {
-      name: "Diamond Quantum",
-      price: "$1,999",
-      period: "/month",
-      description: "Exclusive quantum elite membership",
-      features: ["All Platinum features", "Research access", "Private sessions", "Annual retreat", "Concierge service"],
-      highlighted: false
+  const handleAppointmentClick = () => {
+    if (isAuthenticated) {
+      setLocation('/appointments');
+    } else {
+      window.location.href = '/';
     }
-  ];
+  };
+
+  const handleAdminClick = () => {
+    if (user?.role === 'admin') {
+      setLocation('/admin');
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-border shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo(0, 0)}>
-              <img src={LOGO_URL} alt="Jangbu Logo" className="h-10 w-10 rounded-full" />
-              <span className="text-xl font-bold text-primary hidden sm:inline">장•부 협회</span>
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
+      {/* Navigation */}
+      <nav className="sticky top-0 z-50 bg-slate-900/95 backdrop-blur border-b border-amber-500/20">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-amber-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold">장•부</span>
             </div>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-8">
-              <a href="/about" className="text-foreground hover:text-primary transition-colors">협회소개</a>
-              <a href="#services" className="text-foreground hover:text-primary transition-colors">서비스</a>
-              <a href="#membership" className="text-foreground hover:text-primary transition-colors">멤버십</a>
-              <a href="#contact" className="text-foreground hover:text-primary transition-colors">문의</a>
-              <Button className="btn-accent">시작하기</Button>
-            </nav>
-
-            {/* Mobile Menu Button */}
-            <button 
-              className="md:hidden"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            <span className="text-white font-bold text-lg">양자요법 관리사 협회</span>
           </div>
-
-          {/* Mobile Navigation */}
-          {mobileMenuOpen && (
-            <nav className="md:hidden mt-4 pb-4 space-y-3 border-t border-border pt-4">
-              <a href="/about" className="block text-foreground hover:text-primary transition-colors">협회소개</a>
-              <a href="#services" className="block text-foreground hover:text-primary transition-colors">서비스</a>
-              <a href="#membership" className="block text-foreground hover:text-primary transition-colors">멤버십</a>
-              <a href="#contact" className="block text-foreground hover:text-primary transition-colors">문의</a>
-              <Button className="btn-accent w-full">시작하기</Button>
-            </nav>
-          )}
+          <div className="flex items-center gap-4">
+            {isAuthenticated && (
+              <>
+                <Button
+                  variant="ghost"
+                  className="text-white hover:text-amber-400"
+                  onClick={() => setLocation('/dashboard')}
+                >
+                  대시보드
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="text-white hover:text-amber-400"
+                  onClick={handleAppointmentClick}
+                >
+                  상담 예약
+                </Button>
+                {user?.role === 'admin' && (
+                  <Button
+                    variant="ghost"
+                    className="text-white hover:text-amber-400"
+                    onClick={handleAdminClick}
+                  >
+                    관리자 패널
+                  </Button>
+                )}
+              </>
+            )}
+          </div>
         </div>
-      </header>
+      </nav>
 
-      {/* Hero Section */}
+      {/* Hero Section with Large Image */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <img 
-          src={HERO_URL} 
-          alt="Quantum Wellness" 
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="relative z-10 container mx-auto px-4 text-center text-white">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in-up">
-            양자요법으로 시작하는 웰니스
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: 'url(https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/hero-quantum-main-6jjXaiPbmoCJLUoUaD8J3L.webp)',
+            backgroundPosition: 'center'
+          }}
+        >
+          <div className="absolute inset-0 bg-black/40"></div>
+        </div>
+        
+        <div className="relative z-10 text-center px-4 max-w-2xl">
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
+            양자 에너지로 <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">건강을 회복하세요</span>
           </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-            최첨단 양자 에너지 치료로 몸과 마음의 완벽한 균형을 찾으세요
+          <p className="text-xl text-gray-200 mb-8">
+            전문 양자요법 관리사와 함께 신체의 에너지 밸런스를 회복하고 건강한 삶을 시작하세요
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
-            <Button className="btn-accent text-lg px-8 py-6">지금 시작하기</Button>
-            <Button variant="outline" className="text-lg px-8 py-6 border-white text-white hover:bg-white/10">
-              더 알아보기
+          <div className="flex gap-4 justify-center flex-wrap">
+            <Button
+              size="lg"
+              className="bg-amber-500 hover:bg-amber-600 text-white px-8"
+              onClick={() => setLocation('/checkout')}
+            >
+              멤버십 가입하기
+              <ChevronRight className="w-5 h-5 ml-2" />
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-amber-500 text-amber-400 hover:bg-amber-500/10"
+              onClick={handleAppointmentClick}
+            >
+              <Calendar className="w-5 h-5 mr-2" />
+              상담 예약하기
             </Button>
           </div>
         </div>
       </section>
 
-      {/* About Section */}
-      <section id="about" className="section-padding bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl font-bold mb-6 text-primary">
-                양자요법이란?
-              </h2>
-              <p className="text-lg text-foreground/80 mb-4">
-                양자요법은 최신 양자 물리학 원리를 기반으로 한 혁신적인 에너지 치료법입니다. 
-                신체의 에너지 장을 최적화하여 자연 치유력을 극대화합니다.
-              </p>
-              <p className="text-lg text-foreground/80 mb-6">
-                우리 협회는 국제 표준에 따라 인증된 전문 관리사들로 구성되어 있으며, 
-                개인맞춤형 양자 치료 프로토콜을 제공합니다.
-              </p>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <CheckCircle2 className="text-accent" size={24} />
-                  <span className="text-foreground">과학 기반의 치료법</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle2 className="text-accent" size={24} />
-                  <span className="text-foreground">인증된 전문 관리사</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle2 className="text-accent" size={24} />
-                  <span className="text-foreground">개인맞춤형 프로토콜</span>
-                </div>
-              </div>
+      {/* About Section with Image */}
+      <section className="max-w-7xl mx-auto px-4 py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 className="text-4xl font-bold text-white mb-6">전문 관리사 소개</h2>
+            <p className="text-gray-300 mb-4 text-lg">
+              국제 인증을 받은 전문 양자요법 관리사들이 여러분의 건강을 책임집니다. 
+              각 관리사는 15년 이상의 경험을 보유하고 있으며, 개인 맞춤형 상담을 제공합니다.
+            </p>
+            <ul className="space-y-3 text-gray-300">
+              <li className="flex items-center gap-3">
+                <Award className="w-5 h-5 text-amber-500" />
+                국제 인증 양자요법 전문가
+              </li>
+              <li className="flex items-center gap-3">
+                <Heart className="w-5 h-5 text-amber-500" />
+                15년 이상의 임상 경험
+              </li>
+              <li className="flex items-center gap-3">
+                <Zap className="w-5 h-5 text-amber-500" />
+                개인 맞춤형 에너지 치유
+              </li>
+            </ul>
+          </div>
+          <div className="rounded-lg overflow-hidden shadow-2xl">
+            <img
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/about-practitioners-Z32UFGZ4froiVZzGms7oZy.webp"
+              alt="전문 관리사"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section with Image */}
+      <section className="bg-slate-800/50 py-20">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-4xl font-bold text-white mb-12 text-center">양자요법 서비스</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div className="rounded-lg overflow-hidden shadow-2xl">
+              <img
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/services-energy-healing-mesduqxKPanDzwZriWUpWz.webp"
+                alt="양자요법 서비스"
+                className="w-full h-full object-cover"
+              />
             </div>
-            <div className="rounded-lg overflow-hidden shadow-xl">
-              <img src={ABOUT_URL} alt="Quantum Therapy" className="w-full h-full object-cover" />
+            <div>
+              <h3 className="text-3xl font-bold text-white mb-6">에너지 치유 프로그램</h3>
+              <p className="text-gray-300 mb-6 text-lg">
+                최첨단 양자 에너지 기술을 활용하여 신체의 에너지 흐름을 최적화합니다.
+                개인의 건강 상태에 맞춰 맞춤형 치유 프로그램을 제공합니다.
+              </p>
+              <ul className="space-y-3 text-gray-300 mb-8">
+                <li>✓ 1:1 개인 상담 및 진단</li>
+                <li>✓ 에너지 밸런싱 치료</li>
+                <li>✓ 스트레스 해소 프로그램</li>
+                <li>✓ 건강 증진 관리</li>
+              </ul>
+              <Button
+                className="bg-amber-500 hover:bg-amber-600 text-white"
+                onClick={() => setLocation('/appointments')}
+              >
+                상담 예약하기
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Services Section */}
-      <section id="services" className="section-padding bg-gradient-to-br from-primary/5 to-accent/5">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-4 text-primary">우리의 서비스</h2>
-          <p className="text-center text-foreground/70 mb-12 max-w-2xl mx-auto">
-            전문 관리사들이 제공하는 다양한 양자 치료 서비스
-          </p>
-          
-          <div className="grid md:grid-cols-3 gap-8">
+      {/* Membership Section with Image */}
+      <section className="max-w-7xl mx-auto px-4 py-20">
+        <h2 className="text-4xl font-bold text-white mb-12 text-center">프리미엄 멤버십</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
+          <div className="rounded-lg overflow-hidden shadow-2xl">
+            <img
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/membership-benefits-hvbgGJoVVoN5HMWZGosGRY.webp"
+              alt="멤버십 혜택"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div>
+            <h3 className="text-3xl font-bold text-white mb-6">독점 멤버십 혜택</h3>
+            <div className="space-y-4 text-gray-300">
+              <div className="bg-slate-800/50 p-4 rounded-lg border border-amber-500/20">
+                <h4 className="text-amber-400 font-bold mb-2">Silver Wellness</h4>
+                <p>월 1회 상담 + 24/7 지원 + 온라인 커뮤니티</p>
+              </div>
+              <div className="bg-slate-800/50 p-4 rounded-lg border border-amber-500/20">
+                <h4 className="text-amber-400 font-bold mb-2">Gold Wellness</h4>
+                <p>월 2회 상담 + 맞춤형 프로그램 + 우선 예약</p>
+              </div>
+              <div className="bg-slate-800/50 p-4 rounded-lg border border-amber-500/20">
+                <h4 className="text-amber-400 font-bold mb-2">Platinum Elite</h4>
+                <p>월 4회 상담 + VIP 서비스 + 개인 관리사</p>
+              </div>
+              <div className="bg-slate-800/50 p-4 rounded-lg border border-amber-500/20">
+                <h4 className="text-amber-400 font-bold mb-2">Diamond Quantum</h4>
+                <p>무제한 상담 + 프리미엄 서비스 + 전용 라운지</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section with Image */}
+      <section className="bg-slate-800/50 py-20">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-4xl font-bold text-white mb-12 text-center">고객 후기</h2>
+          <div className="rounded-lg overflow-hidden shadow-2xl mb-12">
+            <img
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/testimonials-success-FxRZ89mghsSzwmi56YcTgf.webp"
+              alt="고객 후기"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
-                icon: <Zap className="text-accent" size={32} />,
-                title: "에너지 밸런싱",
-                description: "신체 에너지 장의 불균형을 감지하고 최적화하는 치료"
+                name: '김민지',
+                title: '마케팅 임원',
+                testimonial: '양자요법을 통해 만성 스트레스가 완화되었고, 에너지가 회복되었습니다.'
               },
               {
-                icon: <Heart className="text-accent" size={32} />,
-                title: "웰니스 상담",
-                description: "개인의 건강 상태에 맞춘 맞춤형 웰니스 프로그램"
+                name: '이준호',
+                title: '기업가',
+                testimonial: '개인 맞춤형 상담으로 건강이 눈에 띄게 개선되었습니다. 강력히 추천합니다.'
               },
               {
-                icon: <Users className="text-accent" size={32} />,
-                title: "그룹 세션",
-                description: "공동의 목표를 가진 그룹을 위한 집단 치료 프로그램"
+                name: '박수진',
+                title: '의료 전문가',
+                testimonial: '과학적 접근과 전문성이 돋보이는 서비스입니다. 매우 만족합니다.'
               }
-            ].map((service, idx) => (
-              <Card key={idx} className="card-luxury card-hover">
-                <CardHeader>
-                  <div className="mb-4">{service.icon}</div>
-                  <CardTitle>{service.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-foreground/70">{service.description}</p>
-                </CardContent>
+            ].map((testimonial, i) => (
+              <Card key={i} className="p-6 bg-slate-700 border-amber-500/20">
+                <div className="flex items-center gap-2 mb-4">
+                  {[...Array(5)].map((_, j) => (
+                    <span key={j} className="text-amber-400">★</span>
+                  ))}
+                </div>
+                <p className="text-gray-300 mb-4 italic">"{testimonial.testimonial}"</p>
+                <p className="text-white font-bold">{testimonial.name}</p>
+                <p className="text-amber-400 text-sm">{testimonial.title}</p>
               </Card>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Membership Section */}
-      <section id="membership" className="section-padding bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-4 text-primary">멤버십 플랜</h2>
-          <p className="text-center text-foreground/70 mb-12 max-w-2xl mx-auto">
-            당신의 웰니스 목표에 맞는 완벽한 플랜을 선택하세요
-          </p>
-
-          <div className="grid md:grid-cols-4 gap-6 mb-12">
-            {membershipTiers.map((tier, idx) => (
-              <Card 
-                key={idx} 
-                className={`card-luxury card-hover transition-all ${
-                  tier.highlighted ? 'ring-2 ring-accent md:scale-105' : ''
-                }`}
-              >
-                <CardHeader>
-                  <CardTitle className="text-primary">{tier.name}</CardTitle>
-                  <CardDescription>{tier.description}</CardDescription>
-                  <div className="mt-4">
-                    <span className="text-4xl font-bold text-accent">{tier.price}</span>
-                    <span className="text-foreground/60">{tier.period}</span>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3 mb-6">
-                    {tier.features.map((feature, fidx) => (
-                      <li key={fidx} className="flex items-center gap-2">
-                        <CheckCircle2 size={16} className="text-accent flex-shrink-0" />
-                        <span className="text-sm text-foreground/80">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Button className="btn-primary w-full">
-                    선택하기
-                    <ArrowRight size={16} className="ml-2" />
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+      {/* Appointment Section with Image */}
+      <section className="max-w-7xl mx-auto px-4 py-20">
+        <h2 className="text-4xl font-bold text-white mb-12 text-center">상담 예약</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div className="rounded-lg overflow-hidden shadow-2xl">
+            <img
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/appointment-booking-mb5sd55Dqn6P9gnJxjvaWj.webp"
+              alt="상담 예약"
+              className="w-full h-full object-cover"
+            />
           </div>
-
-          <div className="bg-gradient-to-r from-primary to-primary/80 rounded-lg p-8 text-white text-center">
-            <h3 className="text-2xl font-bold mb-2">특별 오퍼</h3>
-            <p className="mb-4">첫 달 50% 할인 + 무료 초기 상담</p>
-            <Button className="bg-accent text-primary hover:bg-accent/90">
-              지금 가입하기
+          <div>
+            <h3 className="text-3xl font-bold text-white mb-6">간편한 예약 시스템</h3>
+            <p className="text-gray-300 mb-6 text-lg">
+              온라인 캘린더를 통해 원하는 시간에 전문 관리사와의 상담을 예약하세요.
+              모바일, 태블릿, 데스크톱 모든 기기에서 쉽게 이용 가능합니다.
+            </p>
+            <ul className="space-y-3 text-gray-300 mb-8">
+              <li className="flex items-center gap-3">
+                <Calendar className="w-5 h-5 text-amber-500" />
+                24시간 온라인 예약
+              </li>
+              <li className="flex items-center gap-3">
+                <Users className="w-5 h-5 text-amber-500" />
+                원하는 관리사 선택
+              </li>
+              <li className="flex items-center gap-3">
+                <BarChart3 className="w-5 h-5 text-amber-500" />
+                예약 현황 실시간 확인
+              </li>
+            </ul>
+            <Button
+              size="lg"
+              className="bg-amber-500 hover:bg-amber-600 text-white"
+              onClick={handleAppointmentClick}
+            >
+              <Calendar className="w-5 h-5 mr-2" />
+              지금 예약하기
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="section-padding bg-gradient-to-br from-primary/5 to-accent/5">
-        <div className="container mx-auto px-4 max-w-2xl">
-          <h2 className="text-4xl font-bold text-center mb-4 text-primary">문의하기</h2>
-          <p className="text-center text-foreground/70 mb-12">
-            더 자세한 정보가 필요하신가요? 우리 팀에 연락하세요.
+      {/* CTA Section */}
+      <section className="bg-gradient-to-r from-amber-600 to-amber-500 py-16">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold text-white mb-4">지금 바로 시작하세요</h2>
+          <p className="text-lg text-white/90 mb-8">
+            전문 양자요법 관리사와의 상담을 통해 건강한 삶을 시작하세요
           </p>
-
-          <Card className="card-luxury">
-            <CardHeader>
-              <CardTitle>연락처</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <h4 className="font-semibold text-primary mb-2">이메일</h4>
-                <p className="text-foreground/70">info@jangbu-quantum.kr</p>
-              </div>
-              <div>
-                <h4 className="font-semibold text-primary mb-2">전화</h4>
-                <p className="text-foreground/70">+82-2-XXXX-XXXX</p>
-              </div>
-              <div>
-                <h4 className="font-semibold text-primary mb-2">주소</h4>
-                <p className="text-foreground/70">서울시 강남구 테헤란로 123</p>
-              </div>
-              <Button className="btn-accent w-full">
-                무료 상담 예약
-              </Button>
-            </CardContent>
-          </Card>
+          <Button
+            size="lg"
+            className="bg-white text-amber-600 hover:bg-gray-100"
+            onClick={handleAppointmentClick}
+          >
+            <Calendar className="w-5 h-5 mr-2" />
+            상담 예약하기
+          </Button>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-primary text-primary-foreground py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+      <footer className="bg-slate-900 border-t border-amber-500/20 py-12">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
-              <h4 className="font-bold mb-4">회사</h4>
-              <ul className="space-y-2 text-primary-foreground/80">
-                <li><a href="#" className="hover:text-primary-foreground transition">소개</a></li>
-                <li><a href="#" className="hover:text-primary-foreground transition">팀</a></li>
-                <li><a href="#" className="hover:text-primary-foreground transition">경력</a></li>
+              <h3 className="text-white font-bold mb-4">장•부 협회</h3>
+              <p className="text-gray-400 text-sm">양자요법을 통한 건강한 삶의 실현</p>
+            </div>
+            <div>
+              <h4 className="text-white font-bold mb-4">빠른 링크</h4>
+              <ul className="space-y-2 text-gray-400 text-sm">
+                <li><a href="/" className="hover:text-amber-400">홈</a></li>
+                <li><a href="/about" className="hover:text-amber-400">소개</a></li>
+                <li><a href="/appointments" className="hover:text-amber-400">상담 예약</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-bold mb-4">서비스</h4>
-              <ul className="space-y-2 text-primary-foreground/80">
-                <li><a href="#" className="hover:text-primary-foreground transition">치료</a></li>
-                <li><a href="#" className="hover:text-primary-foreground transition">상담</a></li>
-                <li><a href="#" className="hover:text-primary-foreground transition">교육</a></li>
+              <h4 className="text-white font-bold mb-4">지원</h4>
+              <ul className="space-y-2 text-gray-400 text-sm">
+                <li><a href="#" className="hover:text-amber-400">FAQ</a></li>
+                <li><a href="#" className="hover:text-amber-400">문의</a></li>
+                <li><a href="#" className="hover:text-amber-400">약관</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-bold mb-4">리소스</h4>
-              <ul className="space-y-2 text-primary-foreground/80">
-                <li><a href="#" className="hover:text-primary-foreground transition">블로그</a></li>
-                <li><a href="#" className="hover:text-primary-foreground transition">FAQ</a></li>
-                <li><a href="#" className="hover:text-primary-foreground transition">뉴스레터</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">법률</h4>
-              <ul className="space-y-2 text-primary-foreground/80">
-                <li><a href="#" className="hover:text-primary-foreground transition">개인정보</a></li>
-                <li><a href="#" className="hover:text-primary-foreground transition">이용약관</a></li>
-                <li><a href="#" className="hover:text-primary-foreground transition">쿠키</a></li>
-              </ul>
+              <h4 className="text-white font-bold mb-4">연락처</h4>
+              <p className="text-gray-400 text-sm">
+                Email: info@jangbu-assoc.com<br />
+                Phone: +82-10-1234-5678
+              </p>
             </div>
           </div>
-          
-          <div className="border-t border-primary-foreground/20 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <p className="text-primary-foreground/80">
-                © 2026 장•부 (양자요법) 관리사 협회. All rights reserved.
-              </p>
-              <div className="flex gap-6 mt-4 md:mt-0">
-                <a href="#" className="text-primary-foreground/80 hover:text-primary-foreground transition">Facebook</a>
-                <a href="#" className="text-primary-foreground/80 hover:text-primary-foreground transition">Instagram</a>
-                <a href="#" className="text-primary-foreground/80 hover:text-primary-foreground transition">LinkedIn</a>
-              </div>
-            </div>
+          <div className="border-t border-amber-500/20 pt-8 text-center text-gray-400 text-sm">
+            <p>&copy; 2026 장•부 양자요법 관리사 협회. All rights reserved.</p>
           </div>
         </div>
       </footer>

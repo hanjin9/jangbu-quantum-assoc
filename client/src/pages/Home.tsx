@@ -4,6 +4,9 @@ import { Card } from '@/components/ui/card';
 import { useLocation } from 'wouter';
 import { ChevronRight, Calendar, BarChart3, Users, Heart, Zap, Award } from 'lucide-react';
 
+// 고정된 히어로 이미지 URL (변경 금지)
+const FIXED_HERO_IMAGE = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/hero-quantum-main-6jjXaiPbmoCJLUoUaD8J3L.webp';
+
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
   const [, setLocation] = useLocation();
@@ -65,13 +68,14 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero Section with Large Image */}
+      {/* Hero Section with FIXED Image */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/hero-quantum-main-6jjXaiPbmoCJLUoUaD8J3L.webp)',
-            backgroundPosition: 'center'
+            backgroundImage: `url(${FIXED_HERO_IMAGE})`,
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed'
           }}
         >
           <div className="absolute inset-0 bg-black/40"></div>
