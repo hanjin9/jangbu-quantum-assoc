@@ -58,7 +58,7 @@ export default function Home() {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-8">
-              <a href="#about" className="text-foreground hover:text-primary transition-colors">소개</a>
+              <a href="/about" className="text-foreground hover:text-primary transition-colors">협회소개</a>
               <a href="#services" className="text-foreground hover:text-primary transition-colors">서비스</a>
               <a href="#membership" className="text-foreground hover:text-primary transition-colors">멤버십</a>
               <a href="#contact" className="text-foreground hover:text-primary transition-colors">문의</a>
@@ -77,7 +77,7 @@ export default function Home() {
           {/* Mobile Navigation */}
           {mobileMenuOpen && (
             <nav className="md:hidden mt-4 pb-4 space-y-3 border-t border-border pt-4">
-              <a href="#about" className="block text-foreground hover:text-primary transition-colors">소개</a>
+              <a href="/about" className="block text-foreground hover:text-primary transition-colors">협회소개</a>
               <a href="#services" className="block text-foreground hover:text-primary transition-colors">서비스</a>
               <a href="#membership" className="block text-foreground hover:text-primary transition-colors">멤버십</a>
               <a href="#contact" className="block text-foreground hover:text-primary transition-colors">문의</a>
