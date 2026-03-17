@@ -6,6 +6,8 @@ import Checkout from "./pages/Checkout";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import Dashboard from "./pages/Dashboard";
 import About from "./pages/About";
+import AdminDashboard from "./pages/AdminDashboard";
+import Appointments from "./pages/Appointments";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -19,6 +21,8 @@ function Router() {
       <Route path={"/checkout"} component={Checkout} />
       <Route path={"/success"} component={PaymentSuccess} />
       <Route path={"/dashboard"} component={Dashboard} />
+      <Route path={"/admin"} component={AdminDashboard} />
+      <Route path={"/appointments"} component={Appointments} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

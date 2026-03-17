@@ -3,14 +3,9 @@ import Stripe from 'stripe';
 import { 
   handleCheckoutSessionCompleted, 
   handleSubscriptionUpdated, 
-  handleSubscriptionDeleted
+  handleSubscriptionDeleted,
+  handleSubscriptionRenewal 
 } from '../_core/stripe-handler';
-import { sendEmailViaManus } from '../_core/email-service-manus';
-import { 
-  generatePaymentConfirmationEmail,
-  generateSubscriptionRenewalEmail,
-  generateWelcomeEmail
-} from '../_core/email-service';
 
 const router = express.Router();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
@@ -57,44 +52,6 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req: R
         }
 
         await handleCheckoutSessionCompleted(session, userEmail, userName);
-        
-        // Send payment confirmation email via Manus
-        const tierNames: Record<string, string> = {
-          silver: 'Silver Wellness',
-          gold: 'Gold Wellness',
-          platinum: 'Platinum Elite',
-          diamond: 'Diamond Quantum'
-        };
-
-        const tierId = (session.metadata?.tier_id as string) || 'gold';
-        const tierName = tierNames[tierId] || tierId;
-        const amount = ((session.amount_total || 0) / 100).toFixed(2);
-        const date = new Date().toLocaleDateString('ko-KR');
-
-        const paymentTemplate = generatePaymentConfirmationEmail({
-          orderId: parseInt(session.client_reference_id || '0'),
-          tierName,
-          amount: `$${amount}`,
-          date,
-          invoiceUrl: `https://jangbu-assoc.com/invoices/${session.id}`
-        });
-
-        await sendEmailViaManus({
-          to: userEmail,
-          subject: paymentTemplate.subject,
-          html: paymentTemplate.html,
-          text: paymentTemplate.text
-        });
-
-        // Send welcome email
-        const welcomeTemplate = generateWelcomeEmail(userName);
-        await sendEmailViaManus({
-          to: userEmail,
-          subject: welcomeTemplate.subject,
-          html: welcomeTemplate.html,
-          text: welcomeTemplate.text
-        });
-
         console.log(`✓ Checkout session completed: ${session.id}`);
         break;
       }
@@ -133,35 +90,9 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req: R
               }
             }
 
-            // Send renewal reminder email if this is not the first invoice
-            if ((invoice as any).number && parseInt((invoice as any).number) > 1) {
-              const tierNames: Record<string, string> = {
-                silver: 'Silver Wellness',
-                gold: 'Gold Wellness',
-                platinum: 'Platinum Elite',
-                diamond: 'Diamond Quantum'
-              };
-
-              const metadata = subscription.metadata as any;
-              const tierId = metadata?.tier_id || 'gold';
-              const tierName = tierNames[tierId] || tierId;
-              
-              const renewalDate = new Date((subscription as any).current_period_end * 1000).toLocaleDateString('ko-KR');
-              const amount = `$${(invoice.amount_paid / 100).toFixed(2)}`;
-
-              const renewalTemplate = generateSubscriptionRenewalEmail({
-                tierId,
-                tierName,
-                renewalDate,
-                amount
-              });
-
-              await sendEmailViaManus({
-                to: userEmail,
-                subject: renewalTemplate.subject,
-                html: renewalTemplate.html,
-                text: renewalTemplate.text
-              });
+            // Send renewal reminder if this is not the first invoice
+            if (invoice.number && parseInt(invoice.number) > 1) {
+              await handleSubscriptionRenewal(subscription, userEmail, userName);
             }
           } catch (error) {
             console.error('Error processing invoice:', error);
