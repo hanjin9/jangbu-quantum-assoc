@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE `live_stream_chats` (\n\t`id` int AUTO_INCREMENT PRIMARY KEY NOT NULL,\n\t`stream_id` int NOT NULL,\n\t`user_id` int NOT NULL,\n\t`user_name` varchar(255) NOT NULL,\n\t`message` text NOT NULL,\n\t`is_instructor_reply` int DEFAULT 0 NOT NULL,\n\t`reply_to_message_id` int,\n\t`created_at` timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2ov7UodCCzAj1bK.dc110586ac44 --database ZFmCugcMVdsgzLCVvZ8jeT --execute CREATE TABLE `live_stream_chats` (\n\t`id` int AUTO_INCREMENT PRIMARY KEY NOT NULL,\n\t`stream_id` int NOT NULL,\n\t`user_id` int NOT NULL,\n\t`user_name` varchar(255) NOT NULL,\n\t`message` text NOT NULL,\n\t`is_instructor_reply` int DEFAULT 0 NOT NULL,\n\t`reply_to_message_id` int,\n\t`created_at` timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1661
+}

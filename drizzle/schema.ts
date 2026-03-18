@@ -102,3 +102,21 @@ export const emailLogs = mysqlTable("email_logs", {
 
 export type EmailLog = typeof emailLogs.$inferSelect;
 export type InsertEmailLog = typeof emailLogs.$inferInsert;
+
+
+/**
+ * Live stream chat messages table
+ */
+export const liveStreamChats = mysqlTable("live_stream_chats", {
+  id: int("id").autoincrement().primaryKey(),
+  streamId: int("stream_id").notNull(),
+  userId: int("user_id").notNull(),
+  userName: varchar("user_name", { length: 255 }).notNull(),
+  message: text("message").notNull(),
+  isInstructorReply: int("is_instructor_reply").default(0).notNull(),
+  replyToMessageId: int("reply_to_message_id"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type LiveStreamChat = typeof liveStreamChats.$inferSelect;
+export type InsertLiveStreamChat = typeof liveStreamChats.$inferInsert;

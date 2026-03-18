@@ -71,3 +71,13 @@
 - [x] GitHub 저장소 '장부 관리사협회' 생성 (https://github.com/hanjin9/jangbu-quantum-assoc)
 - [x] 프로젝트 코드 GitHub에 푸시
 - [x] README 및 문서 작성
+
+
+## 7차 단계 (라이브 스트리밍 실시간 채팅)
+- [x] 실시간 채팅 데이터베이스 스키마 추가 (live_stream_chats 테이블)
+- [x] tRPC 실시간 채팅 라우터 구현 (sendMessage, getMessages, replyToMessage)
+- [x] 라이브 스트리밍 화면에 채팅 컴포넌트 추가 (LiveStreamChat.tsx)
+- [x] 실시간 메시지 송수신 기능
+- [x] 강사 답변 기능 (isInstructorReply, replyToMessage)
+- [x] 채팅 모데레이션 기능 (replyingTo 상태 관리)
+- [x] 통합 테스트 및 체크포인트 (단계 완료)

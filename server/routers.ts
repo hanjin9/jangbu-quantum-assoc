@@ -79,7 +79,38 @@ export const appRouter = router({
       return { success: true, message: response, timestamp: new Date(), conversationId: Math.random().toString(36) };
     }),
     getChatHistory: protectedProcedure.query(async ({ ctx }) => ({ userId: ctx.user?.id, messages: [{ id: 1, role: 'user', content: '가입하고 싶어요', timestamp: new Date() }, { id: 2, role: 'bot', content: '멤버십 가입은...', timestamp: new Date() }] }))
+  }),
+  livestreamChat: router({
+    sendMessage: protectedProcedure.input(z.object({ streamId: z.number(), message: z.string().min(1).max(500) })).mutation(async ({ input, ctx }) => ({
+      success: true,
+      messageId: Math.random(),
+      streamId: input.streamId,
+      userId: ctx.user?.id,
+      userName: ctx.user?.name || 'Anonymous',
+      message: input.message,
+      isInstructorReply: false,
+      createdAt: new Date()
+    })),
+    getMessages: publicProcedure.input(z.object({ streamId: z.number(), limit: z.number().default(50) })).query(async ({ input }) => ({
+      streamId: input.streamId,
+      messages: [
+        { id: 1, streamId: input.streamId, userId: 1, userName: '김민지', message: '기초 이론이 정말 도움이 됩니다!', isInstructorReply: false, createdAt: new Date(Date.now() - 60000) },
+        { id: 2, streamId: input.streamId, userId: 2, userName: '강사님', message: '감사합니다! 더 궁금한 점이 있으시면 언제든 질문해주세요.', isInstructorReply: true, createdAt: new Date(Date.now() - 50000) },
+        { id: 3, streamId: input.streamId, userId: 3, userName: '이준호', message: '실습은 어떻게 하나요?', isInstructorReply: false, createdAt: new Date(Date.now() - 30000) }
+      ]
+    })),
+    replyToMessage: protectedProcedure.input(z.object({ streamId: z.number(), messageId: z.number(), replyMessage: z.string().min(1).max(500) })).mutation(async ({ input, ctx }) => ({
+      success: true,
+      replyId: Math.random(),
+      streamId: input.streamId,
+      replyToMessageId: input.messageId,
+      userId: ctx.user?.id,
+      userName: ctx.user?.name || 'Instructor',
+      message: input.replyMessage,
+      isInstructorReply: ctx.user?.role === 'admin',
+      createdAt: new Date()
+    }))
   })
-});
+});;
 
 export type AppRouter = typeof appRouter;
