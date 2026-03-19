@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE users ADD COLUMN phone_number VARCHAR(20) AFTER email;\nALTER TABLE users ADD COLUMN address TEXT AFTER phone_number;\nALTER TABLE users ADD COLUMN city VARCHAR(100) AFTER address;\nALTER TABLE users ADD COLUMN zip_code VARCHAR(20) AFTER city;\nALTER TABLE users ADD COLUMN kakao_id VARCHAR(255) AFTER zip_code;\nALTER TABLE users ADD COLUMN naver_id VARCHAR(255) AFTER kakao_id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2ov7UodCCzAj1bK.dc110586ac44 --database ZFmCugcMVdsgzLCVvZ8jeT --execute ALTER TABLE users ADD COLUMN phone_number VARCHAR(20) AFTER email;\nALTER TABLE users ADD COLUMN address TEXT AFTER phone_number;\nALTER TABLE users ADD COLUMN city VARCHAR(100) AFTER address;\nALTER TABLE users ADD COLUMN zip_code VARCHAR(20) AFTER city;\nALTER TABLE users ADD COLUMN kakao_id VARCHAR(255) AFTER zip_code;\nALTER TABLE users ADD COLUMN naver_id VARCHAR(255) AFTER kakao_id;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 5088
+}

@@ -163,3 +163,39 @@ export const subscriptionCancellations = mysqlTable("subscription_cancellations"
 
 export type SubscriptionCancellation = typeof subscriptionCancellations.$inferSelect;
 export type InsertSubscriptionCancellation = typeof subscriptionCancellations.$inferInsert;
+
+
+/**
+ * User Profiles table for extended profile information
+ */
+export const userProfiles = mysqlTable("user_profiles", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("user_id").notNull(),
+  phoneNumber: varchar("phone_number", { length: 20 }),
+  address: text("address"),
+  city: varchar("city", { length: 100 }),
+  zipCode: varchar("zip_code", { length: 20 }),
+  profileImageUrl: text("profile_image_url"),
+  bio: text("bio"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserProfile = typeof userProfiles.$inferSelect;
+export type InsertUserProfile = typeof userProfiles.$inferInsert;
+
+/**
+ * Social Logins table for Kakao, Naver, Phone authentication
+ */
+export const socialLogins = mysqlTable("social_logins", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("user_id").notNull(),
+  provider: varchar("provider", { length: 50 }).notNull(),
+  providerId: varchar("provider_id", { length: 255 }).notNull(),
+  providerName: varchar("provider_name", { length: 255 }),
+  providerEmail: varchar("provider_email", { length: 320 }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type SocialLogin = typeof socialLogins.$inferSelect;
+export type InsertSocialLogin = typeof socialLogins.$inferInsert;

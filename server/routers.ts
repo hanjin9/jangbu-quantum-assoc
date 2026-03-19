@@ -111,6 +111,57 @@ export const appRouter = router({
       createdAt: new Date()
     }))
   }),
+  profile: router({
+    getProfile: protectedProcedure.query(async ({ ctx }) => ({
+      id: ctx.user?.id,
+      name: ctx.user?.name,
+      email: ctx.user?.email,
+      phoneNumber: '',
+      address: '',
+      city: '',
+      zipCode: '',
+      profileImageUrl: '',
+      bio: ''
+    })),
+    updateProfile: protectedProcedure.input(z.object({
+      name: z.string().optional(),
+      phoneNumber: z.string().optional(),
+      address: z.string().optional(),
+      city: z.string().optional(),
+      zipCode: z.string().optional(),
+      bio: z.string().optional()
+    })).mutation(async ({ input, ctx }) => ({
+      success: true,
+      userId: ctx.user?.id,
+      message: '프로필이 업데이트되었습니다',
+      updatedAt: new Date()
+    }))
+  }),
+  socialAuth: router({
+    kakaoLogin: publicProcedure.input(z.object({ kakaoCode: z.string() })).mutation(async ({ input }) => ({
+      success: true,
+      userId: Math.random(),
+      token: `token_${Math.random().toString(36).substring(7)}`,
+      message: '카카오 로그인 성공'
+    })),
+    naverLogin: publicProcedure.input(z.object({ naverCode: z.string() })).mutation(async ({ input }) => ({
+      success: true,
+      userId: Math.random(),
+      token: `token_${Math.random().toString(36).substring(7)}`,
+      message: '네이버 로그인 성공'
+    })),
+    phoneLogin: publicProcedure.input(z.object({ phoneNumber: z.string(), verificationCode: z.string() })).mutation(async ({ input }) => ({
+      success: true,
+      userId: Math.random(),
+      token: `token_${Math.random().toString(36).substring(7)}`,
+      message: '휴대폰 로그인 성공'
+    })),
+    sendPhoneVerification: publicProcedure.input(z.object({ phoneNumber: z.string() })).mutation(async ({ input }) => ({
+      success: true,
+      verificationId: Math.random().toString(36).substring(7),
+      message: '인증번호가 발송되었습니다 (테스트: 123456)'
+    }))
+  }),
   admin: router({
     listSubscriptions: protectedProcedure.query(async ({ ctx }) => {
       if (ctx.user?.role !== 'admin') throw new Error('관리자만 접근 가능합니다');
