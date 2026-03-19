@@ -1,0 +1,97 @@
+{
+  "common": {
+    "home": "ホーム",
+    "about": "について",
+    "services": "サービス",
+    "membership": "メンバーシップ",
+    "contact": "お問い合わせ",
+    "login": "ログイン",
+    "logout": "ログアウト",
+    "dashboard": "ダッシュボード",
+    "profile": "プロフィール",
+    "settings": "設定",
+    "language": "言語",
+    "korean": "한국어",
+    "english": "English",
+    "chinese": "中文",
+    "japanese": "日本語"
+  },
+  "hero": {
+    "title": "量子エネルギーで健康を取り戻す",
+    "subtitle": "認定量子療法士と一緒に健康への道を歩み始め、あなたの身体のエネルギーバランスを回復させましょう",
+    "cta_membership": "メンバーシップに参加",
+    "cta_appointment": "相談予約"
+  },
+  "about": {
+    "title": "長部量子療法士協会",
+    "description": "認定量子療法士で構成された協会で、科学的根拠に基づいた量子療法を通じて健康的な生活をサポートしています",
+    "practitioners": "認定療法士",
+    "experience": "年の経験"
+  },
+  "membership": {
+    "basic": "ベーシック",
+    "standard": "スタンダード",
+    "premium": "プレミアム",
+    "vip": "VIP",
+    "per_month": "/月",
+    "features": "機能",
+    "select": "選択"
+  },
+  "dashboard": {
+    "welcome": "ようこそ",
+    "subscriptions": "サブスクリプション情報",
+    "orders": "注文履歴",
+    "appointments": "予約",
+    "profile": "プロフィール情報",
+    "edit_profile": "プロフィールを編集"
+  },
+  "community": {
+    "title": "コミュニティ",
+    "posts": "投稿",
+    "discussions": "ディスカッション",
+    "create_post": "投稿を作成",
+    "reply": "返信"
+  },
+  "exam": {
+    "title": "実技試験",
+    "start_exam": "試験を開始",
+    "questions": "問題",
+    "submit": "送信",
+    "result": "結果",
+    "passed": "合格",
+    "failed": "不合格"
+  },
+  "certification": {
+    "title": "認定証",
+    "verify": "認定証を検証",
+    "download": "ダウンロード",
+    "qr_code": "QRコード"
+  },
+  "livestream": {
+    "title": "ライブ講座",
+    "join": "参加",
+    "chat": "チャット",
+    "send_message": "メッセージを送信",
+    "instructor": "講師"
+  },
+  "chatbot": {
+    "title": "AI相談",
+    "ask_question": "質問する",
+    "response": "応答"
+  },
+  "payment": {
+    "total": "合計",
+    "currency": "¥",
+    "payment_method": "支払い方法",
+    "card": "カード",
+    "success": "支払い成功",
+    "failed": "支払い失敗",
+    "cancel": "キャンセル"
+  },
+  "errors": {
+    "required_field": "このフィールドは必須です",
+    "invalid_email": "無効なメールアドレス",
+    "password_mismatch": "パスワードが一致しません",
+    "something_wrong": "エラーが発生しました"
+  }
+}
