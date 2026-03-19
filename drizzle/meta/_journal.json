@@ -43,6 +43,20 @@
       "when": 1773936339607,
       "tag": "0005_complex_hydra",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1773941280596,
+      "tag": "0006_daffy_sunset_bain",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1773942135857,
+      "tag": "0007_perfect_warbird",
+      "breakpoints": true
     }
   ]
 }
