@@ -13,6 +13,7 @@ export function GlobalHeader() {
   const navItems = [
     { label: t('common.home'), path: '/' },
     { label: t('common.about'), path: '/about' },
+    { label: '아카데미', path: '/academy' },
     { label: t('community.title'), path: '/community' },
     { label: t('livestream.title'), path: '/livestream' },
     { label: t('common.dashboard'), path: '/dashboard' },

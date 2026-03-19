@@ -8,12 +8,14 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
-      {/* Hero Section */}
-      <section className="relative w-full h-[600px] bg-gradient-to-r from-[#1a4d7a]/80 to-[#d4af37]/20 flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-10 right-10 w-96 h-96 bg-[#d4af37] rounded-full blur-3xl"></div>
-          <div className="absolute bottom-10 left-10 w-96 h-96 bg-[#1a4d7a] rounded-full blur-3xl"></div>
-        </div>
+      {/* Hero Section with Original Image */}
+      <section 
+        className="relative w-full h-[600px] flex items-center justify-center overflow-hidden bg-cover bg-center"
+        style={{
+          backgroundImage: 'url(https://cdn.manus.im/webdev-static-assets/hero-quantum-main.png)',
+        }}
+      >
+        <div className="absolute inset-0 bg-black/40"></div>
         
         <div className="relative z-10 text-center max-w-2xl px-4">
           <h2 className="text-5xl md:text-6xl font-bold text-white mb-4">{t('hero.title')}</h2>
