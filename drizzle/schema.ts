@@ -120,3 +120,46 @@ export const liveStreamChats = mysqlTable("live_stream_chats", {
 
 export type LiveStreamChat = typeof liveStreamChats.$inferSelect;
 export type InsertLiveStreamChat = typeof liveStreamChats.$inferInsert;
+
+
+/**
+ * Refunds table for tracking refund transactions
+ */
+export const refunds = mysqlTable("refunds", {
+  id: int("id").autoincrement().primaryKey(),
+  orderId: int("order_id").notNull(),
+  userId: int("user_id").notNull(),
+  stripeRefundId: varchar("stripe_refund_id", { length: 255 }).unique(),
+  stripeChargeId: varchar("stripe_charge_id", { length: 255 }),
+  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  currency: varchar("currency", { length: 3 }).default("USD").notNull(),
+  reason: varchar("reason", { length: 255 }).notNull(),
+  status: mysqlEnum("status", ["pending", "succeeded", "failed"]).default("pending").notNull(),
+  adminId: int("admin_id").notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Refund = typeof refunds.$inferSelect;
+export type InsertRefund = typeof refunds.$inferInsert;
+
+/**
+ * Subscription cancellations table for tracking cancellation details
+ */
+export const subscriptionCancellations = mysqlTable("subscription_cancellations", {
+  id: int("id").autoincrement().primaryKey(),
+  subscriptionId: int("subscription_id").notNull(),
+  userId: int("user_id").notNull(),
+  stripeSubscriptionId: varchar("stripe_subscription_id", { length: 255 }).notNull(),
+  reason: varchar("reason", { length: 255 }).notNull(),
+  refundAmount: decimal("refund_amount", { precision: 10, scale: 2 }),
+  refundId: int("refund_id"),
+  cancelledBy: mysqlEnum("cancelled_by", ["user", "admin"]).notNull(),
+  adminId: int("admin_id"),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type SubscriptionCancellation = typeof subscriptionCancellations.$inferSelect;
+export type InsertSubscriptionCancellation = typeof subscriptionCancellations.$inferInsert;

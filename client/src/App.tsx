@@ -16,6 +16,7 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import CertificateVerification from "./pages/CertificateVerification";
 import LiveStream from "./pages/LiveStream";
 import ChatBot from "./pages/ChatBot";
+import AdminSubscriptions from "./pages/AdminSubscriptions";
 
 function Router() {
   return (
@@ -32,6 +33,7 @@ function Router() {
       <Route path={"/verify-certificate"} component={CertificateVerification} />
       <Route path={"/livestream"} component={LiveStream} />
       <Route path={"/chatbot"} component={ChatBot} />
+      <Route path={"/admin/subscriptions"} component={AdminSubscriptions} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

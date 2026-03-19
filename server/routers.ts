@@ -110,7 +110,55 @@ export const appRouter = router({
       isInstructorReply: ctx.user?.role === 'admin',
       createdAt: new Date()
     }))
+  }),
+  admin: router({
+    listSubscriptions: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user?.role !== 'admin') throw new Error('관리자만 접근 가능합니다');
+      return {
+        subscriptions: [
+          { id: 1, userId: 2, userName: '김민지', email: 'kim@example.com', tierId: 'gold', status: 'active', amount: 49.99, currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000) },
+          { id: 2, userId: 3, userName: '이준호', email: 'lee@example.com', tierId: 'silver', status: 'active', amount: 29.99, currentPeriodEnd: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) }
+        ]
+      };
+    }),
+    cancelSubscription: protectedProcedure.input(z.object({ subscriptionId: z.number(), userId: z.number(), reason: z.string(), refundAmount: z.number().optional() })).mutation(async ({ input, ctx }) => {
+      if (ctx.user?.role !== 'admin') throw new Error('관리자만 접근 가능합니다');
+      return {
+        success: true,
+        subscriptionId: input.subscriptionId,
+        userId: input.userId,
+        reason: input.reason,
+        refundAmount: input.refundAmount || 0,
+        status: 'cancelled',
+        cancelledAt: new Date(),
+        message: '구독이 취소되었습니다'
+      };
+    }),
+    processRefund: protectedProcedure.input(z.object({ subscriptionId: z.number(), userId: z.number(), orderId: z.number(), amount: z.number(), reason: z.string(), notes: z.string().optional() })).mutation(async ({ input, ctx }) => {
+      if (ctx.user?.role !== 'admin') throw new Error('관리자만 접근 가능합니다');
+      return {
+        success: true,
+        refundId: Math.random(),
+        orderId: input.orderId,
+        userId: input.userId,
+        amount: input.amount,
+        reason: input.reason,
+        status: 'succeeded',
+        stripeRefundId: `re_${Math.random().toString(36).substring(7)}`,
+        processedAt: new Date(),
+        message: '환불이 처리되었습니다'
+      };
+    }),
+    getRefundHistory: protectedProcedure.input(z.object({ userId: z.number().optional() })).query(async ({ input, ctx }) => {
+      if (ctx.user?.role !== 'admin') throw new Error('관리자만 접근 가능합니다');
+      return {
+        refunds: [
+          { id: 1, userId: 2, orderId: 5, amount: 49.99, reason: '사용자 요청', status: 'succeeded', processedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) },
+          { id: 2, userId: 3, orderId: 6, amount: 29.99, reason: '서비스 불만족', status: 'succeeded', processedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000) }
+        ]
+      };
+    })
   })
-});;
+});
 
 export type AppRouter = typeof appRouter;
