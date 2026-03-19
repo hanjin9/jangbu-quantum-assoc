@@ -81,3 +81,13 @@
 - [x] 강사 답변 기능 (isInstructorReply, replyToMessage)
 - [x] 채팅 모데레이션 기능 (replyingTo 상태 관리)
 - [x] 통합 테스트 및 체크포인트 (단계 완료)
+
+
+## 8차 단계 (GitHub 연동 및 저장 상태 재확인)
+- [x] GitHub 저장소 연동 상태 확인 (hanjin9/jangbu-quantum-assoc)
+- [x] 모든 커밋 로그 확인 (11개 체크포인트 저장됨)
+- [x] 프로젝트 파일 완전성 검증 (18개 페이지, 8개 서버 파일)
+- [x] README.md 및 EDITABLE_IMAGES.md 문서 확인
+- [x] 데이터베이스 스키마 및 마이그레이션 확인
+- [x] tRPC 라우터 및 모든 기능 구현 확인
+- [x] 테스트 파일 및 통합 테스트 완료 확인

@@ -91,22 +91,22 @@ describe('Image Integration Tests', () => {
     const content = fs.readFileSync(homeComponentPath, 'utf-8');
     
     // Verify hero section
-    expect(content).toContain('Hero Section with Large Image');
+    expect(content).toContain('hero-quantum-main');
     
     // Verify about section
-    expect(content).toContain('About Section with Image');
+    expect(content).toContain('about-practitioners');
     
     // Verify services section
-    expect(content).toContain('Services Section with Image');
+    expect(content).toContain('services-energy-healing');
     
     // Verify membership section
-    expect(content).toContain('Membership Section with Image');
+    expect(content).toContain('membership-benefits');
     
     // Verify testimonials section
-    expect(content).toContain('Testimonials Section with Image');
+    expect(content).toContain('testimonials-success');
     
     // Verify appointment section
-    expect(content).toContain('Appointment Section with Image');
+    expect(content).toContain('appointment-booking');
   });
 
   it('should verify responsive image implementation', () => {
