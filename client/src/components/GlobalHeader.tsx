@@ -22,6 +22,10 @@ export function GlobalHeader() {
   const handleLogoClick = () => {
     navigate('/');
     setMobileMenuOpen(false);
+    // 홈페이지 맨 상단으로 스크롤
+    setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    }, 0);
   };
 
   return (
@@ -81,6 +85,12 @@ export function GlobalHeader() {
                 onClick={() => {
                   navigate(item.path);
                   setMobileMenuOpen(false);
+                  // 홈페이지로 돌아갈 때 맨 상단으로 스크롤
+                  if (item.path === '/') {
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+                    }, 0);
+                  }
                 }}
                 className="text-sm text-left hover:text-[#d4af37] transition-colors py-2"
               >
