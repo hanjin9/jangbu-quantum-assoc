@@ -1,0 +1,97 @@
+{
+  "common": {
+    "home": "홈",
+    "about": "소개",
+    "services": "서비스",
+    "membership": "멤버십",
+    "contact": "연락처",
+    "login": "로그인",
+    "logout": "로그아웃",
+    "dashboard": "대시보드",
+    "profile": "프로필",
+    "settings": "설정",
+    "language": "언어",
+    "korean": "한국어",
+    "english": "English",
+    "chinese": "中文",
+    "japanese": "日本語"
+  },
+  "hero": {
+    "title": "양자 에너지로 건강을 회복하세요",
+    "subtitle": "전문 양자요법 관리사와 함께 신체의 에너지 밸런스를 회복하고 건강한 삶을 시작하세요",
+    "cta_membership": "멤버십 가입하기",
+    "cta_appointment": "상담 예약하기"
+  },
+  "about": {
+    "title": "장•부 양자요법 관리사 협회",
+    "description": "전문 양자요법 관리사들이 모인 협회로, 과학적 기반의 양자요법을 통해 건강한 삶을 지원합니다",
+    "practitioners": "인증 관리사",
+    "experience": "년 경력"
+  },
+  "membership": {
+    "basic": "기본",
+    "standard": "표준",
+    "premium": "프리미엄",
+    "vip": "VIP",
+    "per_month": "/월",
+    "features": "주요 기능",
+    "select": "선택"
+  },
+  "dashboard": {
+    "welcome": "환영합니다",
+    "subscriptions": "구독 정보",
+    "orders": "주문 이력",
+    "appointments": "예약 일정",
+    "profile": "프로필 정보",
+    "edit_profile": "프로필 수정"
+  },
+  "community": {
+    "title": "커뮤니티",
+    "posts": "게시물",
+    "discussions": "토론",
+    "create_post": "게시물 작성",
+    "reply": "댓글"
+  },
+  "exam": {
+    "title": "실기시험",
+    "start_exam": "시험 시작",
+    "questions": "문제",
+    "submit": "제출",
+    "result": "결과",
+    "passed": "합격",
+    "failed": "불합격"
+  },
+  "certification": {
+    "title": "자격증",
+    "verify": "자격증 검증",
+    "download": "다운로드",
+    "qr_code": "QR 코드"
+  },
+  "livestream": {
+    "title": "라이브 강의",
+    "join": "참석",
+    "chat": "채팅",
+    "send_message": "메시지 전송",
+    "instructor": "강사"
+  },
+  "chatbot": {
+    "title": "AI 상담",
+    "ask_question": "질문하기",
+    "response": "답변"
+  },
+  "payment": {
+    "total": "총액",
+    "currency": "₩",
+    "payment_method": "결제 방법",
+    "card": "카드",
+    "success": "결제 성공",
+    "failed": "결제 실패",
+    "cancel": "취소"
+  },
+  "errors": {
+    "required_field": "필수 입력 항목입니다",
+    "invalid_email": "유효하지 않은 이메일입니다",
+    "password_mismatch": "비밀번호가 일치하지 않습니다",
+    "something_wrong": "문제가 발생했습니다"
+  }
+}
