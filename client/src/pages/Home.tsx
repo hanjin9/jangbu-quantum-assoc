@@ -27,47 +27,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-slate-900/95 backdrop-blur border-b border-amber-500/20">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-amber-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">장•부</span>
-            </div>
-            <span className="text-white font-bold text-lg">양자요법 관리사 협회</span>
-          </div>
-          <div className="flex items-center gap-4">
-            {isAuthenticated && (
-              <>
-                <Button
-                  variant="ghost"
-                  className="text-white hover:text-amber-400"
-                  onClick={() => setLocation('/dashboard')}
-                >
-                  대시보드
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="text-white hover:text-amber-400"
-                  onClick={handleAppointmentClick}
-                >
-                  상담 예약
-                </Button>
-                {user?.role === 'admin' && (
-                  <Button
-                    variant="ghost"
-                    className="text-white hover:text-amber-400"
-                    onClick={handleAdminClick}
-                  >
-                    관리자 패널
-                  </Button>
-                )}
-              </>
-            )}
-          </div>
-        </div>
-      </nav>
-
       {/* Hero Section with FIXED Image */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div

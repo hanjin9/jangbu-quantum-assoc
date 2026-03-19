@@ -22,6 +22,34 @@
       "when": 1773814176536,
       "tag": "0002_certain_sentinel",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1773919854595,
+      "tag": "0003_tiny_slapstick",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1773922365483,
+      "tag": "0004_orange_plazm",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1773936339607,
+      "tag": "0005_complex_hydra",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1773941280596,
+      "tag": "0006_daffy_sunset_bain",
+      "breakpoints": true
     }
   ]
 }
