@@ -1,40 +1,51 @@
 import { useTranslation } from '@/hooks/useTranslation';
 import { Button } from '@/components/ui/button';
 import { useLocation } from 'wouter';
+import { ChevronRight, Calendar } from 'lucide-react';
 
 export default function Home() {
   const { t } = useTranslation();
   const [, navigate] = useLocation();
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      {/* Hero Section with Original Image */}
-      <section 
-        className="relative w-full h-[600px] flex items-center justify-center overflow-hidden bg-cover bg-center"
-        style={{
-          backgroundImage: 'url(https://cdn.manus.im/webdev-static-assets/hero-quantum-main.png)',
-        }}
-      >
-        <div className="absolute inset-0 bg-black/40"></div>
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
+      {/* Hero Section with FIXED Image */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url(https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/hero-quantum-main-6jjXaiPbmoCJLUoUaD8J3L.webp)`,
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed'
+          }}
+        >
+          <div className="absolute inset-0 bg-black/40"></div>
+        </div>
         
-        <div className="relative z-10 text-center max-w-2xl px-4">
-          <h2 className="text-5xl md:text-6xl font-bold text-white mb-4">{t('hero.title')}</h2>
-          <p className="text-xl text-gray-100 mb-8">{t('hero.subtitle')}</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
-              className="bg-[#d4af37] text-[#1a4d7a] hover:bg-[#c99d2e] font-bold"
+        <div className="relative z-10 text-center px-4 max-w-2xl">
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
+            양자 에너지로 <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">건강을 회복하세요</span>
+          </h1>
+          <p className="text-xl text-gray-200 mb-8">
+            전문 양자요법 관리사와 함께 신체의 에너지 밸런스를 회복하고 건강한 삶을 시작하세요
+          </p>
+          <div className="flex gap-4 justify-center flex-wrap">
+            <Button
+              size="lg"
+              className="bg-amber-500 hover:bg-amber-600 text-white px-8"
               onClick={() => navigate('/checkout')}
             >
-              {t('hero.cta_membership')}
+              회원 가입하기
+              <ChevronRight className="w-5 h-5 ml-2" />
             </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="border-[#d4af37] text-[#d4af37] hover:bg-[#d4af37]/10"
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-amber-500 text-amber-400 hover:bg-amber-500/10"
               onClick={() => navigate('/appointments')}
             >
-              {t('hero.cta_appointment')}
+              <Calendar className="w-5 h-5 mr-2" />
+              상담 예약하기
             </Button>
           </div>
         </div>
