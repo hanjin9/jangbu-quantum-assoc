@@ -2,13 +2,32 @@ import { useLocation } from 'wouter';
 import { useTranslation } from '@/hooks/useTranslation';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { Menu, X, ArrowUp } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 export function GlobalHeader() {
-  const [, navigate] = useLocation();
+  const [location, navigate] = useLocation();
   const { t } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // 페이지 전환 시 스크롤 리셋
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [location]);
+
+  // 스크롤 위치에 따라 "맨 위로" 버튼 표시
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  };
 
   const navItems = [
     { label: t('common.home'), path: '/' },
@@ -30,38 +49,45 @@ export function GlobalHeader() {
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex justify-between items-center">
-          {/* Logo */}
+      <div className="w-full px-0 py-4">
+        <div className="flex justify-between items-center px-4 md:px-6 gap-4 md:gap-8">
+          {/* Logo - 좌측 끝에 붙임 */}
           <button
             onClick={handleLogoClick}
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+            className="flex items-center gap-1 md:gap-2 hover:opacity-80 transition-opacity flex-shrink-0"
             title={t('about.title')}
           >
             <div className="w-10 h-10 bg-gradient-to-br from-[#1a4d7a] to-[#d4af37] rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">장•부</span>
             </div>
-            <h1 className="text-lg font-bold text-[#1a4d7a] hidden sm:inline">
+            <h1 className="text-base md:text-lg font-bold text-[#1a4d7a] hidden sm:inline whitespace-nowrap">
               {t('about.title')}
             </h1>
           </button>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex gap-6 items-center">
-            {navItems.map((item) => (
-              <button
-                key={item.path}
-                onClick={() => navigate(item.path)}
-                className="text-sm hover:text-[#d4af37] transition-colors"
-              >
-                {item.label}
-              </button>
-            ))}
+          {/* Desktop Navigation - 중앙 정렬, 여유있는 간격 */}
+          <nav className="hidden md:flex gap-8 items-center flex-1 justify-center">
+            {navItems.map((item) => {
+              const isActive = location === item.path;
+              return (
+                <button
+                  key={item.path}
+                  onClick={() => navigate(item.path)}
+                  className={`text-sm transition-colors whitespace-nowrap ${
+                    isActive
+                      ? 'text-[#d4af37] font-semibold border-b-2 border-[#d4af37] pb-1'
+                      : 'hover:text-[#d4af37]'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
             <LanguageSwitcher />
           </nav>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center gap-2">
+          <div className="md:hidden flex items-center gap-2 flex-shrink-0">
             <LanguageSwitcher />
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -75,31 +101,43 @@ export function GlobalHeader() {
             </button>
           </div>
         </div>
+      </div>
 
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <nav className="md:hidden mt-4 pb-4 border-t border-border pt-4 flex flex-col gap-3">
-            {navItems.map((item) => (
+      {/* Mobile Navigation */}
+      {mobileMenuOpen && (
+        <nav className="md:hidden mt-4 pb-4 border-t border-border pt-4 flex flex-col gap-3 px-4">
+          {navItems.map((item) => {
+            const isActive = location === item.path;
+            return (
               <button
                 key={item.path}
                 onClick={() => {
                   navigate(item.path);
                   setMobileMenuOpen(false);
-                  // 홈페이지로 돌아갈 때 맨 상단으로 스크롤
-                  if (item.path === '/') {
-                    setTimeout(() => {
-                      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-                    }, 0);
-                  }
                 }}
-                className="text-sm text-left hover:text-[#d4af37] transition-colors py-2"
+                className={`text-sm text-left transition-colors py-2 ${
+                  isActive
+                    ? 'text-[#d4af37] font-semibold'
+                    : 'hover:text-[#d4af37]'
+                }`}
               >
                 {item.label}
               </button>
-            ))}
-          </nav>
-        )}
-      </div>
+            );
+          })}
+        </nav>
+      )}
+
+      {/* "맨 위로" 플로팅 버튼 */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 bg-[#d4af37] hover:bg-[#c9a227] text-white p-3 rounded-full shadow-lg transition-all duration-300 z-40"
+          title="맨 위로"
+        >
+          <ArrowUp className="h-5 w-5" />
+        </button>
+      )}
     </header>
   );
 }
