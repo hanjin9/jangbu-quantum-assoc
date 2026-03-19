@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CheckCircle2, AlertCircle, Calendar, CreditCard, LogOut, Settings, Loader2 } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Calendar, CreditCard, LogOut, Settings, Loader2, BookOpen } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
+import { useLocation } from 'wouter';
 
 interface Subscription {
   id: number;
@@ -26,6 +27,7 @@ interface Order {
 
 export default function Dashboard() {
   const { user: authUser, logout } = useAuth();
+  const [, navigate] = useLocation();
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -110,12 +112,22 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* Dashboard Hero Image Section */}
+        <div className="mb-8 rounded-lg overflow-hidden shadow-lg">
+          <img 
+            src="https://cdn.manus.im/webdev-static-assets/membership-benefits.png" 
+            alt="Dashboard Hero"
+            className="w-full h-auto object-cover"
+          />
+        </div>
+
         {/* Main Content */}
         <Tabs defaultValue="subscription" className="space-y-6">
-          <TabsList className="bg-slate-800 border border-slate-700">
+          <TabsList className="bg-slate-800 border border-slate-700 grid w-full grid-cols-4">
             <TabsTrigger value="subscription" className="data-[state=active]:bg-amber-500">구독 정보</TabsTrigger>
             <TabsTrigger value="orders" className="data-[state=active]:bg-amber-500">주문 이력</TabsTrigger>
             <TabsTrigger value="profile" className="data-[state=active]:bg-amber-500">프로필</TabsTrigger>
+            <TabsTrigger value="exam" className="data-[state=active]:bg-amber-500">실기시험</TabsTrigger>
           </TabsList>
 
           {/* Subscription Tab */}
@@ -235,6 +247,94 @@ export default function Dashboard() {
                   <p className="text-white font-semibold">
                     {authUser?.createdAt ? new Date(authUser.createdAt).toLocaleDateString('ko-KR') : '-'}
                   </p>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Exam Tab - 전체 실기 시험 화면 */}
+          <TabsContent value="exam" className="space-y-6">
+            <Card className="bg-slate-800 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center gap-2">
+                  <BookOpen className="w-5 h-5" />
+                  실기 시험 센터
+                </CardTitle>
+                <CardDescription>양자요법 관리사 자격 시험</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* 시험 과정 카드 */}
+                  <div className="bg-slate-700 rounded-lg p-6 hover:bg-slate-600 transition cursor-pointer" onClick={() => navigate('/exam')}>
+                    <div className="text-3xl mb-3">📚</div>
+                    <h3 className="text-white font-bold mb-2">양자요법 기초</h3>
+                    <p className="text-sm text-gray-400 mb-4">양자에너지 치유의 기본 원리를 배웁니다.</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs bg-amber-500/20 text-amber-300 px-2 py-1 rounded">3문제</span>
+                      <Button size="sm" className="bg-amber-500 hover:bg-amber-600">응시하기</Button>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-700 rounded-lg p-6 hover:bg-slate-600 transition cursor-pointer" onClick={() => navigate('/exam')}>
+                    <div className="text-3xl mb-3">⚡</div>
+                    <h3 className="text-white font-bold mb-2">에너지 진단법</h3>
+                    <p className="text-sm text-gray-400 mb-4">환자의 에너지 상태를 진단하는 방법을 학습합니다.</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs bg-amber-500/20 text-amber-300 px-2 py-1 rounded">3문제</span>
+                      <Button size="sm" className="bg-amber-500 hover:bg-amber-600">응시하기</Button>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-700 rounded-lg p-6 hover:bg-slate-600 transition cursor-pointer" onClick={() => navigate('/exam')}>
+                    <div className="text-3xl mb-3">🔬</div>
+                    <h3 className="text-white font-bold mb-2">치료 기법 심화</h3>
+                    <p className="text-sm text-gray-400 mb-4">고급 양자 치료 기법을 습득합니다.</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs bg-amber-500/20 text-amber-300 px-2 py-1 rounded">3문제</span>
+                      <Button size="sm" className="bg-amber-500 hover:bg-amber-600">응시하기</Button>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-700 rounded-lg p-6 hover:bg-slate-600 transition cursor-pointer" onClick={() => navigate('/exam')}>
+                    <div className="text-3xl mb-3">⚖️</div>
+                    <h3 className="text-white font-bold mb-2">윤리 및 전문성</h3>
+                    <p className="text-sm text-gray-400 mb-4">전문가로서의 윤리와 책임을 학습합니다.</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs bg-amber-500/20 text-amber-300 px-2 py-1 rounded">3문제</span>
+                      <Button size="sm" className="bg-amber-500 hover:bg-amber-600">응시하기</Button>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-700 rounded-lg p-6 hover:bg-slate-600 transition cursor-pointer" onClick={() => navigate('/exam')}>
+                    <div className="text-3xl mb-3">🏥</div>
+                    <h3 className="text-white font-bold mb-2">임상 실습</h3>
+                    <p className="text-sm text-gray-400 mb-4">실제 임상 사례를 통한 실습입니다.</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs bg-amber-500/20 text-amber-300 px-2 py-1 rounded">3문제</span>
+                      <Button size="sm" className="bg-amber-500 hover:bg-amber-600">응시하기</Button>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-700 rounded-lg p-6 hover:bg-slate-600 transition cursor-pointer" onClick={() => navigate('/exam')}>
+                    <div className="text-3xl mb-3">🎓</div>
+                    <h3 className="text-white font-bold mb-2">자격증 종합 시험</h3>
+                    <p className="text-sm text-gray-400 mb-4">모든 과정을 통합한 최종 시험입니다.</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs bg-amber-500/20 text-amber-300 px-2 py-1 rounded">3문제</span>
+                      <Button size="sm" className="bg-amber-500 hover:bg-amber-600">응시하기</Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 시험 안내 */}
+                <div className="bg-slate-700 rounded-lg p-4 border border-amber-500/30">
+                  <h4 className="text-white font-bold mb-2">시험 정보</h4>
+                  <ul className="text-sm text-gray-300 space-y-1">
+                    <li>• 각 과정당 3문제 출제</li>
+                    <li>• 60점 이상 합격</li>
+                    <li>• 합격 시 온라인 수료증 발급</li>
+                    <li>• 언제든지 재응시 가능</li>
+                  </ul>
                 </div>
               </CardContent>
             </Card>

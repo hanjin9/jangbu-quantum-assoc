@@ -43,6 +43,161 @@ export default function Academy() {
       ],
       passingScore: 60,
     },
+    {
+      id: 2,
+      title: '에너지 진단법',
+      description: '환자의 에너지 상태를 진단하는 방법을 학습합니다.',
+      materials: [
+        '에너지 필드 측정',
+        '진단 도구 사용법',
+        '케이스 분석',
+      ],
+      exam: [
+        {
+          id: 1,
+          question: '에너지 필드 측정의 기본 원리는?',
+          options: ['진동 감지', '온도 측정', '색상 분석', '음파 감지'],
+          correct: 0,
+        },
+        {
+          id: 2,
+          question: '진단 도구 중 가장 기본적인 것은?',
+          options: ['손 스캔', '기계 스캔', '음성 분석', '혈액 검사'],
+          correct: 0,
+        },
+        {
+          id: 3,
+          question: '에너지 불균형의 주요 증상은?',
+          options: ['피로', '두통', '통증', '모두 해당'],
+          correct: 3,
+        },
+      ],
+      passingScore: 60,
+    },
+    {
+      id: 3,
+      title: '치료 기법 심화',
+      description: '고급 양자 치료 기법을 습득합니다.',
+      materials: [
+        '고급 에너지 조정',
+        '복합 치료법',
+        '응급 상황 대응',
+      ],
+      exam: [
+        {
+          id: 1,
+          question: '고급 에너지 조정의 핵심은?',
+          options: ['정확한 주파수', '강한 힘', '긴 시간', '반복'],
+          correct: 0,
+        },
+        {
+          id: 2,
+          question: '복합 치료법은 몇 가지 기법을 결합하는가?',
+          options: ['2가지', '3가지', '4가지', '5가지'],
+          correct: 1,
+        },
+        {
+          id: 3,
+          question: '응급 상황에서 가장 중요한 것은?',
+          options: ['신속한 대응', '정확한 진단', '환자 안정', '전문가 호출'],
+          correct: 0,
+        },
+      ],
+      passingScore: 60,
+    },
+    {
+      id: 4,
+      title: '윤리 및 전문성',
+      description: '양자요법 관리사의 윤리 기준과 전문성을 배웁니다.',
+      materials: [
+        '윤리 강령',
+        '환자 보호',
+        '전문가 책임',
+      ],
+      exam: [
+        {
+          id: 1,
+          question: '양자요법 관리사의 기본 윤리는?',
+          options: ['환자 중심', '이익 추구', '명성 관리', '기술 자랑'],
+          correct: 0,
+        },
+        {
+          id: 2,
+          question: '환자 정보 보호의 가장 중요한 원칙은?',
+          options: ['비밀 유지', '투명성', '공개', '공유'],
+          correct: 0,
+        },
+        {
+          id: 3,
+          question: '전문가의 책임은?',
+          options: ['지속 학습', '자격 유지', '윤리 준수', '모두 해당'],
+          correct: 3,
+        },
+      ],
+      passingScore: 60,
+    },
+    {
+      id: 5,
+      title: '임상 실습',
+      description: '실제 환자 사례를 통한 임상 실습을 진행합니다.',
+      materials: [
+        '사례 분석',
+        '치료 계획 수립',
+        '결과 평가',
+      ],
+      exam: [
+        {
+          id: 1,
+          question: '임상 사례 분석의 첫 단계는?',
+          options: ['환자 정보 수집', '즉시 치료', '약물 처방', '수술 계획'],
+          correct: 0,
+        },
+        {
+          id: 2,
+          question: '치료 계획 수립 시 고려할 사항은?',
+          options: ['환자 상태', '치료 목표', '예상 기간', '모두 해당'],
+          correct: 3,
+        },
+        {
+          id: 3,
+          question: '결과 평가의 주요 지표는?',
+          options: ['증상 개선', '에너지 변화', '환자 만족도', '모두 해당'],
+          correct: 3,
+        },
+      ],
+      passingScore: 60,
+    },
+    {
+      id: 6,
+      title: '자격증 종합 시험',
+      description: '모든 과정을 종합하는 최종 자격증 시험입니다.',
+      materials: [
+        '전체 이론 복습',
+        '실습 기법 정리',
+        '윤리 및 전문성',
+      ],
+      exam: [
+        {
+          id: 1,
+          question: '양자요법의 핵심 철학은?',
+          options: ['에너지 균형', '약물 치료', '수술', '물리 치료'],
+          correct: 0,
+        },
+        {
+          id: 2,
+          question: '관리사의 주요 역할은?',
+          options: ['진단 및 치료', '환자 교육', '예방 관리', '모두 해당'],
+          correct: 3,
+        },
+        {
+          id: 3,
+          question: '전문성 유지의 방법은?',
+          options: ['지속 교육', '경험 축적', '윤리 준수', '모두 해당'],
+          correct: 3,
+        },
+      ],
+      passingScore: 70,
+    },
   ];
 
   const handleStartExam = (courseId: number) => {
@@ -198,37 +353,36 @@ export default function Academy() {
       <div className="container mx-auto px-4">
         <h1 className="text-4xl font-bold text-[#1a4d7a] mb-4">아카데미 / 교육</h1>
         <p className="text-lg text-muted-foreground mb-12">
-          전문가 양성을 위한 체계적인 교육 프로그램
+          전문가 양성을 위한 체계적인 교육 프로그램 (총 6개 과정)
         </p>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {courses.map(course => (
             <div key={course.id} className="bg-card rounded-lg border border-border overflow-hidden hover:border-[#d4af37] transition">
               <div className="p-6">
-                <h2 className="text-2xl font-bold text-[#1a4d7a] mb-2">{course.title}</h2>
-                <p className="text-muted-foreground mb-6">{course.description}</p>
+                <div className="text-3xl font-bold text-[#d4af37] mb-2">{course.id}</div>
+                <h2 className="text-xl font-bold text-[#1a4d7a] mb-2">{course.title}</h2>
+                <p className="text-sm text-muted-foreground mb-6">{course.description}</p>
 
                 <div className="mb-6">
-                  <h3 className="font-bold text-[#1a4d7a] mb-3">📚 교재</h3>
-                  <ul className="space-y-2">
+                  <h3 className="font-bold text-[#1a4d7a] mb-3 text-sm">📚 교재</h3>
+                  <ul className="space-y-1">
                     {course.materials.map((material, idx) => (
-                      <li key={idx} className="flex items-center gap-2 text-sm">
-                        <span className="w-2 h-2 bg-[#d4af37] rounded-full"></span>
+                      <li key={idx} className="flex items-center gap-2 text-xs">
+                        <span className="w-1.5 h-1.5 bg-[#d4af37] rounded-full"></span>
                         {material}
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="mb-6">
-                  <p className="text-sm text-muted-foreground">
-                    시험: {course.exam.length}문제 | 합격선: {course.passingScore}점
-                  </p>
+                <div className="mb-6 text-xs text-muted-foreground">
+                  <p>시험: {course.exam.length}문제 | 합격선: {course.passingScore}점</p>
                 </div>
 
                 <Button
                   onClick={() => handleStartExam(course.id)}
-                  className="w-full bg-[#d4af37] text-[#1a4d7a] hover:bg-[#c99d2e] font-bold"
+                  className="w-full bg-[#d4af37] text-[#1a4d7a] hover:bg-[#c99d2e] font-bold text-sm"
                 >
                   시험 응시
                 </Button>
