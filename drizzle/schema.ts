@@ -170,11 +170,12 @@ export type InsertSubscriptionCancellation = typeof subscriptionCancellations.$i
  */
 export const userProfiles = mysqlTable("user_profiles", {
   id: int("id").autoincrement().primaryKey(),
-  userId: int("user_id").notNull(),
+  userId: int("user_id").notNull().unique(),
   phoneNumber: varchar("phone_number", { length: 20 }),
   address: text("address"),
   city: varchar("city", { length: 100 }),
   zipCode: varchar("zip_code", { length: 20 }),
+  avatarUrl: text("avatar_url"),
   profileImageUrl: text("profile_image_url"),
   bio: text("bio"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -199,3 +200,22 @@ export const socialLogins = mysqlTable("social_logins", {
 
 export type SocialLogin = typeof socialLogins.$inferSelect;
 export type InsertSocialLogin = typeof socialLogins.$inferInsert;
+
+
+
+
+/**
+ * JWT sessions table for managing user sessions and tokens
+ */
+export const jwtSessions = mysqlTable("jwt_sessions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("user_id").notNull(),
+  token: text("token").notNull(),
+  refreshToken: text("refresh_token"),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type JWTSession = typeof jwtSessions.$inferSelect;
+export type InsertJWTSession = typeof jwtSessions.$inferInsert;

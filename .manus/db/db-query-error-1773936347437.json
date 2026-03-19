@@ -1,0 +1,8 @@
+{
+  "query": "ALTER TABLE `user_profiles` ADD COLUMN `avatar_url` text;\nALTER TABLE `jwt_sessions` MODIFY `expires_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2ov7UodCCzAj1bK.dc110586ac44 --database ZFmCugcMVdsgzLCVvZ8jeT --execute ALTER TABLE `user_profiles` ADD COLUMN `avatar_url` text;\nALTER TABLE `jwt_sessions` MODIFY `expires_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1146 (42S02) at line 1: Table 'zfmcugcmvdsgzlcvvz8jet.user_profiles' doesn't exist"
+  ]
+}

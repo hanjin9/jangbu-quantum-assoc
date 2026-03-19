@@ -120,6 +120,7 @@ export const appRouter = router({
       address: '',
       city: '',
       zipCode: '',
+      avatarUrl: '',
       profileImageUrl: '',
       bio: ''
     })),
@@ -129,12 +130,24 @@ export const appRouter = router({
       address: z.string().optional(),
       city: z.string().optional(),
       zipCode: z.string().optional(),
+      avatarUrl: z.string().optional(),
       bio: z.string().optional()
     })).mutation(async ({ input, ctx }) => ({
       success: true,
       userId: ctx.user?.id,
       message: '프로필이 업데이트되었습니다',
       updatedAt: new Date()
+    })),
+    uploadAvatar: protectedProcedure.input(z.object({
+      fileName: z.string(),
+      fileSize: z.number()
+    })).mutation(async ({ input, ctx }) => ({
+      success: true,
+      userId: ctx.user?.id,
+      fileName: input.fileName,
+      fileSize: input.fileSize,
+      url: `https://cdn.example.com/avatars/${ctx.user?.id}/${input.fileName}`,
+      uploadedAt: new Date()
     }))
   }),
   socialAuth: router({
