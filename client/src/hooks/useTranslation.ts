@@ -3,8 +3,9 @@ import koTranslations from '../locales/ko.json';
 import enTranslations from '../locales/en.json';
 import zhTranslations from '../locales/zh.json';
 import jaTranslations from '../locales/ja.json';
+import esTranslations from '../locales/es.json';
 
-export type Language = 'ko' | 'en' | 'zh' | 'ja';
+export type Language = 'ko' | 'en' | 'zh' | 'ja' | 'es';
 
 interface Translations {
   [key: string]: {
@@ -17,6 +18,7 @@ const translations: Record<Language, Translations> = {
   en: enTranslations,
   zh: zhTranslations,
   ja: jaTranslations,
+  es: esTranslations,
 };
 
 const LANGUAGE_KEY = 'jangbu_language';
@@ -80,7 +82,7 @@ export function useTranslation() {
     changeLanguage,
     t,
     isInitialized,
-    availableLanguages: ['ko', 'en', 'zh', 'ja'] as Language[],
+    availableLanguages: ['ko', 'en', 'zh', 'ja', 'es'] as Language[],
   };
 }
 
@@ -90,6 +92,7 @@ export function getLanguageName(lang: Language): string {
     en: 'English',
     zh: '中文',
     ja: '日本語',
+    es: 'Español',
   };
   return names[lang];
 }

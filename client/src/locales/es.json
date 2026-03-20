@@ -1,0 +1,59 @@
+{
+  "common": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "services": "Servicios",
+    "membership": "Membresía",
+    "contact": "Contacto",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "dashboard": "Panel de control",
+    "profile": "Perfil",
+    "settings": "Configuración",
+    "language": "Idioma",
+    "korean": "한국어",
+    "english": "English",
+    "chinese": "中文",
+    "japanese": "日本語",
+    "spanish": "Español"
+  },
+  "hero": {
+    "title": "Recupere la salud con energía cuántica",
+    "subtitle": "Trabaje con profesionales certificados en terapia cuántica para restaurar el equilibrio energético de su cuerpo e iniciar una vida saludable",
+    "cta_membership": "Unirse a la membresía",
+    "cta_appointment": "Reservar consulta"
+  },
+  "about": {
+    "title": "Asociación de Profesionales de Terapia Cuántica Jangbu",
+    "description": "Una asociación de profesionales certificados en terapia cuántica que apoyan una vida saludable a través de terapia cuántica basada en la ciencia",
+    "practitioners": "Profesionales certificados",
+    "experience": "años de experiencia"
+  },
+  "academy": {
+    "title": "Academia de Terapia Cuántica",
+    "description": "Programas de capacitación completos para profesionales de terapia cuántica",
+    "course": "Curso",
+    "progress": "Progreso",
+    "certificate": "Certificado"
+  },
+  "community": {
+    "title": "Comunidad",
+    "description": "Conecte con otros profesionales y comparta experiencias",
+    "posts": "Publicaciones",
+    "members": "Miembros"
+  },
+  "livestream": {
+    "title": "Transmisión en vivo",
+    "description": "Sesiones educativas en vivo con expertos",
+    "live": "EN VIVO",
+    "upcoming": "Próximas"
+  },
+  "checkout": {
+    "title": "Planes de membresía",
+    "description": "Elija el plan que mejor se adapte a sus necesidades",
+    "basic": "Básico",
+    "premium": "Premium",
+    "vip": "VIP",
+    "enterprise": "Empresa"
+  }
+}

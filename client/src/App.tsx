@@ -22,6 +22,7 @@ import SimpleLogin from "./pages/SimpleLogin";
 import ProfileEdit from "./pages/ProfileEdit";
 import ProfileEditWithImage from "./pages/ProfileEditWithImage";
 import Academy from "./pages/Academy";
+import Settings from "./pages/Settings";
 import { BottomNavBar } from "./components/BottomNavBar";
 
 function Router() {
@@ -44,6 +45,7 @@ function Router() {
       <Route path={"/profile-edit"} component={ProfileEdit} />
       <Route path={"/profile-edit-image"} component={ProfileEditWithImage} />
       <Route path={"/academy"} component={Academy} />
+      <Route path={"/settings"} component={Settings} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
