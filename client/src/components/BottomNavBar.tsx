@@ -7,10 +7,10 @@ export function BottomNavBar() {
 
   const navItems = [
     { icon: BookOpen, label: '교육', path: '/academy', id: 'academy' },
-    { icon: Users, label: '커뮤니티', path: '/community', id: 'community' },
-    { icon: Home, label: '홈', path: '/', id: 'home', primary: true },
-    { icon: Phone, label: '상담', path: '/appointments', id: 'appointments' },
     { icon: User, label: '마이', path: '/profile', id: 'profile' },
+    { icon: Home, label: '홈', path: '/', id: 'home', primary: true },
+    { icon: Users, label: '커뮤니티', path: '/community', id: 'community' },
+    { icon: Phone, label: '상담', path: '/appointments', id: 'appointments' },
   ];
 
   const isActive = (path: string) => {
