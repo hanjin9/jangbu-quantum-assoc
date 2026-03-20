@@ -48,19 +48,19 @@ export function GlobalHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
-      <div className="w-full px-0 py-4">
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border safe-top">
+      <div className="w-full px-0 py-2 md:py-4">
         <div className="flex justify-between items-center px-4 md:px-6 gap-4 md:gap-8">
           {/* Logo - 좌측 끝에 붙임 */}
           <button
             onClick={handleLogoClick}
-            className="flex items-center gap-1 md:gap-2 hover:opacity-80 transition-opacity flex-shrink-0"
+            className="flex items-center gap-1 md:gap-2 hover:opacity-80 transition-opacity flex-shrink-0 active:scale-95"
             title={t('about.title')}
           >
-            <div className="w-10 h-10 bg-gradient-to-br from-[#1a4d7a] to-[#d4af37] rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">장•부</span>
+            <div className="w-9 h-9 md:w-10 md:h-10 bg-gradient-to-br from-[#1a4d7a] to-[#d4af37] rounded-lg flex items-center justify-center flex-shrink-0">
+              <span className="text-white font-bold text-xs md:text-sm">장•부</span>
             </div>
-            <h1 className="text-base md:text-lg font-bold text-[#1a4d7a] hidden sm:inline whitespace-nowrap">
+            <h1 className="text-sm md:text-lg font-bold text-[#1a4d7a] hidden sm:inline whitespace-nowrap">
               {t('about.title')}
             </h1>
           </button>

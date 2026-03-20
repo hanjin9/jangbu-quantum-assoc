@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
       {/* Hero Section with FIXED Image */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative h-screen md:h-screen flex items-center justify-center overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
@@ -23,13 +23,13 @@ export default function Home() {
         </div>
         
         <div className="relative z-10 text-center px-4 max-w-2xl">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
+          <h1 className="text-3xl md:text-7xl font-bold text-white mb-4 md:mb-6">
             양자 에너지로 <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">건강을 회복하세요</span>
           </h1>
-          <p className="text-xl text-gray-200 mb-8">
+          <p className="text-base md:text-xl text-gray-200 mb-6 md:mb-8">
             전문 양자요법 관리사와 함께 신체의 에너지 밸런스를 회복하고 건강한 삶을 시작하세요
           </p>
-          <div className="flex gap-4 justify-center flex-wrap">
+          <div className="flex gap-2 md:gap-4 justify-center flex-wrap text-sm md:text-base">
             <Button
               size="lg"
               className="bg-amber-500 hover:bg-amber-600 text-white px-8"

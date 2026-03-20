@@ -22,6 +22,7 @@ import SimpleLogin from "./pages/SimpleLogin";
 import ProfileEdit from "./pages/ProfileEdit";
 import ProfileEditWithImage from "./pages/ProfileEditWithImage";
 import Academy from "./pages/Academy";
+import { BottomNavBar } from "./components/BottomNavBar";
 
 function Router() {
   return (
@@ -56,9 +57,10 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <GlobalHeader />
-          <main className="min-h-screen">
+          <main className="min-h-screen pb-20">
             <Router />
           </main>
+          <BottomNavBar />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
