@@ -9,8 +9,8 @@ export function BottomNavBar() {
     { icon: BookOpen, label: '교육', path: '/academy', id: 'academy' },
     { icon: Phone, label: '상담', path: '/appointments', id: 'appointments' },
     { icon: Home, label: '홈', path: '/', id: 'home', primary: true },
-    { icon: Users, label: '커뮤니티', path: '/community', id: 'community' },
     { icon: User, label: '마이', path: '/profile', id: 'profile' },
+    { icon: Users, label: '커뮤니티', path: '/community', id: 'community' },
   ];
 
   const isActive = (path: string) => {
