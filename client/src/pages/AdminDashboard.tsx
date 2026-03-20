@@ -100,6 +100,27 @@ export default function AdminDashboard() {
     bounced: emailLogs.filter(e => e.status === 'bounced').length,
   };
 
+  // 회원 관리 데이터
+  const users = [
+    { id: 1, name: '김민지', email: 'minzi@example.com', tier: 'Gold', joinDate: '2026-01-15', status: '활성' },
+    { id: 2, name: '이준호', email: 'junho@example.com', tier: 'Platinum', joinDate: '2026-02-01', status: '활성' },
+    { id: 3, name: '박수진', email: 'sujin@example.com', tier: 'Silver', joinDate: '2026-02-20', status: '활성' },
+  ];
+
+  // 게시물 관리 데이터
+  const posts = [
+    { id: 1, author: '김민지', title: '양자요법 초급 강의 후기', category: '후기', date: '2026-03-19', status: '승인' },
+    { id: 2, author: '이준호', title: '에너지 진단법 질문있습니다', category: '질문', date: '2026-03-18', status: '승인' },
+    { id: 3, author: '박수진', title: '신입 회원 인사드립니다', category: '소개', date: '2026-03-17', status: '대기' },
+  ];
+
+  // 결제 관리 데이터
+  const payments = [
+    { id: 1, user: '김민지', tier: 'Gold', amount: '₩59,900', date: '2026-03-15', status: '완료' },
+    { id: 2, user: '이준호', tier: 'Platinum', amount: '₩99,900', date: '2026-03-10', status: '완료' },
+    { id: 3, user: '박수진', tier: 'Silver', amount: '₩29,900', date: '2026-03-01', status: '완료' },
+  ];
+
   const chartData = [
     { name: 'Silver', value: subscriptions.filter(s => s.tierId === 'silver').length },
     { name: 'Gold', value: subscriptions.filter(s => s.tierId === 'gold').length },
@@ -153,10 +174,12 @@ export default function AdminDashboard() {
 
         {/* Tabs */}
         <Tabs defaultValue="orders" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="orders">주문 관리</TabsTrigger>
             <TabsTrigger value="subscriptions">구독 모니터링</TabsTrigger>
-            <TabsTrigger value="emails">이메일 로그</TabsTrigger>
+            <TabsTrigger value="users">회원 관리</TabsTrigger>
+            <TabsTrigger value="posts">게시물 관리</TabsTrigger>
+            <TabsTrigger value="payments">결제 관리</TabsTrigger>
             <TabsTrigger value="analytics">분석</TabsTrigger>
           </TabsList>
 
@@ -232,6 +255,119 @@ export default function AdminDashboard() {
                           </span>
                         </td>
                         <td className="py-3">{sub.currentPeriodEnd}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </Card>
+          </TabsContent>
+
+          {/* User Management Tab */}
+          <TabsContent value="users" className="space-y-4">
+            <Card className="p-6">
+              <h2 className="text-xl font-bold mb-4">회원 관리</h2>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="border-b">
+                    <tr className="text-left">
+                      <th className="pb-2 font-semibold">이름</th>
+                      <th className="pb-2 font-semibold">이메일</th>
+                      <th className="pb-2 font-semibold">멤버십</th>
+                      <th className="pb-2 font-semibold">가입일</th>
+                      <th className="pb-2 font-semibold">상태</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users.map(user => (
+                      <tr key={user.id} className="border-b hover:bg-muted/50">
+                        <td className="py-3">{user.name}</td>
+                        <td className="py-3">{user.email}</td>
+                        <td className="py-3 capitalize">{user.tier}</td>
+                        <td className="py-3">{user.joinDate}</td>
+                        <td className="py-3">
+                          <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                            user.status === '활성' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                          }`}>
+                            {user.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </Card>
+          </TabsContent>
+
+          {/* Post Management Tab */}
+          <TabsContent value="posts" className="space-y-4">
+            <Card className="p-6">
+              <h2 className="text-xl font-bold mb-4">게시물 관리</h2>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="border-b">
+                    <tr className="text-left">
+                      <th className="pb-2 font-semibold">제목</th>
+                      <th className="pb-2 font-semibold">작성자</th>
+                      <th className="pb-2 font-semibold">카테고리</th>
+                      <th className="pb-2 font-semibold">작성일</th>
+                      <th className="pb-2 font-semibold">상태</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {posts.map(post => (
+                      <tr key={post.id} className="border-b hover:bg-muted/50">
+                        <td className="py-3">{post.title}</td>
+                        <td className="py-3">{post.author}</td>
+                        <td className="py-3">{post.category}</td>
+                        <td className="py-3">{post.date}</td>
+                        <td className="py-3">
+                          <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                            post.status === '승인' ? 'bg-green-100 text-green-800' :
+                            post.status === '대기' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-red-100 text-red-800'
+                          }`}>
+                            {post.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </Card>
+          </TabsContent>
+
+          {/* Payment Management Tab */}
+          <TabsContent value="payments" className="space-y-4">
+            <Card className="p-6">
+              <h2 className="text-xl font-bold mb-4">결제 관리</h2>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="border-b">
+                    <tr className="text-left">
+                      <th className="pb-2 font-semibold">회원명</th>
+                      <th className="pb-2 font-semibold">멤버십</th>
+                      <th className="pb-2 font-semibold">금액</th>
+                      <th className="pb-2 font-semibold">결제일</th>
+                      <th className="pb-2 font-semibold">상태</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {payments.map(payment => (
+                      <tr key={payment.id} className="border-b hover:bg-muted/50">
+                        <td className="py-3">{payment.user}</td>
+                        <td className="py-3 capitalize">{payment.tier}</td>
+                        <td className="py-3">{payment.amount}</td>
+                        <td className="py-3">{payment.date}</td>
+                        <td className="py-3">
+                          <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                            payment.status === '완료' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                          }`}>
+                            {payment.status}
+                          </span>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
