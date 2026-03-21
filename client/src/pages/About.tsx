@@ -25,6 +25,25 @@ export default function About() {
         </div>
       </section>
 
+      {/* 협회 소개 영상 */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-8 text-yellow-400 text-center">협회 소개 영상</h2>
+          <div className="aspect-video bg-black rounded-lg overflow-hidden border border-yellow-400/20 mb-12">
+            <video
+              width="100%"
+              height="100%"
+              controls
+              className="w-full h-full"
+              poster="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/video_frame_1_opening-C2BBqsUQXWUy4We9jL95Fx.webp"
+            >
+              <source src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663351563633/EoMpLezanDhEiQXx.mp4" type="video/mp4" />
+              브라우저가 HTML5 비디오를 지원하지 않습니다.
+            </video>
+          </div>
+        </div>
+      </section>
+
       {/* 협회 소개 */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-800">
         <div className="max-w-4xl mx-auto">
