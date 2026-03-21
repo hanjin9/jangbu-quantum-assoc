@@ -33,10 +33,33 @@ export default function About() {
             <div className="bg-slate-700 p-8 rounded-lg border border-yellow-400/20">
               <h3 className="text-2xl font-bold text-yellow-400 mb-4">설립 배경</h3>
               <p className="text-lg leading-relaxed">
-                장•부 양자요법 관리사 협회는 현대인의 건강 문제를 해결하기 위해 양자 에너지 치료법의 전문성과 신뢰성을 확보하고자 설립되었습니다. 
-                전통 의학과 현대 과학을 결합한 양자요법은 신체의 에너지 균형을 회복시켜 자연 치유력을 극대화하는 혁신적인 건강 관리 방법입니다. 
-                우리 협회는 이러한 양자요법의 보급과 전문가 양성을 통해 국민 건강 증진에 기여하고 있습니다.
+                장•부 양자요법 관리사 협회는 현대 의학과 양자 물리학을 결합한 혁신적인 건강 관리 방법을 보급하기 위해 설립되었습니다. 
+                양자요법은 인체의 세포 단위에서 에너지 균형을 회복시켜 자연 치유력을 극대화하는 과학적 접근법입니다. 
+                IBM의 16큐비트 양자 프로세서를 활용한 신약 개발 사례에서 보듯이, 양자 기술은 의료 혁신의 핵심입니다. 
+                우리 협회는 이러한 양자 에너지 치료법의 전문성을 확보하고, 체계적인 교육과 자격 관리를 통해 국민 건강 증진에 기여합니다.
               </p>
+            </div>
+
+            <div className="bg-slate-700 p-8 rounded-lg border border-yellow-400/20">
+              <h3 className="text-2xl font-bold text-yellow-400 mb-4">양자요법의 과학적 근거</h3>
+              <div className="space-y-4 text-gray-300">
+                <p>
+                  <strong className="text-yellow-300">세포 에너지 활성화:</strong> 양자 에너지는 인체의 세포 기능과 면역력을 강화하며, 
+                  세포 하나하나가 활성화되어 건강해집니다.
+                </p>
+                <p>
+                  <strong className="text-yellow-300">혈액순환 촉진:</strong> 원적외선과 인체 세포 간의 공명 현상을 통해 혈액순환을 개선하고 
+                  체온을 올려 면역력을 증강합니다.
+                </p>
+                <p>
+                  <strong className="text-yellow-300">자율신경 조절:</strong> 432Hz 자연 주파수와 영점장(Zero Point Field) 공명을 통해 
+                  심층 이완과 자율신경 회복을 돕습니다.
+                </p>
+                <p>
+                  <strong className="text-yellow-300">만성질환 개선:</strong> 암의 예방과 완화, 만성 통증과 만성 염증 해소, 
+                  냉기 제거 등 다양한 건강 문제 해결에 효과적입니다.
+                </p>
+              </div>
             </div>
 
             <div className="bg-slate-700 p-8 rounded-lg border border-yellow-400/20">
@@ -53,11 +76,11 @@ export default function About() {
               <ul className="space-y-4 text-lg">
                 <li className="flex items-start">
                   <span className="text-yellow-400 mr-4 font-bold">•</span>
-                  <span><strong className="text-yellow-300">전문가 양성:</strong> 체계적인 교육과정을 통해 양자요법 전문가를 양성하고 자격 관리</span>
+                  <span><strong className="text-yellow-300">전문가 양성:</strong> 6개월 이상의 체계적인 교육과정을 통해 양자요법 전문가를 양성하고 국제 수준의 자격 관리</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-yellow-400 mr-4 font-bold">•</span>
-                  <span><strong className="text-yellow-300">기술 개발:</strong> 양자요법의 과학적 근거를 강화하고 새로운 치료법 연구 및 개발</span>
+                  <span><strong className="text-yellow-300">기술 개발:</strong> 양자요법의 과학적 근거를 강화하고 5G 테라헤르츠 양자 에너지 기술 등 새로운 치료법 연구 및 개발</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-yellow-400 mr-4 font-bold">•</span>
@@ -80,26 +103,59 @@ export default function About() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-gradient-to-br from-yellow-400/10 to-transparent p-8 rounded-lg border border-yellow-400/30">
               <h3 className="text-2xl font-bold text-yellow-400 mb-4">신뢰성</h3>
-              <p className="text-gray-300">과학적 근거에 기반한 양자요법으로 신뢰할 수 있는 건강 관리 서비스 제공</p>
+              <p className="text-gray-300">양자 물리학과 현대 의학에 기반한 과학적 근거로 신뢰할 수 있는 건강 관리 서비스 제공</p>
             </div>
             <div className="bg-gradient-to-br from-yellow-400/10 to-transparent p-8 rounded-lg border border-yellow-400/30">
               <h3 className="text-2xl font-bold text-yellow-400 mb-4">전문성</h3>
-              <p className="text-gray-300">체계적인 교육과정과 자격 관리를 통한 전문가 집단의 형성</p>
+              <p className="text-gray-300">국제 수준의 체계적인 교육과정과 자격 관리를 통한 전문가 집단의 형성</p>
+            </div>
+            <div className="bg-gradient-to-br from-yellow-400/10 to-transparent p-8 rounded-lg border border-yellow-400/30">
+              <h3 className="text-2xl font-bold text-yellow-400 mb-4">혁신</h3>
+              <p className="text-gray-300">5G 테라헤르츠 기술, 양자 색채 요법 등 지속적인 연구와 개발을 통한 혁신</p>
             </div>
             <div className="bg-gradient-to-br from-yellow-400/10 to-transparent p-8 rounded-lg border border-yellow-400/30">
               <h3 className="text-2xl font-bold text-yellow-400 mb-4">인도주의</h3>
               <p className="text-gray-300">모든 사람의 건강한 삶을 위해 헌신하는 인도주의적 정신</p>
             </div>
-            <div className="bg-gradient-to-br from-yellow-400/10 to-transparent p-8 rounded-lg border border-yellow-400/30">
-              <h3 className="text-2xl font-bold text-yellow-400 mb-4">혁신</h3>
-              <p className="text-gray-300">지속적인 연구와 개발을 통한 양자요법의 혁신과 발전</p>
+          </div>
+        </div>
+      </section>
+
+      {/* 양자요법의 효과 */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-800">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-12 text-yellow-400">양자요법의 주요 효과</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-slate-700 p-6 rounded-lg border border-yellow-400/20">
+              <h3 className="text-lg font-bold text-yellow-400 mb-3">✓ 면역력 강화</h3>
+              <p className="text-gray-300">체온 상승을 통한 면역 기능 증강 및 감기 빈도 70% 감소</p>
+            </div>
+            <div className="bg-slate-700 p-6 rounded-lg border border-yellow-400/20">
+              <h3 className="text-lg font-bold text-yellow-400 mb-3">✓ 통증 완화</h3>
+              <p className="text-gray-300">만성 요통, 어깨 통증 등 85% 이상 통증 감소</p>
+            </div>
+            <div className="bg-slate-700 p-6 rounded-lg border border-yellow-400/20">
+              <h3 className="text-lg font-bold text-yellow-400 mb-3">✓ 피로 회복</h3>
+              <p className="text-gray-300">만성 피로 극복 및 에너지 수준 90% 회복</p>
+            </div>
+            <div className="bg-slate-700 p-6 rounded-lg border border-yellow-400/20">
+              <h3 className="text-lg font-bold text-yellow-400 mb-3">✓ 스트레스 해소</h3>
+              <p className="text-gray-300">스트레스 80% 감소 및 정서 안정화</p>
+            </div>
+            <div className="bg-slate-700 p-6 rounded-lg border border-yellow-400/20">
+              <h3 className="text-lg font-bold text-yellow-400 mb-3">✓ 혈액순환 개선</h3>
+              <p className="text-gray-300">혈류량 증가 및 신진대사 활성화</p>
+            </div>
+            <div className="bg-slate-700 p-6 rounded-lg border border-yellow-400/20">
+              <h3 className="text-lg font-bold text-yellow-400 mb-3">✓ 피부 건강</h3>
+              <p className="text-gray-300">피부 톤 개선, 트러블 감소, 탄력 증가</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* 조직 구조 */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-800">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl sm:text-4xl font-bold mb-12 text-yellow-400">조직 구조</h2>
           <div className="bg-slate-700 p-8 rounded-lg border border-yellow-400/20">
@@ -110,11 +166,11 @@ export default function About() {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-yellow-400 mb-2">교육 위원회</h3>
-                <p className="text-gray-300">양자요법 교육과정 개발 및 운영, 자격 관리</p>
+                <p className="text-gray-300">6개월 이상의 양자요법 교육과정 개발 및 운영, 국제 수준의 자격 관리</p>
               </div>
               <div>
                 <h3 className="text-xl font-bold text-yellow-400 mb-2">연구 개발 위원회</h3>
-                <p className="text-gray-300">양자요법 기술 연구 및 신규 프로그램 개발</p>
+                <p className="text-gray-300">양자 색채 요법, 5G 테라헤르츠 기술 등 신규 치료법 개발</p>
               </div>
               <div>
                 <h3 className="text-xl font-bold text-yellow-400 mb-2">윤리 및 규정 위원회</h3>
@@ -122,7 +178,7 @@ export default function About() {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-yellow-400 mb-2">사회 공헌 위원회</h3>
-                <p className="text-gray-300">지역사회 건강 증진 프로그램 운영</p>
+                <p className="text-gray-300">지역사회 건강 증진 프로그램 운영 및 취약계층 지원</p>
               </div>
             </div>
           </div>

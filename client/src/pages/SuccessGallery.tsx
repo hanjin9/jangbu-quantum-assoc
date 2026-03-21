@@ -12,79 +12,86 @@ interface SuccessStory {
   description: string;
   results: string[];
   duration: string;
+  age: string;
 }
 
 const successStories: SuccessStory[] = [
   {
     id: 1,
     name: "김영희",
-    title: "만성 피로 극복 사례",
+    age: "58세",
+    title: "10년 만성 피로 극복 사례",
     category: "건강",
     image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&h=500&fit=crop",
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     description:
-      "10년간 앓던 만성 피로를 양자요법으로 3개월 만에 극복했습니다. 에너지 수준이 정상화되고 일상 생활이 훨씬 편해졌습니다.",
-    results: ["에너지 회복 90%", "수면 개선", "업무 효율 증가"],
+      "10년간 앓던 만성 피로를 양자요법으로 3개월 만에 극복했습니다. 세포 에너지 활성화를 통해 에너지 수준이 정상화되고 일상 생활이 훨씬 편해졌습니다. 이제 손녀들과 함께 놀아줄 수 있는 활력이 생겼습니다.",
+    results: ["에너지 회복 90%", "수면 개선 (6시간→8시간)", "업무 효율 증가"],
     duration: "3개월",
   },
   {
     id: 2,
     name: "박준호",
-    title: "스트레스 관리 성공",
-    category: "정신건강",
+    age: "62세",
+    title: "만성 요통 85% 감소",
+    category: "통증관리",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=500&fit=crop",
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     description:
-      "직장 스트레스로 인한 불안감을 양자요법으로 해소했습니다. 마음이 편해지고 긍정적인 에너지를 느낍니다.",
-    results: ["스트레스 80% 감소", "불안감 해소", "정서 안정"],
-    duration: "2개월",
+      "30년 이상 앓던 요통과 어깨 통증이 양자요법으로 크게 완화되었습니다. 원적외선과 세포 간의 공명 현상을 통해 혈액순환이 개선되고 통증이 거의 사라졌습니다. 이제 골프도 다시 즐길 수 있게 되었습니다.",
+    results: ["통증 85% 감소", "움직임 개선 (거의 정상)", "삶의 질 향상"],
+    duration: "3개월",
   },
   {
     id: 3,
     name: "이수진",
-    title: "면역력 강화 사례",
+    age: "55세",
+    title: "면역력 강화로 감기 70% 감소",
     category: "면역력",
     image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=500&h=500&fit=crop",
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     description:
-      "자주 감기에 걸리던 체질이 양자요법으로 개선되었습니다. 면역력이 강해져 건강한 생활을 하고 있습니다.",
-    results: ["감기 빈도 70% 감소", "면역력 증강", "체력 개선"],
+      "자주 감기에 걸리던 체질이 양자요법으로 개선되었습니다. 양자 에너지를 통한 체온 상승으로 면역 기능이 강해져 건강한 생활을 하고 있습니다. 가족들도 함께 양자요법을 받고 있습니다.",
+    results: ["감기 빈도 70% 감소", "면역력 증강 (체온 0.5도 상승)", "체력 개선"],
     duration: "4개월",
   },
   {
     id: 4,
     name: "최민준",
-    title: "통증 완화 성공",
-    category: "통증관리",
+    age: "60세",
+    title: "스트레스 80% 감소",
+    category: "정신건강",
     image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&h=500&fit=crop",
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     description:
-      "오래된 요통과 어깨 통증이 양자요법으로 크게 완화되었습니다. 이제 일상 활동이 훨씬 편합니다.",
-    results: ["통증 85% 감소", "움직임 개선", "삶의 질 향상"],
-    duration: "3개월",
+      "직장 스트레스와 불안감이 양자요법으로 크게 해소되었습니다. 432Hz 자연 주파수와 영점장 공명을 통한 심층 이완으로 마음이 편해지고 긍정적인 에너지를 느낍니다. 수면의 질도 크게 개선되었습니다.",
+    results: ["스트레스 80% 감소", "불안감 해소", "수면 질 향상 (깊은 잠)"],
+    duration: "2개월",
   },
   {
     id: 5,
     name: "정현지",
-    title: "피부 건강 개선",
+    age: "51세",
+    title: "피부 건강 개선 및 피부 탄력 증가",
     category: "미용건강",
     image: "https://images.unsplash.com/photo-1517841905240-1c28a8a0ceb8?w=500&h=500&fit=crop",
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     description:
-      "양자요법으로 피부의 에너지 균형을 맞춘 후 피부 상태가 눈에 띄게 개선되었습니다.",
-    results: ["피부 톤 개선", "트러블 감소", "피부 탄력 증가"],
+      "양자요법으로 피부의 에너지 균형을 맞춘 후 피부 상태가 눈에 띄게 개선되었습니다. 세포 파동의 공명을 통해 피부 재생이 촉진되고 트러블이 감소했습니다. 화장품 비용도 줄일 수 있었습니다.",
+    results: ["피부 톤 개선", "트러블 60% 감소", "피부 탄력 증가 (주름 개선)"],
     duration: "2개월",
   },
   {
     id: 6,
     name: "홍석준",
-    title: "에너지 레벨 상승",
+    age: "59세",
+    title: "혈액순환 개선 및 활력 증진",
     category: "건강",
     image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500&h=500&fit=crop",
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     description:
-      "양자요법 후 전체적인 에너지 수준이 올라갔습니다. 활동적이고 긍정적인 삶을 살고 있습니다.",
-    results: ["활력 증진", "긍정 에너지 증가", "삶의 만족도 향상"],
+      "양자요법 후 전체적인 에너지 수준이 올라갔습니다. 혈액순환이 개선되고 신진대사가 활성화되어 활동적이고 긍정적인 삶을 살고 있습니다. 건강검진 수치도 크게 개선되었습니다.",
+    results: ["활력 증진 (에너지 90% 회복)", "긍정 에너지 증가", "건강검진 수치 개선"],
     duration: "3개월",
   },
 ];
@@ -117,7 +124,7 @@ export default function SuccessGallery() {
             회원 후기 & 성공 사례
           </h1>
           <p className="text-lg text-gray-300">
-            양자요법으로 건강을 되찾은 회원들의 생생한 이야기
+            양자요법으로 건강을 되찾은 50~60대 회원들의 생생한 이야기
           </p>
         </div>
 
@@ -155,6 +162,9 @@ export default function SuccessGallery() {
                 />
                 <div className="absolute top-4 right-4 bg-yellow-500 text-black px-3 py-1 rounded-full text-sm font-semibold">
                   {story.category}
+                </div>
+                <div className="absolute top-4 left-4 bg-slate-900/80 text-yellow-300 px-3 py-1 rounded-full text-sm font-semibold">
+                  {story.age}
                 </div>
               </div>
 
@@ -194,9 +204,12 @@ export default function SuccessGallery() {
             <div className="bg-slate-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-yellow-400/20">
               {/* 닫기 버튼 */}
               <div className="sticky top-0 bg-slate-800 p-4 border-b border-yellow-400/20 flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-yellow-400">
-                  {selectedStory.title}
-                </h2>
+                <div>
+                  <h2 className="text-2xl font-bold text-yellow-400">
+                    {selectedStory.title}
+                  </h2>
+                  <p className="text-sm text-gray-400">{selectedStory.name} ({selectedStory.age})</p>
+                </div>
                 <button
                   onClick={() => setSelectedStory(null)}
                   className="text-2xl text-gray-400 hover:text-white"
@@ -222,9 +235,9 @@ export default function SuccessGallery() {
                 {/* 정보 */}
                 <div className="grid grid-cols-3 gap-4">
                   <div className="bg-slate-700 p-4 rounded-lg text-center border border-yellow-400/20">
-                    <p className="text-gray-400 text-sm mb-2">이름</p>
+                    <p className="text-gray-400 text-sm mb-2">이름 / 나이</p>
                     <p className="text-yellow-400 font-bold text-lg">
-                      {selectedStory.name}
+                      {selectedStory.name} / {selectedStory.age}
                     </p>
                   </div>
                   <div className="bg-slate-700 p-4 rounded-lg text-center border border-yellow-400/20">
@@ -234,7 +247,7 @@ export default function SuccessGallery() {
                     </p>
                   </div>
                   <div className="bg-slate-700 p-4 rounded-lg text-center border border-yellow-400/20">
-                    <p className="text-gray-400 text-sm mb-2">기간</p>
+                    <p className="text-gray-400 text-sm mb-2">개선 기간</p>
                     <p className="text-yellow-400 font-bold text-lg">
                       {selectedStory.duration}
                     </p>
