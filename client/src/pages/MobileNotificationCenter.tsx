@@ -18,6 +18,9 @@ export function MobileNotificationCenter() {
   const [devices, setDevices] = useState<any[]>([]);
   const [filter, setFilter] = useState<'all' | 'unread' | 'critical'>('all');
   const [selectedAlert, setSelectedAlert] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [scheduleTime, setScheduleTime] = useState('');
 
   useEffect(() => {
     // 더미 데이터 로드
@@ -153,6 +156,32 @@ export function MobileNotificationCenter() {
     setAlerts(alerts.filter((a) => a.createdAt > cutoffDate));
   };
 
+  const handleSearchAlerts = (query: string) => {
+    setSearchQuery(query);
+  };
+
+  const handleAddTag = (alertId: string, tag: string) => {
+    setAlerts(
+      alerts.map((a) => {
+        if (a.id === alertId) {
+          return { ...a, tags: [...(a.tags || []), tag] };
+        }
+        return a;
+      })
+    );
+  };
+
+  const handleScheduleNotification = (time: string) => {
+    setScheduleTime(time);
+    alert(`알림이 ${time}에 발송되도록 예약되었습니다.`);
+  };
+
+  const searchedAlerts = alerts.filter(
+    (a) =>
+      a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      a.message.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const formatTime = (date: Date) => {
     const now = new Date();
     const diff = now.getTime() - date.getTime();
@@ -180,7 +209,19 @@ export function MobileNotificationCenter() {
     }
   };
 
-  const filteredAlerts = getFilteredAlerts();
+  const getFilteredByType = () => {
+    const baseAlerts = searchedAlerts.length > 0 ? searchedAlerts : alerts;
+    switch (filter) {
+      case 'unread':
+        return baseAlerts.filter((a) => !a.isRead);
+      case 'critical':
+        return baseAlerts.filter((a) => a.priority === 'critical');
+      default:
+        return baseAlerts;
+    }
+  };
+
+  const filteredAlerts = getFilteredByType();
   const unreadCount = alerts.filter((a) => !a.isRead).length;
 
   return (
@@ -277,6 +318,17 @@ export function MobileNotificationCenter() {
               </Button>
             </div>
 
+            {/* 알림 검색 */}
+            <div className="mb-6">
+              <input
+                type="text"
+                placeholder="알림 검색 (제목/메시지)..."
+                value={searchQuery}
+                onChange={(e) => handleSearchAlerts(e.target.value)}
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37]"
+              />
+            </div>
+
             {/* 알림 관리 옵션 */}
             <div className="flex gap-2 mb-6 flex-wrap">
               <Button
@@ -302,6 +354,25 @@ export function MobileNotificationCenter() {
                 className="text-xs"
               >
                 CSV 내보내기
+              </Button>
+            </div>
+
+            {/* 알림 예약 발송 */}
+            <div className="mb-6 flex gap-2">
+              <input
+                type="datetime-local"
+                value={scheduleTime}
+                onChange={(e) => setScheduleTime(e.target.value)}
+                className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white text-sm focus:outline-none focus:border-[#d4af37]"
+              />
+              <Button
+                onClick={() => handleScheduleNotification(scheduleTime)}
+                variant="outline"
+                size="sm"
+                className="text-xs"
+                disabled={!scheduleTime}
+              >
+                예약 발송
               </Button>
             </div>
 
