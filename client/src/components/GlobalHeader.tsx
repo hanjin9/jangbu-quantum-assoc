@@ -38,7 +38,9 @@ export function GlobalHeader() {
     { label: '성공사례', path: '/success-gallery' },
     { label: t('community.title'), path: '/community' },
     { label: t('livestream.title'), path: '/livestream' },
+    { label: '회원 등급', path: '/membership-tiers' },
     { label: '알림', path: '/notifications' },
+    { label: '통계', path: '/admin-stats' },
     { label: t('common.dashboard'), path: '/dashboard' },
   ];
 
