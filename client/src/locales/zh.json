@@ -18,14 +18,14 @@
   },
   "hero": {
     "title": "用量子能量恢复您的健康",
-    "subtitle": "与我们的认证量子疗法医生一起开始您的健康之旅，恢复您身体的能量平衡",
+    "subtitle": "与专业的量子疗法从业者合作，恢复身体的能量平衡，开始健康的生活",
     "cta_membership": "加入会员",
     "cta_appointment": "预约咨询"
   },
   "about": {
-    "title": "长部量子疗法医生协会",
-    "description": "由认证量子疗法医生组成的协会，致力于通过科学的量子疗法支持健康生活",
-    "practitioners": "认证医生",
+    "title": "长•部量子疗法从业者协会",
+    "description": "由专业量子疗法从业者组成的协会，通过科学基础的量子疗法支持健康生活",
+    "practitioners": "认证从业者",
     "experience": "年经验"
   },
   "membership": {
@@ -34,7 +34,7 @@
     "premium": "高级",
     "vip": "VIP",
     "per_month": "/月",
-    "features": "功能",
+    "features": "主要功能",
     "select": "选择"
   },
   "dashboard": {
@@ -43,7 +43,7 @@
     "orders": "订单历史",
     "appointments": "预约",
     "profile": "个人资料",
-    "edit_profile": "编辑资料"
+    "edit_profile": "编辑个人资料"
   },
   "community": {
     "title": "社区",
@@ -62,7 +62,7 @@
     "failed": "未通过"
   },
   "certification": {
-    "title": "证书",
+    "title": "认证",
     "verify": "验证证书",
     "download": "下载",
     "qr_code": "二维码"
@@ -77,7 +77,27 @@
   "chatbot": {
     "title": "AI咨询",
     "ask_question": "提问",
-    "response": "回复"
+    "response": "回应"
+  },
+  "team": {
+    "title": "协会高管和专家",
+    "description": "量子疗法领域的顶级专家齐聚一堂",
+    "position": "职位",
+    "qualification": "资格和经验",
+    "experience": "经验",
+    "contact": "联系"
+  },
+  "blog": {
+    "title": "新闻通讯和博客",
+    "description": "定期更新最新的量子疗法研究、会员活动和成功案例",
+    "category_research": "研究",
+    "category_success": "成功案例",
+    "category_news": "协会新闻",
+    "category_education": "教育",
+    "read_time": "分钟",
+    "read_more": "阅读更多",
+    "author": "作者",
+    "date": "日期"
   },
   "payment": {
     "total": "总计",
@@ -92,6 +112,6 @@
     "required_field": "此字段为必填项",
     "invalid_email": "无效的电子邮件地址",
     "password_mismatch": "密码不匹配",
-    "something_wrong": "出错了"
+    "something_wrong": "出了问题"
   }
 }

@@ -18,14 +18,14 @@
   },
   "hero": {
     "title": "量子エネルギーで健康を取り戻す",
-    "subtitle": "認定量子療法士と一緒に健康への道を歩み始め、あなたの身体のエネルギーバランスを回復させましょう",
+    "subtitle": "専門の量子療法施術者と一緒に、体のエネルギーバランスを回復し、健康的な生活を始めましょう",
     "cta_membership": "メンバーシップに参加",
     "cta_appointment": "相談予約"
   },
   "about": {
-    "title": "長部量子療法士協会",
-    "description": "認定量子療法士で構成された協会で、科学的根拠に基づいた量子療法を通じて健康的な生活をサポートしています",
-    "practitioners": "認定療法士",
+    "title": "長•部量子療法施術者協会",
+    "description": "科学的根拠に基づく量子療法を通じて、健康的な生活をサポートする専門家の協会",
+    "practitioners": "認定施術者",
     "experience": "年の経験"
   },
   "membership": {
@@ -34,7 +34,7 @@
     "premium": "プレミアム",
     "vip": "VIP",
     "per_month": "/月",
-    "features": "機能",
+    "features": "主な機能",
     "select": "選択"
   },
   "dashboard": {
@@ -43,27 +43,27 @@
     "orders": "注文履歴",
     "appointments": "予約",
     "profile": "プロフィール情報",
-    "edit_profile": "プロフィールを編集"
+    "edit_profile": "プロフィール編集"
   },
   "community": {
     "title": "コミュニティ",
     "posts": "投稿",
     "discussions": "ディスカッション",
-    "create_post": "投稿を作成",
+    "create_post": "投稿作成",
     "reply": "返信"
   },
   "exam": {
     "title": "実技試験",
-    "start_exam": "試験を開始",
+    "start_exam": "試験開始",
     "questions": "問題",
-    "submit": "送信",
+    "submit": "提出",
     "result": "結果",
     "passed": "合格",
     "failed": "不合格"
   },
   "certification": {
-    "title": "認定証",
-    "verify": "認定証を検証",
+    "title": "認定",
+    "verify": "認定書を確認",
     "download": "ダウンロード",
     "qr_code": "QRコード"
   },
@@ -71,13 +71,33 @@
     "title": "ライブ講座",
     "join": "参加",
     "chat": "チャット",
-    "send_message": "メッセージを送信",
+    "send_message": "メッセージ送信",
     "instructor": "講師"
   },
   "chatbot": {
     "title": "AI相談",
     "ask_question": "質問する",
-    "response": "応答"
+    "response": "回答"
+  },
+  "team": {
+    "title": "協会役員と専門家",
+    "description": "量子療法分野のトップ専門家が一堂に集まります",
+    "position": "職位",
+    "qualification": "資格と経験",
+    "experience": "経験",
+    "contact": "連絡先"
+  },
+  "blog": {
+    "title": "ニュースレター&ブログ",
+    "description": "最新の量子療法研究、会員活動、成功事例を定期的に更新",
+    "category_research": "研究",
+    "category_success": "成功事例",
+    "category_news": "協会ニュース",
+    "category_education": "教育",
+    "read_time": "分",
+    "read_more": "もっと読む",
+    "author": "著者",
+    "date": "日付"
   },
   "payment": {
     "total": "合計",
@@ -89,9 +109,9 @@
     "cancel": "キャンセル"
   },
   "errors": {
-    "required_field": "このフィールドは必須です",
+    "required_field": "この項目は必須です",
     "invalid_email": "無効なメールアドレス",
     "password_mismatch": "パスワードが一致しません",
-    "something_wrong": "エラーが発生しました"
+    "something_wrong": "問題が発生しました"
   }
 }

@@ -17,16 +17,16 @@
     "japanese": "日本語"
   },
   "hero": {
-    "title": "Restore Your Health with Quantum Energy",
-    "subtitle": "Start your journey to wellness with our certified quantum therapy practitioners and restore your body's energy balance",
+    "title": "Recover Your Health with Quantum Energy",
+    "subtitle": "Work with professional quantum therapy practitioners to restore your body's energy balance and start a healthy life",
     "cta_membership": "Join Membership",
-    "cta_appointment": "Book Appointment"
+    "cta_appointment": "Book Consultation"
   },
   "about": {
     "title": "Jangbu Quantum Therapy Practitioners Association",
-    "description": "An association of certified quantum therapy practitioners dedicated to supporting healthy living through science-based quantum therapy",
+    "description": "An association of professional quantum therapy practitioners providing science-based quantum therapy for a healthy life",
     "practitioners": "Certified Practitioners",
-    "experience": "Years Experience"
+    "experience": "years experience"
   },
   "membership": {
     "basic": "Basic",
@@ -34,7 +34,7 @@
     "premium": "Premium",
     "vip": "VIP",
     "per_month": "/month",
-    "features": "Features",
+    "features": "Key Features",
     "select": "Select"
   },
   "dashboard": {
@@ -78,6 +78,26 @@
     "title": "AI Consultation",
     "ask_question": "Ask Question",
     "response": "Response"
+  },
+  "team": {
+    "title": "Association Executives and Experts",
+    "description": "Top experts in the field of quantum therapy work together",
+    "position": "Position",
+    "qualification": "Qualifications and Experience",
+    "experience": "Experience",
+    "contact": "Contact"
+  },
+  "blog": {
+    "title": "Newsletter & Blog",
+    "description": "Regularly updated with latest quantum therapy research, member activities, and success stories",
+    "category_research": "Research",
+    "category_success": "Success Stories",
+    "category_news": "Association News",
+    "category_education": "Education",
+    "read_time": "min",
+    "read_more": "Read More",
+    "author": "Author",
+    "date": "Date"
   },
   "payment": {
     "total": "Total",

@@ -79,6 +79,26 @@
     "ask_question": "질문하기",
     "response": "답변"
   },
+  "team": {
+    "title": "협회 임원진 및 전문가",
+    "description": "양자요법 분야의 최고 전문가들이 함께합니다",
+    "position": "직책",
+    "qualification": "자격 및 경력",
+    "experience": "경력",
+    "contact": "연락처"
+  },
+  "blog": {
+    "title": "뉴스레터 & 블로그",
+    "description": "양자요법 최신 연구, 회원 활동, 성공 사례를 정기적으로 업데이트합니다",
+    "category_research": "연구",
+    "category_success": "성공사례",
+    "category_news": "협회소식",
+    "category_education": "교육",
+    "read_time": "분",
+    "read_more": "자세히 읽기",
+    "author": "작성자",
+    "date": "날짜"
+  },
   "payment": {
     "total": "총액",
     "currency": "₩",

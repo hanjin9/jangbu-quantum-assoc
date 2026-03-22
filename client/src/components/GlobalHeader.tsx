@@ -33,6 +33,8 @@ export function GlobalHeader() {
     { label: t('common.home'), path: '/' },
     { label: t('common.about'), path: '/about' },
     { label: '아카데미', path: '/academy' },
+    { label: '전문가', path: '/team-profile' },
+    { label: '블로그', path: '/newsletter-blog' },
     { label: '성공사례', path: '/success-gallery' },
     { label: t('community.title'), path: '/community' },
     { label: t('livestream.title'), path: '/livestream' },

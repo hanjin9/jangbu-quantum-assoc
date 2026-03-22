@@ -25,6 +25,8 @@ import Academy from "./pages/Academy";
 import Settings from "./pages/Settings";
 import ChatConsultation from "./pages/ChatConsultation";
 import SuccessGallery from "./pages/SuccessGallery";
+import TeamProfile from "./pages/TeamProfile";
+import NewsletterBlog from "./pages/NewsletterBlog";
 import { BottomNavBar } from "./components/BottomNavBar";
 
 function Router() {
@@ -50,6 +52,8 @@ function Router() {
       <Route path={"/settings"} component={Settings} />
       <Route path={"/chat-consultation"} component={ChatConsultation} />
       <Route path={"/success-gallery"} component={SuccessGallery} />
+      <Route path={"/team-profile"} component={TeamProfile} />
+      <Route path={"/newsletter-blog"} component={NewsletterBlog} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

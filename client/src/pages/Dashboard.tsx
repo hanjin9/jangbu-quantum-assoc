@@ -101,7 +101,12 @@ export default function Dashboard() {
             <p className="text-gray-400">안녕하세요, {authUser?.name}님</p>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" size="sm" className="text-gray-300 border-gray-600 hover:bg-gray-800">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="text-gray-300 border-gray-600 hover:bg-gray-800 cursor-pointer"
+              onClick={() => navigate('/settings')}
+            >
               <Settings className="w-4 h-4 mr-2" />
               설정
             </Button>
@@ -123,11 +128,11 @@ export default function Dashboard() {
 
         {/* Main Content */}
         <Tabs defaultValue="subscription" className="space-y-6">
-          <TabsList className="bg-slate-800 border border-slate-700 grid w-full grid-cols-4">
-            <TabsTrigger value="subscription" className="data-[state=active]:bg-amber-500">구독 정보</TabsTrigger>
-            <TabsTrigger value="orders" className="data-[state=active]:bg-amber-500">주문 이력</TabsTrigger>
-            <TabsTrigger value="profile" className="data-[state=active]:bg-amber-500">프로필</TabsTrigger>
-            <TabsTrigger value="exam" className="data-[state=active]:bg-amber-500">실기시험</TabsTrigger>
+          <TabsList className="bg-slate-700 border border-slate-600 grid w-full grid-cols-4">
+            <TabsTrigger value="subscription" className="data-[state=active]:bg-amber-500 text-gray-200">구독 정보</TabsTrigger>
+            <TabsTrigger value="orders" className="data-[state=active]:bg-amber-500 text-gray-200">주문 이력</TabsTrigger>
+            <TabsTrigger value="profile" className="data-[state=active]:bg-amber-500 text-gray-200">프로필</TabsTrigger>
+            <TabsTrigger value="exam" className="data-[state=active]:bg-amber-500 text-gray-200">실기시험</TabsTrigger>
           </TabsList>
 
           {/* Subscription Tab */}

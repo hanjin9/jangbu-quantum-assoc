@@ -14,46 +14,104 @@
     "korean": "한국어",
     "english": "English",
     "chinese": "中文",
-    "japanese": "日本語",
-    "spanish": "Español"
+    "japanese": "日本語"
   },
   "hero": {
-    "title": "Recupere la salud con energía cuántica",
-    "subtitle": "Trabaje con profesionales certificados en terapia cuántica para restaurar el equilibrio energético de su cuerpo e iniciar una vida saludable",
+    "title": "Recupere su salud con energía cuántica",
+    "subtitle": "Trabaje con profesionales especializados en terapia cuántica para restaurar el equilibrio energético de su cuerpo e iniciar una vida saludable",
     "cta_membership": "Unirse a la membresía",
     "cta_appointment": "Reservar consulta"
   },
   "about": {
     "title": "Asociación de Profesionales de Terapia Cuántica Jangbu",
-    "description": "Una asociación de profesionales certificados en terapia cuántica que apoyan una vida saludable a través de terapia cuántica basada en la ciencia",
+    "description": "Una asociación de profesionales especializados en terapia cuántica que proporciona terapia cuántica basada en ciencia para una vida saludable",
     "practitioners": "Profesionales certificados",
     "experience": "años de experiencia"
   },
-  "academy": {
-    "title": "Academia de Terapia Cuántica",
-    "description": "Programas de capacitación completos para profesionales de terapia cuántica",
-    "course": "Curso",
-    "progress": "Progreso",
-    "certificate": "Certificado"
+  "membership": {
+    "basic": "Básico",
+    "standard": "Estándar",
+    "premium": "Premium",
+    "vip": "VIP",
+    "per_month": "/mes",
+    "features": "Características principales",
+    "select": "Seleccionar"
+  },
+  "dashboard": {
+    "welcome": "Bienvenido",
+    "subscriptions": "Información de suscripción",
+    "orders": "Historial de pedidos",
+    "appointments": "Citas",
+    "profile": "Información del perfil",
+    "edit_profile": "Editar perfil"
   },
   "community": {
     "title": "Comunidad",
-    "description": "Conecte con otros profesionales y comparta experiencias",
     "posts": "Publicaciones",
-    "members": "Miembros"
+    "discussions": "Discusiones",
+    "create_post": "Crear publicación",
+    "reply": "Responder"
+  },
+  "exam": {
+    "title": "Examen práctico",
+    "start_exam": "Iniciar examen",
+    "questions": "Preguntas",
+    "submit": "Enviar",
+    "result": "Resultado",
+    "passed": "Aprobado",
+    "failed": "Reprobado"
+  },
+  "certification": {
+    "title": "Certificación",
+    "verify": "Verificar certificado",
+    "download": "Descargar",
+    "qr_code": "Código QR"
   },
   "livestream": {
-    "title": "Transmisión en vivo",
-    "description": "Sesiones educativas en vivo con expertos",
-    "live": "EN VIVO",
-    "upcoming": "Próximas"
+    "title": "Clase en vivo",
+    "join": "Unirse",
+    "chat": "Chat",
+    "send_message": "Enviar mensaje",
+    "instructor": "Instructor"
   },
-  "checkout": {
-    "title": "Planes de membresía",
-    "description": "Elija el plan que mejor se adapte a sus necesidades",
-    "basic": "Básico",
-    "premium": "Premium",
-    "vip": "VIP",
-    "enterprise": "Empresa"
+  "chatbot": {
+    "title": "Consulta de IA",
+    "ask_question": "Hacer pregunta",
+    "response": "Respuesta"
+  },
+  "team": {
+    "title": "Ejecutivos y expertos de la asociación",
+    "description": "Los mejores expertos en el campo de la terapia cuántica trabajan juntos",
+    "position": "Posición",
+    "qualification": "Calificaciones y experiencia",
+    "experience": "Experiencia",
+    "contact": "Contacto"
+  },
+  "blog": {
+    "title": "Boletín y blog",
+    "description": "Actualización regular de la investigación más reciente en terapia cuántica, actividades de miembros e historias de éxito",
+    "category_research": "Investigación",
+    "category_success": "Historias de éxito",
+    "category_news": "Noticias de la asociación",
+    "category_education": "Educación",
+    "read_time": "min",
+    "read_more": "Leer más",
+    "author": "Autor",
+    "date": "Fecha"
+  },
+  "payment": {
+    "total": "Total",
+    "currency": "$",
+    "payment_method": "Método de pago",
+    "card": "Tarjeta",
+    "success": "Pago exitoso",
+    "failed": "Pago fallido",
+    "cancel": "Cancelar"
+  },
+  "errors": {
+    "required_field": "Este campo es obligatorio",
+    "invalid_email": "Dirección de correo electrónico no válida",
+    "password_mismatch": "Las contraseñas no coinciden",
+    "something_wrong": "Algo salió mal"
   }
 }
