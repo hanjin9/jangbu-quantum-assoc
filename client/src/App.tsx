@@ -35,6 +35,9 @@ import AdminStatsDashboard from "./pages/AdminStatsDashboard";
 import RevenueAnalytics from "./pages/RevenueAnalytics";
 import FeedbackPage from "./pages/FeedbackPage";
 import AnnouncementPage from "./pages/AnnouncementPage";
+import { LiveLecture } from "./pages/LiveLecture";
+import { SearchRecommend } from "./pages/SearchRecommend";
+import { CertificatePage } from "./pages/CertificatePage";
 import { BottomNavBar } from "./components/BottomNavBar";
 
 function Router() {
@@ -68,9 +71,12 @@ function Router() {
       <Route path={"/membership-tiers"} component={MembershipTiers} />
       <Route path={"/admin-stats"} component={AdminStatsDashboard} />
       <Route path={"/revenue-analytics"} component={RevenueAnalytics} />
-      <Route path={"/feedback"} component={FeedbackPage} />
-      <Route path={"/announcements"} component={AnnouncementPage} />
-      <Route path={"/404"} component={NotFound} />
+           <Route path="/feedback" component={FeedbackPage} />
+      <Route path="/announcements" component={AnnouncementPage} />
+      <Route path="/live-lecture" component={LiveLecture} />
+      <Route path="/search-recommend" component={SearchRecommend} />
+      <Route path="/certificates" component={CertificatePage} />
+      <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
   );
