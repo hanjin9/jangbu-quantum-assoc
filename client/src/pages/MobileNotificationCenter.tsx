@@ -120,6 +120,39 @@ export function MobileNotificationCenter() {
     );
   };
 
+  const handleDeleteReadAlerts = () => {
+    setAlerts(alerts.filter((a) => !a.isRead));
+  };
+
+  const handleExportAlerts = (format: string) => {
+    if (format === 'csv') {
+      const csv = [
+        ['제목', '메시지', '유형', '생성 시간', '읽음 여부'],
+        ...alerts.map((a) => [
+          a.title,
+          a.message,
+          a.type,
+          a.createdAt.toLocaleString('ko-KR'),
+          a.isRead ? '읽음' : '미읽',
+        ]),
+      ]
+        .map((row) => row.map((cell) => `"${cell}"`).join(','))
+        .join('\n');
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `alerts_${new Date().toISOString().split('T')[0]}.csv`;
+      link.click();
+    }
+  };
+
+  const handleSetAutoCleanup = (days: number) => {
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+    setAlerts(alerts.filter((a) => a.createdAt > cutoffDate));
+  };
+
   const formatTime = (date: Date) => {
     const now = new Date();
     const diff = now.getTime() - date.getTime();
@@ -234,6 +267,42 @@ export function MobileNotificationCenter() {
                   모두 읽음
                 </Button>
               )}
+              <Button
+                onClick={handleDeleteReadAlerts}
+                variant="outline"
+                className="text-red-400 border-red-400 hover:bg-red-400 hover:text-black text-sm"
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                읽은 알림 삭제
+              </Button>
+            </div>
+
+            {/* 알림 관리 옵션 */}
+            <div className="flex gap-2 mb-6 flex-wrap">
+              <Button
+                onClick={() => handleSetAutoCleanup(7)}
+                variant="outline"
+                size="sm"
+                className="text-xs"
+              >
+                7일 이상 삭제
+              </Button>
+              <Button
+                onClick={() => handleSetAutoCleanup(30)}
+                variant="outline"
+                size="sm"
+                className="text-xs"
+              >
+                30일 이상 삭제
+              </Button>
+              <Button
+                onClick={() => handleExportAlerts('csv')}
+                variant="outline"
+                size="sm"
+                className="text-xs"
+              >
+                CSV 내보내기
+              </Button>
             </div>
 
             {/* 알림 목록 */}
