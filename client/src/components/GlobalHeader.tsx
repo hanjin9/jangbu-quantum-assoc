@@ -39,6 +39,8 @@ export function GlobalHeader() {
     { label: t('community.title'), path: '/community' },
     { label: t('livestream.title'), path: '/livestream' },
     { label: '회원 등급', path: '/membership-tiers' },
+    { label: '공지사항', path: '/announcements' },
+    { label: '피드백', path: '/feedback' },
     { label: '알림', path: '/notifications' },
     { label: '통계', path: '/admin-stats' },
     { label: t('common.dashboard'), path: '/dashboard' },
