@@ -32,6 +32,7 @@ import NotificationCenter from "./pages/NotificationCenter";
 import NotificationPreferences from "./pages/NotificationPreferences";
 import MembershipTiers from "./pages/MembershipTiers";
 import AdminStatsDashboard from "./pages/AdminStatsDashboard";
+import RevenueAnalytics from "./pages/RevenueAnalytics";
 import { BottomNavBar } from "./components/BottomNavBar";
 
 function Router() {
@@ -64,6 +65,7 @@ function Router() {
       <Route path={"/notification-preferences"} component={NotificationPreferences} />
       <Route path={"/membership-tiers"} component={MembershipTiers} />
       <Route path={"/admin-stats"} component={AdminStatsDashboard} />
+      <Route path={"/revenue-analytics"} component={RevenueAnalytics} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
