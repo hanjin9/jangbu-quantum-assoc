@@ -114,6 +114,12 @@ export function MobileNotificationCenter() {
     setAlerts(alerts.filter((a) => a.id !== alertId));
   };
 
+  const handleMarkAllAsRead = () => {
+    setAlerts(
+      alerts.map((a) => ({ ...a, isRead: true }))
+    );
+  };
+
   const formatTime = (date: Date) => {
     const now = new Date();
     const diff = now.getTime() - date.getTime();
@@ -193,29 +199,41 @@ export function MobileNotificationCenter() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* 알림 목록 */}
           <div className="lg:col-span-2">
-            {/* 필터 버튼 */}
-            <div className="flex gap-2 mb-6">
-              <Button
-                onClick={() => setFilter('all')}
-                variant={filter === 'all' ? 'default' : 'outline'}
-                className={filter === 'all' ? 'bg-[#d4af37] text-black' : ''}
-              >
-                전체
-              </Button>
-              <Button
-                onClick={() => setFilter('unread')}
-                variant={filter === 'unread' ? 'default' : 'outline'}
-                className={filter === 'unread' ? 'bg-blue-600 text-white' : ''}
-              >
-                읽지 않음 ({unreadCount})
-              </Button>
-              <Button
-                onClick={() => setFilter('critical')}
-                variant={filter === 'critical' ? 'default' : 'outline'}
-                className={filter === 'critical' ? 'bg-red-600 text-white' : ''}
-              >
-                긴급
-              </Button>
+            {/* 필터 버튼 및 모두 읽음 */}
+            <div className="flex gap-2 mb-6 items-center justify-between">
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => setFilter('all')}
+                  variant={filter === 'all' ? 'default' : 'outline'}
+                  className={filter === 'all' ? 'bg-[#d4af37] text-black' : ''}
+                >
+                  전체
+                </Button>
+                <Button
+                  onClick={() => setFilter('unread')}
+                  variant={filter === 'unread' ? 'default' : 'outline'}
+                  className={filter === 'unread' ? 'bg-blue-600 text-white' : ''}
+                >
+                  읽지 않음 ({unreadCount})
+                </Button>
+                <Button
+                  onClick={() => setFilter('critical')}
+                  variant={filter === 'critical' ? 'default' : 'outline'}
+                  className={filter === 'critical' ? 'bg-red-600 text-white' : ''}
+                >
+                  긴급
+                </Button>
+              </div>
+              {unreadCount > 0 && (
+                <Button
+                  onClick={handleMarkAllAsRead}
+                  variant="outline"
+                  className="text-[#d4af37] border-[#d4af37] hover:bg-[#d4af37] hover:text-black text-sm"
+                >
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  모두 읽음
+                </Button>
+              )}
             </div>
 
             {/* 알림 목록 */}
