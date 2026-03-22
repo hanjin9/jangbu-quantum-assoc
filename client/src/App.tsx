@@ -29,6 +29,7 @@ import TeamProfile from "./pages/TeamProfile";
 import NewsletterBlog from "./pages/NewsletterBlog";
 import SignupProcess from "./pages/SignupProcess";
 import NotificationCenter from "./pages/NotificationCenter";
+import NotificationPreferences from "./pages/NotificationPreferences";
 import { BottomNavBar } from "./components/BottomNavBar";
 
 function Router() {
@@ -58,6 +59,7 @@ function Router() {
       <Route path={"/newsletter-blog"} component={NewsletterBlog} />
       <Route path={"/signup"} component={SignupProcess} />
       <Route path={"/notifications"} component={NotificationCenter} />
+      <Route path={"/notification-preferences"} component={NotificationPreferences} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
