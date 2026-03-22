@@ -40,6 +40,7 @@ import { SearchRecommend } from "./pages/SearchRecommend";
 import { CertificatePage } from "./pages/CertificatePage";
 import { AdminLogin } from "./pages/AdminLogin";
 import { AuditLogDashboard } from "./pages/AuditLogDashboard";
+import { MobileNotificationCenter } from "./pages/MobileNotificationCenter";
 import { BottomNavBar } from "./components/BottomNavBar";
 
 function Router() {
@@ -80,6 +81,7 @@ function Router() {
       <Route path="/certificates" component={CertificatePage} />
       <Route path="/admin-login" component={AdminLogin} />
       <Route path="/audit-logs" component={AuditLogDashboard} />
+      <Route path="/mobile-notifications" component={MobileNotificationCenter} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
