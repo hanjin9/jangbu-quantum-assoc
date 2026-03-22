@@ -38,6 +38,8 @@ import AnnouncementPage from "./pages/AnnouncementPage";
 import { LiveLecture } from "./pages/LiveLecture";
 import { SearchRecommend } from "./pages/SearchRecommend";
 import { CertificatePage } from "./pages/CertificatePage";
+import { AdminLogin } from "./pages/AdminLogin";
+import { AuditLogDashboard } from "./pages/AuditLogDashboard";
 import { BottomNavBar } from "./components/BottomNavBar";
 
 function Router() {
@@ -76,6 +78,8 @@ function Router() {
       <Route path="/live-lecture" component={LiveLecture} />
       <Route path="/search-recommend" component={SearchRecommend} />
       <Route path="/certificates" component={CertificatePage} />
+      <Route path="/admin-login" component={AdminLogin} />
+      <Route path="/audit-logs" component={AuditLogDashboard} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
