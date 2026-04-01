@@ -53,7 +53,7 @@ export async function validateAdminLogin(
 
     // 2. 사용자 조회
     const user = await db.query.users.findFirst({
-      where: (users, { eq, and }) =>
+      where: (users: any, { eq, and }: any) =>
         and(eq(users.email, email), eq(users.role, 'admin')),
     });
 

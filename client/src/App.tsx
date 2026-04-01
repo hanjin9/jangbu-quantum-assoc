@@ -74,7 +74,7 @@ function Router() {
       <Route path={"/membership-tiers"} component={MembershipTiers} />
       <Route path={"/admin-stats"} component={AdminStatsDashboard} />
       <Route path={"/revenue-analytics"} component={RevenueAnalytics} />
-           <Route path="/feedback" component={FeedbackPage} />
+      <Route path="/feedback" component={FeedbackPage} />
       <Route path="/announcements" component={AnnouncementPage} />
       <Route path="/live-lecture" component={LiveLecture} />
       <Route path="/search-recommend" component={SearchRecommend} />

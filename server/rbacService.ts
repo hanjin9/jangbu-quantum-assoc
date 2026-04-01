@@ -10,9 +10,7 @@ export interface Permission {
   action: 'create' | 'read' | 'update' | 'delete';
 }
 
-export interface RolePermissions {
-  [key in AdminRole]: Permission[];
-}
+export type RolePermissions = Record<AdminRole, Permission[]>;
 
 /**
  * 역할별 권한 정의
@@ -107,14 +105,15 @@ export function hasPermission(
   action: 'create' | 'read' | 'update' | 'delete'
 ): boolean {
   const permissions = rolePermissions[role];
-  return permissions.some((p) => p.resource === resource && p.action === action);
+  return permissions.some((p: Permission) => p.resource === resource && p.action === action);
 }
 
 /**
  * 데이터 접근 범위 확인 함수
  */
 export function getDataScope(role: AdminRole, resource: string): Record<string, boolean> {
-  return roleDataScope[role][resource as keyof typeof roleDataScope[AdminRole]] || {};
+  const scope = roleDataScope[role as keyof typeof roleDataScope];
+  return (scope && scope[resource as keyof typeof scope]) || {};
 }
 
 /**
