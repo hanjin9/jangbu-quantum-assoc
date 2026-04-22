@@ -40,11 +40,11 @@ export default function Home() {
             </Button>
             <Button
               size="lg"
-              className="bg-amber-600 hover:bg-amber-700 text-white px-8 md:px-12 min-w-max"
+              className="bg-amber-600 hover:bg-amber-700 text-white px-8 md:px-12 min-w-max text-lg md:text-2xl font-bold py-6 md:py-8"
               onClick={() => navigate('/checkout')}
             >
               📝 회원 가입
-              <ChevronRight className="w-5 h-5 ml-2" />
+              <ChevronRight className="w-6 h-6 ml-2" />
             </Button>
             <Button
               size="lg"
