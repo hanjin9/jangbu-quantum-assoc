@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
-import { Menu, X, Settings, ChevronDown, Info, BookOpen, Users, User, Newspaper, ArrowLeft, ArrowUp, Globe } from 'lucide-react';
+import { Menu, X, Settings, ChevronDown, Info, BookOpen, Users, User, Newspaper, ArrowLeft, ArrowUp, Globe, Search, LogOut, Home } from 'lucide-react';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { getLoginUrl } from '@/const';
@@ -14,8 +14,11 @@ export function GlobalHeader() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [location] = useLocation();
   const [, navigate] = useLocation();
-  const { user } = useAuth();
-  const t = (key: string) => key; // 간단한 번역 함수
+  const { user, logout } = useAuth();
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [profileOpen, setProfileOpen] = useState(false);
+  const t = (key: string) => key;
 
   useEffect(() => {
     setCanGoBack(window.history.length > 1);
@@ -33,8 +36,19 @@ export function GlobalHeader() {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   };
 
-  const handleGoBack = () => {
-    window.history.back();
+  const handleNavClick = (path: string) => {
+    navigate(path);
+    setMobileMenuOpen(false);
+    setOpenSubmenu(null);
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+      setSearchOpen(false);
+      setSearchQuery('');
+    }
   };
 
   const navItems = [
@@ -42,150 +56,322 @@ export function GlobalHeader() {
       label: '소개',
       path: '/about',
       submenu: [
-        { label: '협회소개', path: '/about' },
-        { label: '비전', path: '/about' },
-        { label: '팀 소개', path: '/team-profile' },
+        { label: '협회 소개', path: '/about' },
+        { label: '비전 & 미션', path: '/about#vision' },
       ],
     },
     {
       label: '학습',
-      path: null,
+      path: '/academy',
       submenu: [
-        { label: '교육과정', path: '/academy' },
-        { label: '시험', path: '/exam' },
-        { label: '자료실', path: '/exam-practice-book' },
-        { label: '성공사례', path: '/success-gallery' },
+        { label: '교육 과정', path: '/academy' },
+        { label: '시험', path: '/academy#exam' },
       ],
     },
     {
       label: '커뮤니티',
-      path: null,
+      path: '/community',
       submenu: [
-        { label: t('community.title'), path: '/community' },
-        { label: '전문가', path: '/team-profile' },
-        { label: '블로그', path: '/newsletter-blog' },
+        { label: '게시판', path: '/community' },
+        { label: '이벤트', path: '/community#events' },
       ],
     },
     {
       label: '회원',
-      path: null,
+      path: '/members',
       submenu: [
-        { label: '회원 등급', path: '/membership-tiers' },
-        { label: '프로필', path: '/dashboard' },
-        { label: '피드백', path: '/feedback' },
+        { label: '회원 가입', path: '/members' },
+        { label: '멤버십', path: '/membership' },
       ],
     },
     {
       label: '소식',
-      path: null,
+      path: '/news',
       submenu: [
-        { label: '공지사항', path: '/announcements' },
-        { label: '알림', path: '/notifications' },
+        { label: '뉴스', path: '/news' },
+        { label: '공지사항', path: '/news#notices' },
       ],
     },
     {
       label: '관리자',
-      path: null,
+      path: '/admin',
       submenu: [
-        { label: '통계 대시보드', path: '/admin-stats' },
-        { label: '수익 분석', path: '/revenue-analytics' },
-        { label: '회원 관리', path: '/admin-members' },
+        { label: '대시보드', path: '/admin' },
+        { label: '사용자 관리', path: '/admin/users' },
       ],
     },
   ];
 
-  const handleLogoClick = () => {
-    navigate('/');
-    setMobileMenuOpen(false);
-    setTimeout(() => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-    }, 0);
-  };
-
   const getMenuIcon = (label: string, isMobile = false) => {
-    const iconClass = isMobile ? 'w-7 h-7 text-[#d4af37]' : 'w-5 h-5 text-[#d4af37]';
+    const size = isMobile ? 'w-7 h-7' : 'w-5 h-5';
     switch (label) {
       case '소개':
-        return <Info className={iconClass} />;
+        return <Info className={size} />;
       case '학습':
-        return <BookOpen className={iconClass} />;
+        return <BookOpen className={size} />;
       case '커뮤니티':
-        return <Users className={iconClass} />;
+        return <Users className={size} />;
       case '회원':
-        return <User className={iconClass} />;
+        return <User className={size} />;
       case '소식':
-        return <Newspaper className={iconClass} />;
+        return <Newspaper className={size} />;
       case '관리자':
-        return <Settings className={iconClass} />;
+        return <Settings className={size} />;
       default:
         return null;
     }
   };
 
-  const handleNavClick = (path?: string | null) => {
-    if (path) {
-      navigate(path);
-      setMobileMenuOpen(false);
-      setOpenSubmenu(null);
-    }
-  };
-
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-border safe-top">
-      <div className="w-full px-0 py-2 md:py-4">
-        <div className="flex justify-between items-center px-1 md:px-6 gap-0.5 md:gap-8 h-14 md:h-auto">
-          {/* Logo + Language Switcher - 좌측 */}
-          <div className="flex items-center gap-0.5 flex-shrink-0">
-            <button
-              onClick={handleLogoClick}
-              className="flex items-center gap-0.5 md:gap-2 hover:opacity-80 transition-opacity flex-shrink-0 active:scale-95 pl-1"
-              title={t('about.title')}
-            >
-              {/* 로고 130% 확대 */}
-              <div className="w-10 h-10 md:w-13 md:h-13 bg-gradient-to-br from-[#1a4d7a] to-[#d4af37] rounded-lg flex items-center justify-center flex-shrink-0">
-                <span className="text-white font-bold text-xs md:text-sm">장•부</span>
-              </div>
-              <h1 className="text-xs md:text-lg font-bold text-[#1a4d7a] hidden md:inline whitespace-nowrap">
-                {t('about.title')}
-              </h1>
-            </button>
-            {/* 로고 옆 글로벌 선택 - 모바일 (지구본 200% 확대) */}
-            <div className="md:hidden">
+    <>
+      <header className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            {/* Left Section - Logo & Back Button */}
+            <div className="flex items-center gap-3">
+              {/* 뒤로가기 버튼 (모바일) */}
+              {canGoBack && (
+                <button
+                  onClick={() => window.history.back()}
+                  className="md:hidden p-1 hover:bg-accent rounded-lg transition flex-shrink-0"
+                  title="뒤로가기"
+                >
+                  <ArrowLeft className="h-6 w-6 text-[#d4af37]" />
+                </button>
+              )}
+
+              {/* 로고 */}
               <button
-                className="p-1 hover:bg-accent rounded-lg transition flex-shrink-0"
-                title="언어 선택"
+                onClick={() => handleNavClick('/')}
+                className="flex items-center gap-2 hover:opacity-80 transition flex-shrink-0"
               >
-                <Globe className="h-8 w-8 text-[#d4af37]" />
+                {/* 로고 130% 확대 */}
+                <div className="w-10 h-10 md:w-13 md:h-13 bg-gradient-to-br from-[#1a4d7a] to-[#d4af37] rounded-lg flex items-center justify-center flex-shrink-0">
+                  <span className="text-white font-bold text-xs md:text-sm">장•부</span>
+                </div>
+                <h1 className="text-xs md:text-lg font-bold text-[#1a4d7a] hidden md:inline whitespace-nowrap">
+                  {t('about.title')}
+                </h1>
+              </button>
+
+              {/* 로고 옆 글로벌 선택 - 모바일 (지구본 200% 확대) */}
+              <div className="md:hidden">
+                <button
+                  className="p-1 hover:bg-accent rounded-lg transition flex-shrink-0"
+                  title="언어 선택"
+                >
+                  <Globe className="h-8 w-8 text-[#d4af37]" />
+                </button>
+              </div>
+            </div>
+
+            {/* Center Section - Desktop Navigation */}
+            <nav className="hidden md:flex gap-2 items-center flex-1 justify-center">
+              {navItems.map((item) => {
+                const isActive = location === item.path;
+                const hasSubmenu = item.submenu && item.submenu.length > 0;
+                return (
+                  <div key={item.label} className="relative group">
+                    <button
+                      onClick={() => handleNavClick(item.path)}
+                      className={`text-sm transition-colors whitespace-nowrap px-3 py-2 rounded-lg flex items-center gap-1 ${
+                        isActive
+                          ? 'text-[#d4af37] font-semibold bg-[#d4af37]/10'
+                          : 'hover:text-[#d4af37] hover:bg-[#d4af37]/5'
+                      } ${hasSubmenu ? 'cursor-default' : ''}`}
+                    >
+                      {item.label}
+                      {hasSubmenu && <ChevronDown className="w-3 h-3" />}
+                    </button>
+                    {/* Desktop Submenu - 호버 시 자동 펼쳐지는 애니메이션 */}
+                    {hasSubmenu && item.submenu && (
+                      <div className="absolute left-0 mt-0 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 py-2 z-50 transform scale-95 group-hover:scale-100">
+                        {item.submenu.map((subitem) => (
+                          <button
+                            key={subitem.label}
+                            onClick={() => handleNavClick(subitem.path)}
+                            className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors"
+                          >
+                            {subitem.label}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+              <LanguageSwitcher />
+            </nav>
+
+            {/* Right Section - Search, Settings, Profile */}
+            <div className="flex items-center gap-2 md:gap-3">
+              {/* 검색 기능 */}
+              <div className="relative">
+                {searchOpen ? (
+                  <form onSubmit={handleSearch} className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      placeholder="검색..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="px-3 py-1 text-sm border border-[#d4af37] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
+                      autoFocus
+                    />
+                    <button
+                      type="submit"
+                      className="p-1 hover:bg-accent rounded-lg transition flex-shrink-0"
+                    >
+                      <Search className="h-5 w-5 text-[#d4af37]" />
+                    </button>
+                  </form>
+                ) : (
+                  <button
+                    onClick={() => setSearchOpen(true)}
+                    className="p-1 hover:bg-accent rounded-lg transition flex-shrink-0"
+                    title="검색"
+                  >
+                    <Search className="h-6 w-6 text-[#d4af37]" />
+                  </button>
+                )}
+              </div>
+
+              {/* 설정 아이콘 200% 확대 */}
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="p-1.5 hover:bg-accent rounded-lg transition flex-shrink-0"
+                title="설정"
+              >
+                <Settings className="h-8 w-8 text-[#d4af37]" />
+              </button>
+
+              {/* 사용자 프로필 드롭다운 */}
+              {user ? (
+                <div className="relative">
+                  <button
+                    onClick={() => setProfileOpen(!profileOpen)}
+                    className="flex items-center gap-2 p-1 hover:bg-accent rounded-lg transition"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#d4af37] to-[#1a4d7a] flex items-center justify-center">
+                      <span className="text-white font-bold text-xs">{user.name?.charAt(0) || '👤'}</span>
+                    </div>
+                    <span className="text-sm font-semibold text-[#d4af37] hidden md:inline">{user.name || '사용자'}</span>
+                  </button>
+                  {profileOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50">
+                      <button
+                        onClick={() => {
+                          navigate('/profile');
+                          setProfileOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors flex items-center gap-2"
+                      >
+                        <User className="w-4 h-4" />
+                        마이페이지
+                      </button>
+                      <button
+                        onClick={() => {
+                          navigate('/dashboard');
+                          setProfileOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors flex items-center gap-2"
+                      >
+                        <Settings className="w-4 h-4" />
+                        설정
+                      </button>
+                      <hr className="my-1" />
+                      <button
+                        onClick={() => {
+                          logout();
+                          setProfileOpen(false);
+                          navigate('/');
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors flex items-center gap-2"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        로그아웃
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <button
+                  onClick={() => window.location.href = getLoginUrl()}
+                  className="text-sm font-semibold text-[#d4af37] hover:text-white transition px-3 py-2 rounded-lg hover:bg-[#d4af37]/10"
+                >
+                  로그인
+                </button>
+              )}
+
+              {/* 모바일 메뉴 버튼 */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-1.5 hover:bg-accent rounded-lg transition flex-shrink-0"
+                title="메뉴"
+              >
+                {mobileMenuOpen ? (
+                  <X className="h-12 w-12 stroke-[2.5]" />
+                ) : (
+                  <Menu className="h-12 w-12 stroke-[2.5]" />
+                )}
               </button>
             </div>
           </div>
+        </div>
+      </header>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex gap-2 items-center flex-1 justify-center">
+      {/* Mobile Navigation - 애니메이션 추가 */}
+      {mobileMenuOpen && (
+        <nav className="md:hidden bg-white border-b border-slate-200 animate-in slide-in-from-top-2 duration-300">
+          <div className="max-w-7xl mx-auto px-4 py-4 space-y-2">
             {navItems.map((item) => {
               const isActive = location === item.path;
               const hasSubmenu = item.submenu && item.submenu.length > 0;
               return (
-                <div key={item.label} className="relative group">
+                <div key={item.label}>
                   <button
-                    onClick={() => handleNavClick(item.path)}
-                    className={`text-sm transition-colors whitespace-nowrap px-3 py-2 rounded-lg flex items-center gap-1 ${
+                    onMouseEnter={() => {
+                      if (hasSubmenu) {
+                        setOpenSubmenu(item.label);
+                      }
+                    }}
+                    onMouseLeave={() => {
+                      if (hasSubmenu) {
+                        setOpenSubmenu(null);
+                      }
+                    }}
+                    onClick={() => {
+                      if (!hasSubmenu) {
+                        handleNavClick(item.path);
+                      } else {
+                        setOpenSubmenu(openSubmenu === item.label ? null : item.label);
+                      }
+                    }}
+                    className={`w-full text-left text-xl font-bold transition-colors py-4 px-4 rounded-lg flex items-center justify-between gap-2 active:scale-95 ${
                       isActive
-                        ? 'text-[#d4af37] font-semibold bg-[#d4af37]/10'
-                        : 'hover:text-[#d4af37] hover:bg-[#d4af37]/5'
-                    } ${hasSubmenu ? 'cursor-default' : ''}`}
+                        ? 'text-[#d4af37] font-bold bg-[#d4af37]/10'
+                        : 'text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/5'
+                    }`}
                   >
-                    {item.label}
-                    {hasSubmenu && <ChevronDown className="w-3 h-3" />}
+                    <span className="flex items-center gap-3">
+                      {getMenuIcon(item.label, true)}
+                      {item.label}
+                    </span>
+                    {hasSubmenu && (
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform ${
+                          openSubmenu === item.label ? 'rotate-180' : ''
+                        }`}
+                      />
+                    )}
                   </button>
-                  {/* Desktop Submenu - 호버 시 자동 펼쳐지는 애니메이션 */}
-                  {hasSubmenu && item.submenu && (
-                    <div className="absolute left-0 mt-0 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 py-2 z-50 transform scale-95 group-hover:scale-100">
+                  {/* Mobile Submenu - 호버 시 자동 펼쳐지는 애니메이션 */}
+                  {hasSubmenu && openSubmenu === item.label && item.submenu && (
+                    <div className="pl-4 space-y-1 mt-1 animate-in slide-in-from-top-2 duration-300">
                       {item.submenu.map((subitem) => (
                         <button
                           key={subitem.label}
                           onClick={() => handleNavClick(subitem.path)}
-                          className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors"
+                          className="w-full text-left text-base font-semibold text-slate-800 hover:text-[#d4af37] py-3 px-4 rounded-lg hover:bg-[#d4af37]/10 transition-all duration-200 transform hover:translate-x-1"
                         >
                           {subitem.label}
                         </button>
@@ -195,147 +381,75 @@ export function GlobalHeader() {
                 </div>
               );
             })}
-            <LanguageSwitcher />
-          </nav>
-
-          {/* 중간 텍스트 - 모바일 (한 줄, 큰 크기) */}
-          <div className="md:hidden flex-1 text-center px-1">
-            <h2 className="text-lg font-bold text-[#d4af37] leading-tight whitespace-nowrap">
-              장•부 (양자요법) 관리사협회
-            </h2>
           </div>
-
-          {/* 뒤로가기 + 메뉴 텍스트 + 햄버거 + 설정(톱니바퀴만) - 최대한 우측 */}
-          <div className="md:hidden flex items-center gap-0.5 flex-shrink-0 pr-2">
-            {/* 뒤로가기 버튼 */}
-            {canGoBack && (
-              <button
-                onClick={handleGoBack}
-                className="p-1.5 hover:bg-accent rounded-lg transition opacity-50 hover:opacity-100"
-                title="이전 페이지"
-              >
-                <ArrowLeft className="h-5 w-5 stroke-[2.5] text-slate-600" />
-              </button>
-            )}
-
-            {/* 메뉴 텍스트 2배 확대 + 색상 변경 */}
-            <span className="text-2xl font-bold text-slate-600">메뉴</span>
-
-            {/* 햄버거 메뉴 250% 확대 */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-1.5 hover:bg-accent rounded-lg transition"
-              title="메뉴"
-            >
-              {mobileMenuOpen ? (
-                <X className="h-12 w-12 stroke-[2.5]" />
-              ) : (
-                <Menu className="h-12 w-12 stroke-[2.5]" />
-              )}
-            </button>
-
-            {/* 설정 아이콘 200% 확대 */}
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="p-1.5 hover:bg-accent rounded-lg transition flex-shrink-0"
-              title="설정"
-            >
-              <Settings className="h-8 w-8 text-[#d4af37]" />
-            </button>
-
-            {/* 로그인 상태 표시 - 사용자 프로필 */}
-            {user && (
-              <div className="flex items-center gap-3 pl-3 border-l border-slate-600">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#d4af37] to-[#1a4d7a] flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">{user.name?.charAt(0) || '👤'}</span>
-                </div>
-                <span className="text-sm font-semibold text-[#d4af37] hidden md:inline">{user.name || '사용자'}</span>
-              </div>
-            )}
-            {!user && (
-              <button
-                onClick={() => window.location.href = getLoginUrl()}
-                className="text-sm font-semibold text-[#d4af37] hover:text-white transition px-3 py-2 rounded-lg hover:bg-[#d4af37]/10"
-              >
-                로그인
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Navigation - 애니메이션 추가 */}
-      {mobileMenuOpen && (
-        <nav className="md:hidden mt-4 pb-4 border-t border-border pt-4 flex flex-col gap-1 px-4 animate-in slide-in-from-top-2 duration-300">
-          {navItems.map((item) => {
-            const isActive = location === item.path;
-            const hasSubmenu = item.submenu && item.submenu.length > 0;
-            return (
-              <div key={item.label}>
-                <button
-                  onClick={() => {
-                    if (!hasSubmenu) {
-                      handleNavClick(item.path);
-                    }
-                  }}
-                  onMouseEnter={() => {
-                    if (hasSubmenu) {
-                      setOpenSubmenu(item.label);
-                    }
-                  }}
-                  onMouseLeave={() => {
-                    if (hasSubmenu) {
-                      setOpenSubmenu(null);
-                    }
-                  }}
-                  className={`w-full text-left text-xl font-bold transition-colors py-4 px-4 rounded-lg flex items-center justify-between gap-2 active:scale-95 ${
-                    isActive
-                      ? 'text-[#d4af37] font-bold bg-[#d4af37]/10'
-                      : 'text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/5'
-                  }`}
-                >
-                  <span className="flex items-center gap-3">
-                    {getMenuIcon(item.label, true)}
-                    {item.label}
-                  </span>
-                  {hasSubmenu && (
-                    <ChevronDown
-                      className={`w-4 h-4 transition-transform ${
-                        openSubmenu === item.label ? 'rotate-180' : ''
-                      }`}
-                    />
-                  )}
-                </button>
-                {/* Mobile Submenu - 호버 시 자동 펼쳐지는 애니메이션 */}
-                {hasSubmenu && openSubmenu === item.label && item.submenu && (
-                  <div className="pl-4 space-y-1 mt-1 animate-in slide-in-from-top-2 duration-300">
-                    {item.submenu.map((subitem) => (
-                      <button
-                        key={subitem.label}
-                        onClick={() => handleNavClick(subitem.path)}
-                        className="w-full text-left text-base font-semibold text-slate-800 hover:text-[#d4af37] py-3 px-4 rounded-lg hover:bg-[#d4af37]/10 transition-all duration-200 transform hover:translate-x-1"
-                      >
-                        {subitem.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
         </nav>
       )}
 
-      {/* Scroll to Top Button - 모바일 우측 하단 메뉴바 위 */}
+      {/* Mobile Bottom Navigation Bar */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-40">
+        <div className="flex items-center justify-around h-16">
+          <button
+            onClick={() => handleNavClick('/')}
+            className={`flex flex-col items-center justify-center gap-1 py-2 px-4 transition-colors ${
+              location === '/' ? 'text-[#d4af37]' : 'text-slate-600 hover:text-[#d4af37]'
+            }`}
+          >
+            <Home className="w-6 h-6" />
+            <span className="text-xs font-semibold">홈</span>
+          </button>
+          <button
+            onClick={() => handleNavClick('/academy')}
+            className={`flex flex-col items-center justify-center gap-1 py-2 px-4 transition-colors ${
+              location === '/academy' ? 'text-[#d4af37]' : 'text-slate-600 hover:text-[#d4af37]'
+            }`}
+          >
+            <BookOpen className="w-6 h-6" />
+            <span className="text-xs font-semibold">학습</span>
+          </button>
+          <button
+            onClick={() => handleNavClick('/community')}
+            className={`flex flex-col items-center justify-center gap-1 py-2 px-4 transition-colors ${
+              location === '/community' ? 'text-[#d4af37]' : 'text-slate-600 hover:text-[#d4af37]'
+            }`}
+          >
+            <Users className="w-6 h-6" />
+            <span className="text-xs font-semibold">커뮤니티</span>
+          </button>
+          <button
+            onClick={() => handleNavClick('/membership')}
+            className={`flex flex-col items-center justify-center gap-1 py-2 px-4 transition-colors ${
+              location === '/membership' ? 'text-[#d4af37]' : 'text-slate-600 hover:text-[#d4af37]'
+            }`}
+          >
+            <User className="w-6 h-6" />
+            <span className="text-xs font-semibold">회원</span>
+          </button>
+        </div>
+      </nav>
+
+      {/* PC Navigation - Back & Top Buttons */}
+      {canGoBack && (
+        <button
+          onClick={() => window.history.back()}
+          className="hidden md:flex fixed bottom-8 left-8 w-12 h-12 rounded-full bg-white/50 hover:bg-white/80 text-slate-600 hover:text-[#d4af37] transition-all items-center justify-center shadow-lg"
+          title="뒤로가기"
+        >
+          <ArrowLeft className="w-6 h-6" />
+        </button>
+      )}
+
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-24 right-4 md:bottom-8 md:right-8 bg-[#d4af37] hover:bg-[#c9a227] text-white p-3 rounded-full shadow-lg transition-all duration-300 z-40"
-          title="맨 위로"
+          className="hidden md:flex fixed bottom-8 right-8 w-12 h-12 rounded-full bg-[#d4af37] hover:bg-[#d4af37]/90 text-white transition-all items-center justify-center shadow-lg"
+          title="위로 이동"
         >
-          <ArrowUp className="h-5 w-5" />
+          <ArrowUp className="w-6 h-6" />
         </button>
       )}
-    </header>
+
+      {/* Add padding to body to account for fixed bottom nav on mobile */}
+      <div className="md:hidden h-16" />
+    </>
   );
 }
