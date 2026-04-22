@@ -314,7 +314,7 @@ export async function cleanupInactiveDevices(inactiveDays: number = 30): Promise
   cutoffDate.setDate(cutoffDate.getDate() - inactiveDays);
 
   let removed = 0;
-  for (const [id, device] of deviceRegistry.entries()) {
+  for (const [id, device] of Array.from(deviceRegistry.entries())) {
     if (device.lastSeen < cutoffDate) {
       deviceRegistry.delete(id);
       removed++;

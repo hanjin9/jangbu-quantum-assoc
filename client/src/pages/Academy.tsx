@@ -104,6 +104,36 @@ export default function Academy() {
     },
     {
       id: 6,
+      title: '양자요법 2급',
+      description: '양자요법 심화 과정입니다.',
+      materials: [
+        { title: '고급 에너지 기법', content: '심화된 에너지 조절 및 치료 기법' },
+        { title: '복합 증상 관리', content: '복합적인 건강 문제 진단 및 치료' },
+        { title: '전문가 상담 기법', content: '고급 상담 및 치료 계획 수립' },
+      ],
+      exam: [
+        { id: 1, question: '2급에서 배우는 고급 기법은?', options: ['심화 에너지 조절', '기초 이론', '초급 기법', '상담만'], correct: 0 },
+      ],
+      passingScore: 75,
+      certificateId: 'CERT-002-2026',
+    },
+    {
+      id: 7,
+      title: '양자요법 1급',
+      description: '양자요법 최고 수준의 마스터 과정입니다.',
+      materials: [
+        { title: '마스터 기법', content: '최고 수준의 에너지 치료 기법' },
+        { title: '연구 및 개발', content: '새로운 치료법 개발 및 연구' },
+        { title: '전문가 교육', content: '후진 양성 및 교육 능력' },
+      ],
+      exam: [
+        { id: 1, question: '1급 마스터의 책임은?', options: ['후진 양성 및 연구', '기초만 알기', '수익 추구', '자만'], correct: 0 },
+      ],
+      passingScore: 85,
+      certificateId: 'CERT-MASTER-2026',
+    },
+    {
+      id: 8,
       title: '자격증 종합 시험',
       description: '모든 과정을 통합한 최종 시험입니다.',
       materials: [
