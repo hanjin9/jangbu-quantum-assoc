@@ -71,6 +71,13 @@
       "when": 1776831467559,
       "tag": "0009_familiar_energizer",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1776841645818,
+      "tag": "0010_crazy_whiplash",
+      "breakpoints": true
     }
   ]
 }

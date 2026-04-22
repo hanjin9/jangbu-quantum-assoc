@@ -44,6 +44,7 @@ import { MobileNotificationCenter } from "./pages/MobileNotificationCenter";
 import { BottomNavBar } from "./components/BottomNavBar";
 import MyCertificates from "./pages/MyCertificates";
 import ExamPracticeBook from "./pages/ExamPracticeBook";
+import { OwnerDashboard } from "./pages/OwnerDashboard";
 
 function Router() {
   return (
@@ -86,6 +87,7 @@ function Router() {
       <Route path="/mobile-notifications" component={MobileNotificationCenter} />
       <Route path="/my-certificates" component={MyCertificates} />
       <Route path="/exam-practice-book" component={ExamPracticeBook} />
+      <Route path="/owner-dashboard" component={OwnerDashboard} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
