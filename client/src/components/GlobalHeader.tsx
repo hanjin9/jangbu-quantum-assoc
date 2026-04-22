@@ -19,6 +19,8 @@ export function GlobalHeader() {
   const [searchQuery, setSearchQuery] = useState('');
   const [profileOpen, setProfileOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
+  const [hoverProfile, setHoverProfile] = useState(false);
+  const [hoverLanguage, setHoverLanguage] = useState(false);
   const t = (key: string) => key;
 
   useEffect(() => {
@@ -94,11 +96,11 @@ export function GlobalHeader() {
       ],
     },
     {
-      label: '관리자',
-      path: '/admin',
+      label: '쇼핑몰',
+      path: '/shopping',
       submenu: [
-        { label: '대시보드', path: '/admin' },
-        { label: '사용자 관리', path: '/admin/users' },
+        { label: '건강 강물', path: '/shopping' },
+        { label: '상품 관리', path: '/shopping/products' },
       ],
     },
   ];
@@ -116,8 +118,8 @@ export function GlobalHeader() {
         return <User className={size} />;
       case '소식':
         return <Newspaper className={size} />;
-      case '관리자':
-        return <Settings className={size} />;
+       case '쇼핑몰':
+        return <Newspaper className={size} />;
       default:
         return null;
     }
@@ -152,27 +154,26 @@ export function GlobalHeader() {
                 </div>
               </button>
 
-              {/* 언어 선택 - 모바일 (지구본만 표시) */}
-              <div className="md:hidden relative">
+              {/* 언어 선택 - 모바일 (지구본만 표시) - 호버 모드 */}
+              <div className="md:hidden relative" onMouseEnter={() => setHoverLanguage(true)} onMouseLeave={() => setHoverLanguage(false)}>
                 <button
-                  onClick={() => setLanguageOpen(!languageOpen)}
                   className="p-1 hover:bg-accent rounded-lg transition flex-shrink-0"
                   title="언어 선택"
                 >
                   <Globe className="h-6 w-6 text-[#d4af37]" />
                 </button>
-                {languageOpen && (
-                  <div className="absolute left-0 mt-2 w-40 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50">
-                    <button className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:bg-[#d4af37]/10 transition-colors">
-                      한국어
+                {hoverLanguage && (
+                  <div className="absolute left-0 mt-2 w-40 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200">
+                    <button className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:bg-[#d4af37]/10 transition-colors font-semibold">
+                      한국어 ✓
                     </button>
-                    <button className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:bg-[#d4af37]/10 transition-colors">
+                    <button className="w-full text-left px-4 py-2 text-sm text-slate-400 hover:bg-[#d4af37]/10 transition-colors">
                       English
                     </button>
-                    <button className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:bg-[#d4af37]/10 transition-colors">
+                    <button className="w-full text-left px-4 py-2 text-sm text-slate-400 hover:bg-[#d4af37]/10 transition-colors">
                       中文
                     </button>
-                    <button className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:bg-[#d4af37]/10 transition-colors">
+                    <button className="w-full text-left px-4 py-2 text-sm text-slate-400 hover:bg-[#d4af37]/10 transition-colors">
                       日本語
                     </button>
                   </div>
@@ -259,11 +260,10 @@ export function GlobalHeader() {
                 <Settings className="h-8 w-8 text-[#d4af37]" />
               </button>
 
-              {/* 사용자 프로필 드롭다운 */}
+              {/* 사용자 프로필 드롭다운 - 호버 모드 */}
               {user ? (
-                <div className="relative">
+                <div className="relative" onMouseEnter={() => setHoverProfile(true)} onMouseLeave={() => setHoverProfile(false)}>
                   <button
-                    onClick={() => setProfileOpen(!profileOpen)}
                     className="flex items-center gap-2 p-1 hover:bg-accent rounded-lg transition"
                   >
                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#d4af37] to-[#1a4d7a] flex items-center justify-center">
@@ -271,23 +271,17 @@ export function GlobalHeader() {
                     </div>
                     <span className="text-sm font-semibold text-[#d4af37] hidden md:inline">{user.name || '사용자'}</span>
                   </button>
-                  {profileOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50">
+                  {hoverProfile && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200">
                       <button
-                        onClick={() => {
-                          navigate('/profile');
-                          setProfileOpen(false);
-                        }}
+                        onClick={() => navigate('/profile')}
                         className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors flex items-center gap-2"
                       >
                         <User className="w-4 h-4" />
                         마이페이지
                       </button>
                       <button
-                        onClick={() => {
-                          navigate('/dashboard');
-                          setProfileOpen(false);
-                        }}
+                        onClick={() => navigate('/dashboard')}
                         className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors flex items-center gap-2"
                       >
                         <Settings className="w-4 h-4" />
@@ -297,7 +291,6 @@ export function GlobalHeader() {
                       <button
                         onClick={() => {
                           logout();
-                          setProfileOpen(false);
                           navigate('/');
                         }}
                         className="w-full text-left px-4 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors flex items-center gap-2"
