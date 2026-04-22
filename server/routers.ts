@@ -222,7 +222,118 @@ export const appRouter = router({
         ]
       };
     })
-  })
+  }),
+  certificates: router({
+    issueCertificateAfterPayment: protectedProcedure
+      .input(z.object({
+        orderId: z.number(),
+        courseId: z.string(),
+        courseName: z.string(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        if (!ctx.user) throw new Error('User not authenticated');
+        
+        const { issueCertificateAfterPayment } = await import('./certificateService');
+        const result = await issueCertificateAfterPayment(
+          ctx.user.id,
+          input.orderId,
+          input.courseId,
+          input.courseName,
+          ctx.user.name || 'User'
+        );
+        
+        return {
+          success: true,
+          certificate: {
+            id: result.certificate.id,
+            certificateNumber: result.certificate.certificateNumber,
+            verificationCode: result.certificate.verificationCode,
+            courseName: result.certificate.courseName,
+            issueDate: result.certificate.issueDate,
+          },
+          pdfUrl: result.pdfUrl,
+        };
+      }),
+    getUserCertificates: protectedProcedure
+      .query(async ({ ctx }) => {
+        if (!ctx.user) throw new Error('User not authenticated');
+        
+        const { getUserCertificatesList } = await import('./certificateService');
+        const certs = await getUserCertificatesList(ctx.user.id);
+        
+        return {
+          certificates: certs.map(c => ({
+            id: c.id,
+            certificateNumber: c.certificateNumber,
+            courseName: c.courseName,
+            issueDate: c.issueDate,
+            expiryDate: c.expiryDate,
+            pdfUrl: c.certificatePdfUrl,
+            status: c.status,
+          })),
+        };
+      }),
+    verifyCertificate: publicProcedure
+      .input(z.object({
+        certificateNumber: z.string(),
+      }))
+      .query(async ({ input }) => {
+        const { verifyCertificateByNumber } = await import('./certificateService');
+        const cert = await verifyCertificateByNumber(input.certificateNumber);
+        
+        if (!cert) {
+          return {
+            isValid: false,
+            message: 'Certificate not found',
+          };
+        }
+        
+        return {
+          isValid: cert.status === 'active',
+          certificateNumber: cert.certificateNumber,
+          courseName: cert.courseName,
+          issueDate: cert.issueDate,
+          status: cert.status,
+        };
+      }),
+    downloadCertificate: protectedProcedure
+      .input(z.object({
+        certificateId: z.number(),
+      }))
+      .query(async ({ input, ctx }) => {
+        if (!ctx.user) throw new Error('User not authenticated');
+        
+        const { getCertificateById } = await import('./certificateService');
+        const cert = await getCertificateById(input.certificateId);
+        
+        if (!cert || cert.userId !== ctx.user.id) {
+          throw new Error('Certificate not found or unauthorized');
+        }
+        
+        return {
+          success: true,
+          pdfUrl: cert.certificatePdfUrl,
+          certificateNumber: cert.certificateNumber,
+          downloadUrl: cert.certificatePdfUrl,
+        };
+      }),
+    revokeCertificate: protectedProcedure
+      .input(z.object({
+        certificateId: z.number(),
+        reason: z.string(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== 'admin') throw new Error('Admin access required');
+        
+        const { revokeCertificateById } = await import('./certificateService');
+        await revokeCertificateById(input.certificateId, input.reason);
+        
+        return {
+          success: true,
+          message: 'Certificate revoked successfully',
+        };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

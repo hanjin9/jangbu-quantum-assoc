@@ -64,6 +64,13 @@
       "when": 1774187811712,
       "tag": "0008_left_kulan_gath",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1776831467559,
+      "tag": "0009_familiar_energizer",
+      "breakpoints": true
     }
   ]
 }

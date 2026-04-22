@@ -292,3 +292,69 @@ export const pushSubscriptions = mysqlTable("push_subscriptions", {
 
 export type PushSubscription = typeof pushSubscriptions.$inferSelect;
 export type InsertPushSubscription = typeof pushSubscriptions.$inferInsert;
+
+/**
+ * Certificates table for tracking issued certificates after payment/course completion
+ */
+export const certificates = mysqlTable("certificates", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("user_id").notNull(),
+  orderId: int("order_id"),
+  courseId: varchar("course_id", { length: 100 }).notNull(),
+  courseName: varchar("course_name", { length: 255 }).notNull(),
+  certificateNumber: varchar("certificate_number", { length: 255 }).notNull().unique(),
+  verificationCode: varchar("verification_code", { length: 64 }).notNull().unique(),
+  certificatePdfUrl: text("certificate_pdf_url"),
+  issueDate: timestamp("issue_date").defaultNow().notNull(),
+  expiryDate: timestamp("expiry_date"),
+  status: mysqlEnum("status", ["active", "revoked", "expired"]).default("active").notNull(),
+  revokeReason: text("revoke_reason"),
+  revokedAt: timestamp("revoked_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Certificate = typeof certificates.$inferSelect;
+export type InsertCertificate = typeof certificates.$inferInsert;
+
+/**
+ * Course lectures table for storing course and lecture information
+ */
+export const courseLectures = mysqlTable("course_lectures", {
+  id: int("id").autoincrement().primaryKey(),
+  courseId: varchar("course_id", { length: 100 }).notNull().unique(),
+  courseName: varchar("course_name", { length: 255 }).notNull(),
+  courseLevel: varchar("course_level", { length: 50 }).notNull(),
+  courseDescription: text("course_description"),
+  instructorName: varchar("instructor_name", { length: 255 }),
+  instructorEmail: varchar("instructor_email", { length: 320 }),
+  durationMinutes: int("duration_minutes").notNull(),
+  minimumPassingMinutes: int("minimum_passing_minutes").notNull(),
+  videoUrl: text("video_url"),
+  courseImageUrl: text("course_image_url"),
+  isActive: int("is_active").default(1).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CourseLecture = typeof courseLectures.$inferSelect;
+export type InsertCourseLecture = typeof courseLectures.$inferInsert;
+
+/**
+ * Lecture progress table for tracking user's course progress
+ */
+export const lectureProgress = mysqlTable("lecture_progress", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("user_id").notNull(),
+  courseId: varchar("course_id", { length: 100 }).notNull(),
+  watchedMinutes: int("watched_minutes").default(0).notNull(),
+  progressPercentage: decimal("progress_percentage", { precision: 5, scale: 2 }).default("0.00").notNull(),
+  isCompleted: int("is_completed").default(0).notNull(),
+  completedAt: timestamp("completed_at"),
+  certificateId: int("certificate_id"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type LectureProgress = typeof lectureProgress.$inferSelect;
+export type InsertLectureProgress = typeof lectureProgress.$inferInsert;
