@@ -158,16 +158,18 @@ export function GlobalHeader() {
           </nav>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center gap-2 flex-shrink-0">
+          <div className="md:hidden flex items-center gap-3 flex-shrink-0">
+            <span className="text-sm font-semibold text-[#d4af37]">설정</span>
             <LanguageSwitcher />
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 hover:bg-accent rounded-lg transition"
+              title="메뉴"
             >
               {mobileMenuOpen ? (
-                <X className="h-5 w-5" />
+                <X className="h-6 w-6 stroke-[2.5]" />
               ) : (
-                <Menu className="h-5 w-5" />
+                <Menu className="h-6 w-6 stroke-[2.5]" />
               )}
             </button>
           </div>

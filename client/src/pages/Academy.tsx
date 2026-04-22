@@ -1,11 +1,11 @@
-import { useTranslation } from '@/hooks/useTranslation';
+
 import { Button } from '@/components/ui/button';
 import { useLocation } from 'wouter';
 import { useState } from 'react';
 import { Download, CheckCircle, Clock } from 'lucide-react';
 
+
 export default function Academy() {
-  const { t } = useTranslation();
   const [, navigate] = useLocation();
   const [selectedCourse, setSelectedCourse] = useState<number | null>(null);
   const [userAnswers, setUserAnswers] = useState<Record<number, string>>({});
@@ -111,6 +111,11 @@ export default function Academy() {
         { title: '실무 능력', content: '실제 상황에서의 문제 해결 능력' },
         { title: '윤리 및 책임', content: '전문가로서의 윤리적 판단' },
       ],
+      examMaterials: [
+        { title: 'A형 예상 문제 (쉬움)', url: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/A형_쉬움_예상문제_0df2fed7.pdf' },
+        { title: 'B형 예상 문제 (중간)', url: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/B형_중간_예상문제_3fae6afc.pdf' },
+        { title: 'C형 예상 문제 (어려움)', url: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/C형_어려움_예상문제_c5eb3a43.pdf' },
+      ],
       exam: [
         { id: 1, question: '양자요법의 궁극적 목표는?', options: ['환자 건강 회복', '돈 버는 것', '유명해지기', '권력'], correct: 0 },
         { id: 2, question: '전문 관리사의 책임은?', options: ['환자 안전과 신뢰', '자신의 이익', '경쟁', '비난'], correct: 0 },
@@ -150,6 +155,158 @@ export default function Academy() {
       <div className="container mx-auto px-4">
         <h1 className="text-4xl font-bold text-white mb-4">양자요법 교육 과정</h1>
         <p className="text-gray-300 mb-12">전문 양자요법 관리사 자격증 취득 과정</p>
+
+        {/* 공식 교재 섹션 */}
+        <div className="mb-16 bg-gradient-to-r from-amber-900/20 to-yellow-900/20 p-8 rounded-lg border border-amber-500/30">
+          <h2 className="text-3xl font-bold text-amber-400 mb-8 flex items-center gap-3">
+            <span>📚</span> 공식 교재 및 자료
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* 3급 교재 */}
+            <div className="bg-slate-800/70 p-6 rounded-lg border border-amber-500/20 hover:border-amber-500 transition">
+              <div className="flex items-start gap-4 mb-4">
+                <span className="text-4xl">📚</span>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-white mb-2">3급 교재</h3>
+                  <p className="text-sm text-gray-400">장•부 양자요법 관리사 3급 과정</p>
+                </div>
+              </div>
+              <p className="text-gray-300 text-sm mb-4">
+                장•부 양자요법의 기초 이론부터 실기 기법까지 포함된 종합 교재입니다. 3급 수준의 모든 내용을 다룹니다.
+              </p>
+              <a
+                href="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/grade3_jangbu_d5015981.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition font-semibold"
+              >
+                <Download className="w-4 h-4" />
+                다운로드
+              </a>
+            </div>
+
+            {/* 2급 교재 - 장•부 양자요법 관리사 */}
+            <div className="bg-slate-800/70 p-6 rounded-lg border border-amber-500/20 hover:border-amber-500 transition">
+              <div className="flex items-start gap-4 mb-4">
+                <span className="text-4xl">📖</span>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-white mb-2">2급 교재</h3>
+                  <p className="text-sm text-gray-400">장•부 양자요법 관리사 2급 과정 (실무실기 중심)</p>
+                </div>
+              </div>
+              <p className="text-gray-300 text-sm mb-4">
+                장•부 양자요법의 실무 중심 실기 교재로, 2급 수준의 실제 업무 능력을 갖추기 위한 필수 자료입니다.
+              </p>
+              <a
+                href="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/_____________2__________________________6d7d9024.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition font-semibold"
+              >
+                <Download className="w-4 h-4" />
+                다운로드
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* 과목별 문제집 섹션 */}
+        <div className="mb-16 bg-gradient-to-r from-slate-900/30 to-slate-800/30 p-8 rounded-lg border border-amber-500/20">
+          <h2 className="text-3xl font-bold text-amber-400 mb-8 flex items-center gap-3">
+            <span>✏️</span> 과목별 문제집
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* 기초 이론 */}
+            <div className="bg-slate-800/70 p-6 rounded-lg border border-amber-500/20 hover:border-amber-500 transition">
+              <div className="flex items-start gap-3 mb-4">
+                <span className="text-3xl">🎓</span>
+                <h3 className="text-lg font-bold text-white">기초 이론</h3>
+              </div>
+              <p className="text-gray-300 text-sm mb-4">양자요법의 기본 원리와 기초 개념을 학습합니다.</p>
+              <a
+                href="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/기초_이론_고품질문제집_ab6820bd.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition font-semibold text-sm"
+              >
+                <Download className="w-4 h-4" />
+                문제집 다운로드
+              </a>
+            </div>
+
+            {/* 에너지 관리 */}
+            <div className="bg-slate-800/70 p-6 rounded-lg border border-amber-500/20 hover:border-amber-500 transition">
+              <div className="flex items-start gap-3 mb-4">
+                <span className="text-3xl">⚡</span>
+                <h3 className="text-lg font-bold text-white">에너지 관리</h3>
+              </div>
+              <p className="text-gray-300 text-sm mb-4">에너지 흐름 최적화와 균형 유지 방법을 배웁니다.</p>
+              <a
+                href="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/에너지_관리_고품질문제집_0cc37cab.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition font-semibold text-sm"
+              >
+                <Download className="w-4 h-4" />
+                문제집 다운로드
+              </a>
+            </div>
+
+            {/* 실기 기법 */}
+            <div className="bg-slate-800/70 p-6 rounded-lg border border-amber-500/20 hover:border-amber-500 transition">
+              <div className="flex items-start gap-3 mb-4">
+                <span className="text-3xl">🙌</span>
+                <h3 className="text-lg font-bold text-white">실기 기법</h3>
+              </div>
+              <p className="text-gray-300 text-sm mb-4">실제 시술 기법과 안전한 수행 방법을 습득합니다.</p>
+              <a
+                href="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/실기_기법_고품질문제집_0ff2c02c.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition font-semibold text-sm"
+              >
+                <Download className="w-4 h-4" />
+                문제집 다운로드
+              </a>
+            </div>
+
+            {/* 안전 관리 */}
+            <div className="bg-slate-800/70 p-6 rounded-lg border border-amber-500/20 hover:border-amber-500 transition">
+              <div className="flex items-start gap-3 mb-4">
+                <span className="text-3xl">🛡️</span>
+                <h3 className="text-lg font-bold text-white">안전 관리</h3>
+              </div>
+              <p className="text-gray-300 text-sm mb-4">클라이언트 안전과 응급 상황 대응을 학습합니다.</p>
+              <a
+                href="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/안전_관리_고품질문제집_e62bc7e6.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition font-semibold text-sm"
+              >
+                <Download className="w-4 h-4" />
+                문제집 다운로드
+              </a>
+            </div>
+
+            {/* 윤리 및 법규 */}
+            <div className="bg-slate-800/70 p-6 rounded-lg border border-amber-500/20 hover:border-amber-500 transition">
+              <div className="flex items-start gap-3 mb-4">
+                <span className="text-3xl">⚖️</span>
+                <h3 className="text-lg font-bold text-white">윤리 및 법규</h3>
+              </div>
+              <p className="text-gray-300 text-sm mb-4">전문가 윤리와 관련 법규를 이해합니다.</p>
+              <a
+                href="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/윤리_법규_고품질문제집_66641d37.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition font-semibold text-sm"
+              >
+                <Download className="w-4 h-4" />
+                문제집 다운로드
+              </a>
+            </div>
+          </div>
+        </div>
 
         {/* Progress Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
@@ -228,8 +385,32 @@ export default function Academy() {
                 </div>
               </div>
 
-              {/* Exam Section */}
-              {selectedCourse === course.id && (
+              {/* Exam Materials for Certificate Test */}
+              {selectedCourse === course.id && course.id === 6 && 'examMaterials' in course && (
+                <div className="bg-slate-900/50 p-6 border-t border-amber-500/20">
+                  <h4 className="text-lg font-bold text-white mb-4">📝 예상 문제</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    {(course as any).examMaterials.map((material: any, idx: number) => (
+                      <a
+                        key={idx}
+                        href={material.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-4 bg-slate-800 border border-amber-500/30 rounded-lg hover:border-amber-500 transition flex items-center gap-3"
+                      >
+                        <Download className="w-5 h-5 text-amber-400" />
+                        <div>
+                          <p className="text-white font-semibold text-sm">{material.title}</p>
+                          <p className="text-gray-400 text-xs">25문제</p>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Exam Section for other courses */}
+              {selectedCourse === course.id && course.id !== 6 && (
                 <div className="bg-slate-900/50 p-6 border-t border-amber-500/20">
                   <h4 className="text-lg font-bold text-white mb-4">실기 시험</h4>
                   {course.exam.map(question => (

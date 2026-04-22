@@ -1,5 +1,5 @@
-import { useTranslation } from "@/hooks/useTranslation";
 import { Button } from "@/components/ui/button";
+import { Download } from 'lucide-react';
 import { useLocation } from "wouter";
 
 const useNavigate = () => {
@@ -8,7 +8,6 @@ const useNavigate = () => {
 };
 
 export default function About() {
-  const { t } = useTranslation();
   const navigate = useNavigate() as (path: string) => void;
 
   return (
@@ -91,11 +90,33 @@ export default function About() {
             </div>
 
             <div className="bg-slate-700 p-8 rounded-lg border border-yellow-400/20">
+              <h3 className="text-2xl font-bold text-yellow-400 mb-4">협회 정관 및 운영 방침</h3>
+              <p className="text-gray-300 mb-6">
+                협회의 투명한 운영과 체계적인 관리를 위해 다음의 공식 문서를 제공합니다.
+              </p>
+              <div className="space-y-3">
+                <a
+                  href="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/_____________________________e6253234.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-4 bg-slate-800 rounded-lg hover:bg-slate-700 transition border border-yellow-400/30 hover:border-yellow-400"
+                >
+                  <span className="text-yellow-400 text-2xl">📋</span>
+                  <div className="flex-1">
+                    <p className="font-semibold text-white">협회 정관 (안)</p>
+                    <p className="text-sm text-gray-400">협회의 설립 목적, 조직 구조, 회원 자격 및 의무 등을 규정</p>
+                  </div>
+                  <Download className="w-5 h-5 text-yellow-400" />
+                </a>
+              </div>
+            </div>
+
+            <div className="bg-slate-700 p-8 rounded-lg border border-yellow-400/20">
               <h3 className="text-2xl font-bold text-yellow-400 mb-4">협회의 미션</h3>
               <ul className="space-y-4 text-lg">
                 <li className="flex items-start">
                   <span className="text-yellow-400 mr-4 font-bold">•</span>
-                  <span><strong className="text-yellow-300">전문가 양성:</strong> 6개월 이상의 체계적인 교육과정을 통해 양자요법 전문가를 양성하고 국제 수준의 자격 관리</span>
+                  <span><strong className="text-yellow-300">전문가 양성:</strong> 3급부터 1급까지 체계적인 교육과정을 통해 양자요법 전문가를 양성하고 국제 수준의 자격 관리</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-yellow-400 mr-4 font-bold">•</span>
@@ -103,11 +124,11 @@ export default function About() {
                 </li>
                 <li className="flex items-start">
                   <span className="text-yellow-400 mr-4 font-bold">•</span>
-                  <span><strong className="text-yellow-300">사회 기여:</strong> 지역사회 건강 증진 프로그램 운영 및 취약계층 지원</span>
+                  <span><strong className="text-yellow-300">국민 건강 증진:</strong> 양자요법을 통해 만성질환 예방, 면역력 강화, 삶의 질 향상에 기여</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-yellow-400 mr-4 font-bold">•</span>
-                  <span><strong className="text-yellow-300">국제 협력:</strong> 국내외 의료 전문가와의 협력을 통해 양자요법의 국제화 추진</span>
+                  <span><strong className="text-yellow-300">국제 협력:</strong> 세계 각국의 양자요법 전문가와 협력하여 글로벌 표준 수립 및 정보 교류</span>
                 </li>
               </ul>
             </div>
@@ -115,116 +136,20 @@ export default function About() {
         </div>
       </section>
 
-      {/* 핵심 가치 */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-12 text-yellow-400 text-center">핵심 가치</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-gradient-to-br from-yellow-400/10 to-transparent p-8 rounded-lg border border-yellow-400/30">
-              <h3 className="text-2xl font-bold text-yellow-400 mb-4">신뢰성</h3>
-              <p className="text-gray-300">양자 물리학과 현대 의학에 기반한 과학적 근거로 신뢰할 수 있는 건강 관리 서비스 제공</p>
-            </div>
-            <div className="bg-gradient-to-br from-yellow-400/10 to-transparent p-8 rounded-lg border border-yellow-400/30">
-              <h3 className="text-2xl font-bold text-yellow-400 mb-4">전문성</h3>
-              <p className="text-gray-300">국제 수준의 체계적인 교육과정과 자격 관리를 통한 전문가 집단의 형성</p>
-            </div>
-            <div className="bg-gradient-to-br from-yellow-400/10 to-transparent p-8 rounded-lg border border-yellow-400/30">
-              <h3 className="text-2xl font-bold text-yellow-400 mb-4">혁신</h3>
-              <p className="text-gray-300">5G 테라헤르츠 기술, 양자 색채 요법 등 지속적인 연구와 개발을 통한 혁신</p>
-            </div>
-            <div className="bg-gradient-to-br from-yellow-400/10 to-transparent p-8 rounded-lg border border-yellow-400/30">
-              <h3 className="text-2xl font-bold text-yellow-400 mb-4">인도주의</h3>
-              <p className="text-gray-300">모든 사람의 건강한 삶을 위해 헌신하는 인도주의적 정신</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 양자요법의 효과 */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-800">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-12 text-yellow-400">양자요법의 주요 효과</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-slate-700 p-6 rounded-lg border border-yellow-400/20">
-              <h3 className="text-lg font-bold text-yellow-400 mb-3">✓ 면역력 강화</h3>
-              <p className="text-gray-300">체온 상승을 통한 면역 기능 증강 및 감기 빈도 70% 감소</p>
-            </div>
-            <div className="bg-slate-700 p-6 rounded-lg border border-yellow-400/20">
-              <h3 className="text-lg font-bold text-yellow-400 mb-3">✓ 통증 완화</h3>
-              <p className="text-gray-300">만성 요통, 어깨 통증 등 85% 이상 통증 감소</p>
-            </div>
-            <div className="bg-slate-700 p-6 rounded-lg border border-yellow-400/20">
-              <h3 className="text-lg font-bold text-yellow-400 mb-3">✓ 피로 회복</h3>
-              <p className="text-gray-300">만성 피로 극복 및 에너지 수준 90% 회복</p>
-            </div>
-            <div className="bg-slate-700 p-6 rounded-lg border border-yellow-400/20">
-              <h3 className="text-lg font-bold text-yellow-400 mb-3">✓ 스트레스 해소</h3>
-              <p className="text-gray-300">스트레스 80% 감소 및 정서 안정화</p>
-            </div>
-            <div className="bg-slate-700 p-6 rounded-lg border border-yellow-400/20">
-              <h3 className="text-lg font-bold text-yellow-400 mb-3">✓ 혈액순환 개선</h3>
-              <p className="text-gray-300">혈류량 증가 및 신진대사 활성화</p>
-            </div>
-            <div className="bg-slate-700 p-6 rounded-lg border border-yellow-400/20">
-              <h3 className="text-lg font-bold text-yellow-400 mb-3">✓ 피부 건강</h3>
-              <p className="text-gray-300">피부 톤 개선, 트러블 감소, 탄력 증가</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 조직 구조 */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-12 text-yellow-400">조직 구조</h2>
-          <div className="bg-slate-700 p-8 rounded-lg border border-yellow-400/20">
-            <div className="space-y-6 text-gray-200">
-              <div>
-                <h3 className="text-xl font-bold text-yellow-400 mb-2">회장실</h3>
-                <p className="text-gray-300">협회의 전략 수립 및 대외 활동 총괄</p>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-yellow-400 mb-2">교육 위원회</h3>
-                <p className="text-gray-300">6개월 이상의 양자요법 교육과정 개발 및 운영, 국제 수준의 자격 관리</p>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-yellow-400 mb-2">연구 개발 위원회</h3>
-                <p className="text-gray-300">양자 색채 요법, 5G 테라헤르츠 기술 등 신규 치료법 개발</p>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-yellow-400 mb-2">윤리 및 규정 위원회</h3>
-                <p className="text-gray-300">회원 윤리 기준 관리 및 분쟁 조정</p>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-yellow-400 mb-2">사회 공헌 위원회</h3>
-                <p className="text-gray-300">지역사회 건강 증진 프로그램 운영 및 취약계층 지원</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-yellow-400/10 to-transparent">
+      {/* CTA Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-slate-800 to-slate-900">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-8 text-yellow-400">협회에 가입하세요</h2>
-          <p className="text-lg text-gray-300 mb-12">
-            양자요법 전문가로서의 경력을 시작하고, 전문 커뮤니티에 참여하세요.
+          <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-yellow-400">전문가와 함께 시작하세요</h2>
+          <p className="text-xl text-gray-300 mb-8">
+            양자요법의 전문가가 되기 위한 첫 걸음을 내딛으세요
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              onClick={() => navigate("/academy")}
-              className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-3 text-lg rounded-lg"
-            >
-              교육 프로그램 보기
-            </Button>
-            <Button
-              onClick={() => navigate("/checkout")}
-              className="bg-slate-700 hover:bg-slate-600 text-white font-bold px-8 py-3 text-lg rounded-lg border border-yellow-400"
-            >
-              멤버십 가입하기
-            </Button>
-          </div>
+          <Button
+            size="lg"
+            className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold"
+            onClick={() => navigate('/academy')}
+          >
+            교육 과정 보기
+          </Button>
         </div>
       </section>
     </div>
