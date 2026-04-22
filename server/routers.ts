@@ -4,6 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import { smsAuthRouter } from "./routers-sms";
+import { signupRouter } from "./routers-signup";
 import { paymentRouter } from "./routers-payment";
 import { transcribeRouter } from "./transcribe.router";
 import { consultationRouter } from "./consultation.router";
@@ -12,6 +13,7 @@ export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
   smsAuth: smsAuthRouter,
+  signup: signupRouter,
   payment: paymentRouter,
   transcribe: transcribeRouter,
   consultation: consultationRouter,

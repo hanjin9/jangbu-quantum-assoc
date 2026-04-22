@@ -34,6 +34,7 @@ export default function SignupProcess() {
   
   const sendOTPMutation = trpc.smsAuth.sendOTP.useMutation();
   const verifyOTPMutation = trpc.smsAuth.verifyOTP.useMutation();
+  const completeSignupMutation = trpc.signup.completeSignup.useMutation();
 
   // 타이머
   useEffect(() => {
@@ -162,12 +163,26 @@ export default function SignupProcess() {
 
     setLoading(true);
     try {
-      // 실제로는 백엔드에서 저장
+      // 국제 형식으로 변환
+      const internationalPhone = toInternationalFormat(contact);
+      
+      // 백엔드에서 저장
+      await completeSignupMutation.mutateAsync({
+        sessionToken,
+        name,
+        age,
+        contact: internationalPhone,
+        region: region || undefined,
+        job: job || undefined,
+        motivation: motivation || undefined,
+      });
+      
       setCurrentStep('complete');
       toast.success('회원가입이 완료되었습니다!');
       setTimeout(() => navigate('/'), 2000);
     } catch (err) {
       setError('회원가입에 실패했습니다.');
+      console.error(err);
     } finally {
       setLoading(false);
     }
