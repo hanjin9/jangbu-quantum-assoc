@@ -43,6 +43,7 @@ import { AuditLogDashboard } from "./pages/AuditLogDashboard";
 import { MobileNotificationCenter } from "./pages/MobileNotificationCenter";
 import { BottomNavBar } from "./components/BottomNavBar";
 import MyCertificates from "./pages/MyCertificates";
+import ExamPracticeBook from "./pages/ExamPracticeBook";
 
 function Router() {
   return (
@@ -84,6 +85,7 @@ function Router() {
       <Route path="/audit-logs" component={AuditLogDashboard} />
       <Route path="/mobile-notifications" component={MobileNotificationCenter} />
       <Route path="/my-certificates" component={MyCertificates} />
+      <Route path="/exam-practice-book" component={ExamPracticeBook} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

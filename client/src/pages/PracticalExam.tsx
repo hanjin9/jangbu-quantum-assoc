@@ -5,9 +5,11 @@ import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Clock, CheckCircle, AlertCircle, Trophy } from 'lucide-react';
+import { Clock, CheckCircle, AlertCircle, Trophy, BookOpen } from 'lucide-react';
+import { useLocation } from 'wouter';
 
 export default function PracticalExam() {
+  const [, navigate] = useLocation();
   const [examState, setExamState] = useState<'list' | 'taking' | 'result'>('list');
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
@@ -214,6 +216,17 @@ export default function PracticalExam() {
             <p className="text-gray-300 text-lg">
               양자요법 자격증 취득을 위한 실기시험에 응시하세요
             </p>
+          </div>
+
+          {/* 문제집 버튼 */}
+          <div className="mb-8">
+            <Button
+              onClick={() => navigate('/exam-practice-book')}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg flex items-center gap-2"
+            >
+              <BookOpen className="w-5 h-5" />
+              과목별 문제집 보기
+            </Button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
