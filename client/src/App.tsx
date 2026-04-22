@@ -46,6 +46,7 @@ import MyCertificates from "./pages/MyCertificates";
 import ExamPracticeBook from "./pages/ExamPracticeBook";
 import { OwnerDashboard } from "./pages/OwnerDashboard";
 import BlogDetail from "./pages/BlogDetail";
+import SMSLogin from "./pages/SMSLogin";
 
 function Router() {
   return (
@@ -90,6 +91,7 @@ function Router() {
       <Route path="/exam-practice-book" component={ExamPracticeBook} />
          <Route path="/owner-dashboard" component={OwnerDashboard} />
       <Route path="/blog/:id" component={BlogDetail} />
+      <Route path="/sms-login" component={SMSLogin} />
       <Route path="*" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

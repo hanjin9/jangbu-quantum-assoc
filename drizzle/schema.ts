@@ -358,3 +358,39 @@ export const lectureProgress = mysqlTable("lecture_progress", {
 
 export type LectureProgress = typeof lectureProgress.$inferSelect;
 export type InsertLectureProgress = typeof lectureProgress.$inferInsert;
+
+
+/**
+ * SMS OTP Verification table for phone-based authentication
+ */
+export const smsVerifications = mysqlTable("sms_verifications", {
+  id: int("id").autoincrement().primaryKey(),
+  phoneNumber: varchar("phone_number", { length: 20 }).notNull(),
+  otpCode: varchar("otp_code", { length: 6 }).notNull(),
+  isVerified: int("is_verified").default(0).notNull(),
+  userId: int("user_id"),
+  expiresAt: timestamp("expires_at").notNull(),
+  attemptCount: int("attempt_count").default(0).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SmsVerification = typeof smsVerifications.$inferSelect;
+export type InsertSmsVerification = typeof smsVerifications.$inferInsert;
+
+/**
+ * SMS Login Sessions table for tracking SMS-based login sessions
+ */
+export const smsLoginSessions = mysqlTable("sms_login_sessions", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionToken: varchar("session_token", { length: 255 }).unique().notNull(),
+  phoneNumber: varchar("phone_number", { length: 20 }).notNull(),
+  userId: int("user_id"),
+  isVerified: int("is_verified").default(0).notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SmsLoginSession = typeof smsLoginSessions.$inferSelect;
+export type InsertSmsLoginSession = typeof smsLoginSessions.$inferInsert;
