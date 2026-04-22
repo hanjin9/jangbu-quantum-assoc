@@ -2,7 +2,7 @@ import { useLocation } from 'wouter';
 import { useTranslation } from '@/hooks/useTranslation';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { Button } from '@/components/ui/button';
-import { Menu, X, ArrowUp, ChevronDown } from 'lucide-react';
+import { Menu, X, ArrowUp, ChevronDown, Settings } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 interface NavItem {
@@ -102,20 +102,26 @@ export function GlobalHeader() {
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border safe-top">
       <div className="w-full px-0 py-2 md:py-4">
-        <div className="flex justify-between items-center px-1 md:px-6 gap-1 md:gap-8 h-14 md:h-auto">
-          {/* Logo - 최대한 좌측 */}
-          <button
-            onClick={handleLogoClick}
-            className="flex items-center gap-0.5 md:gap-2 hover:opacity-80 transition-opacity flex-shrink-0 active:scale-95 pl-1"
-            title={t('about.title')}
-          >
-            <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#1a4d7a] to-[#d4af37] rounded-lg flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-bold text-xs md:text-sm">장•부</span>
+        <div className="flex justify-between items-center px-1 md:px-6 gap-0.5 md:gap-8 h-14 md:h-auto">
+          {/* Logo + Language Switcher - 좌측 */}
+          <div className="flex items-center gap-0.5 flex-shrink-0">
+            <button
+              onClick={handleLogoClick}
+              className="flex items-center gap-0.5 md:gap-2 hover:opacity-80 transition-opacity flex-shrink-0 active:scale-95 pl-1"
+              title={t('about.title')}
+            >
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#1a4d7a] to-[#d4af37] rounded-lg flex items-center justify-center flex-shrink-0">
+                <span className="text-white font-bold text-xs md:text-sm">장•부</span>
+              </div>
+              <h1 className="text-xs md:text-lg font-bold text-[#1a4d7a] hidden sm:inline whitespace-nowrap">
+                {t('about.title')}
+              </h1>
+            </button>
+            {/* 로고 옆 글로벌 선택 - 모바일 */}
+            <div className="md:hidden">
+              <LanguageSwitcher />
             </div>
-            <h1 className="text-xs md:text-lg font-bold text-[#1a4d7a] hidden sm:inline whitespace-nowrap">
-              {t('about.title')}
-            </h1>
-          </button>
+          </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex gap-2 items-center flex-1 justify-center">
@@ -157,16 +163,26 @@ export function GlobalHeader() {
             <LanguageSwitcher />
           </nav>
 
-          {/* 중간 텍스트 - 모바일 (한 줄, 4배 크기) */}
+          {/* 중간 텍스트 - 모바일 (한 줄, 큰 크기) */}
           <div className="md:hidden flex-1 text-center px-1">
             <h2 className="text-lg font-bold text-[#d4af37] leading-tight whitespace-nowrap">
               장•부 (양자요법) 관리사협회
             </h2>
           </div>
 
-          {/* Mobile Menu Button - 최대한 우측 */}
-          <div className="md:hidden flex items-center gap-1 flex-shrink-0 pr-1">
-            <LanguageSwitcher />
+          {/* 설정 + 햄버거 메뉴 - 최대한 우측 */}
+          <div className="md:hidden flex items-center gap-0.5 flex-shrink-0 pr-1">
+            {/* 설정 텍스트 + 아이콘 */}
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="flex items-center gap-0.5 px-2 py-1.5 hover:bg-accent rounded-lg transition flex-shrink-0"
+              title="설정"
+            >
+              <Settings className="h-4 w-4 text-[#d4af37]" />
+              <span className="text-xs font-semibold text-[#d4af37]">설정</span>
+            </button>
+            
+            {/* 햄버거 메뉴 */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-1.5 hover:bg-accent rounded-lg transition"
