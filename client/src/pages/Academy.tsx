@@ -180,6 +180,14 @@ export default function Academy() {
     setUserAnswers({});
     setWrongAnswers({});
     setTimeLeft(1800);
+    
+    // 스크롤을 해당 과정 위치로 이동
+    setTimeout(() => {
+      const courseElement = document.querySelector(`[data-course-id="${courseId}"]`);
+      if (courseElement) {
+        courseElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   };
 
   const handleSubmitTest = (courseId: number) => {
@@ -240,7 +248,7 @@ export default function Academy() {
             const progressPercent = getProgressPercentage(course.id);
 
             return (
-              <div key={course.id} className="bg-slate-800/70 rounded-lg border border-amber-500/20 overflow-hidden">
+              <div key={course.id} data-course-id={course.id} className="bg-slate-800/70 rounded-lg border border-amber-500/20 overflow-hidden">
                 {/* 과정 헤더 */}
                 <div className="p-6 hover:bg-slate-700/50 transition cursor-pointer" onClick={() => setExpandedCourse(isExpanded ? null : course.id)}>
                   <div className="flex items-center justify-between mb-3">
