@@ -85,12 +85,22 @@ export default function MembershipTiers() {
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
 
   const handleSelectTier = (tierId: string) => {
+    if (tierId === 'president') {
+      // 협회장은 문의하기
+      navigate('/chat-consultation');
+      return;
+    }
+
     if (!isAuthenticated) {
-      // 미로그인 사용자는 로그인 페이지로 이동 (선택된 멤버십 정보 전달)
-      window.location.href = getLoginUrl(`/checkout?tier=${tierId}`);
+      // 미로그인 사용자는 로그인 페이지로 이동
+      // tier 정보를 localStorage에 저장
+      localStorage.setItem('selectedTier', tierId);
+      // 로그인 후 자동으로 결제 페이지로 이동하도록 returnUrl 설정
+      window.location.href = getLoginUrl(`/payment-checkout?tier=${tierId}`);
     } else {
       // 로그인된 사용자는 결제 페이지로 이동
-      navigate(`/checkout?tier=${tierId}`);
+      localStorage.setItem('selectedTier', tierId);
+      navigate(`/payment-checkout?tier=${tierId}`);
     }
   };
 

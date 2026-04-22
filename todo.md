@@ -340,3 +340,13 @@
 - [ ] 상단 메뉴 전수 검사 (모든 카테고리/페이지에서 활성화 확인)
 - [ ] PC 화면 왼쪽 하단 뒤로가기 버튼 추가 (왼쪽 화살표)
 - [ ] PC 화면 우측 하단 위로 버튼 확인 (동그란 버튼, 유지)
+
+## 37차 단계 (멤버십 선택 → 로그인 → 결제 플로우 완성)
+- [x] MembershipTiers.tsx - 멤버십 선택 시 localStorage 저장
+- [x] MembershipTiers.tsx - 미로그인 사용자는 로그인 페이지로 이동
+- [x] SMSLogin.tsx - URL 파라미터에서 tier 정보 추출
+- [x] SMSLogin.tsx - 로그인 완료 후 returnUrl로 자동 이동
+- [x] PaymentCheckout.tsx - URL에서 tier 파라미터 추출
+- [x] PaymentCheckout.tsx - 멤버십 정보 자동 로드 및 상품 정보 업데이트
+- [x] PaymentCheckout.tsx - 멤버십 정보 디스플레이 추가
+- [x] 전체 테스트 통과 (101/101)

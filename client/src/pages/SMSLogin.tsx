@@ -11,6 +11,7 @@ type Step = 'phone' | 'otp' | 'success' | 'social';
 type LoginMethod = 'sms' | 'google' | 'kakao';
 
 export default function SMSLogin() {
+  const [location] = useLocation();
   const [, navigate] = useLocation();
   const [step, setStep] = useState<Step>('social');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -20,6 +21,7 @@ export default function SMSLogin() {
   const [error, setError] = useState('');
   const [timeLeft, setTimeLeft] = useState(0);
   const [loginMethod, setLoginMethod] = useState<LoginMethod>('sms');
+  const [returnUrl, setReturnUrl] = useState<string>('/'); // 로그인 후 이동할 URL
 
   const sendOTPMutation = trpc.smsAuth.sendOTP.useMutation();
   const verifyOTPMutation = trpc.smsAuth.verifyOTP.useMutation();
@@ -44,6 +46,20 @@ export default function SMSLogin() {
     }
     return `+${cleaned}`;
   };
+
+  // URL에서 returnUrl 파라미터 추출
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tier = params.get('tier');
+    const url = params.get('returnUrl');
+    
+    if (tier) {
+      // tier 정보가 있으면 결제 페이지로 리다이렉트
+      setReturnUrl(`/payment-checkout?tier=${tier}`);
+    } else if (url) {
+      setReturnUrl(decodeURIComponent(url));
+    }
+  }, []);
 
   // 타이머
   useEffect(() => {
@@ -107,7 +123,8 @@ export default function SMSLogin() {
     try {
       await loginWithSessionMutation.mutateAsync({ sessionToken });
       toast.success('로그인되었습니다.');
-      navigate('/');
+      // returnUrl이 있으면 해당 URL로 이동, 없으면 홈으로 이동
+      navigate(returnUrl);
     } catch (err) {
       setError('로그인에 실패했습니다.');
       console.error(err);

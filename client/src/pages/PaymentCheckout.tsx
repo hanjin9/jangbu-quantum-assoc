@@ -21,15 +21,54 @@ interface CheckoutItem {
   quantity: number;
 }
 
+interface MembershipTier {
+  id: string;
+  name: string;
+  price: number;
+}
+
+const membershipTiers: Record<string, MembershipTier> = {
+  basic: { id: 'basic', name: '일반 회원', price: 0 },
+  professional: { id: 'professional', name: '전문가', price: 99000 },
+  president: { id: 'president', name: '협회장', price: 0 },
+};
+
 export default function PaymentCheckout() {
   const [, navigate] = useLocation();
   const [savedCards, setSavedCards] = useState<SavedCard[]>([]);
   const [selectedCardId, setSelectedCardId] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [checkoutItems] = useState<CheckoutItem[]>([
+  const [selectedTier, setSelectedTier] = useState<string>('professional');
+  const [checkoutItems, setCheckoutItems] = useState<CheckoutItem[]>([
     { id: '1', name: '양자요법 기초 과정', price: 99000, quantity: 1 },
   ]);
+
+  // URL에서 tier 파라미터 추출 및 멤버십 정보 설정
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tier = params.get('tier') || localStorage.getItem('selectedTier') || 'professional';
+    
+    setSelectedTier(tier);
+    
+    // 선택된 멤버십에 따라 상품 정보 업데이트
+    const tierInfo = membershipTiers[tier];
+    if (tierInfo) {
+      const tierName = tier === 'professional' ? '전문가 멤버십' : 
+                       tier === 'basic' ? '일반 회원 멤버십' : '협회장 멤버십';
+      setCheckoutItems([
+        { 
+          id: tier, 
+          name: tierName, 
+          price: tierInfo.price, 
+          quantity: 1 
+        },
+      ]);
+    }
+    
+    // localStorage 정리
+    localStorage.removeItem('selectedTier');
+  }, []);
 
   const totalAmount = checkoutItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -126,6 +165,9 @@ export default function PaymentCheckout() {
           <Card className="bg-slate-800 border-amber-500/20">
             <CardHeader>
               <CardTitle className="text-white">주문 요약</CardTitle>
+              <CardDescription className="text-gray-400">
+                선택된 멤버십: <span className="text-amber-400 font-semibold">{membershipTiers[selectedTier]?.name || '선택 안 함'}</span>
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {checkoutItems.map((item) => (
