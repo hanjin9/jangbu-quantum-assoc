@@ -231,16 +231,24 @@ export function GlobalHeader() {
               <div key={item.label}>
                 <button
                   onClick={() => {
-                    if (hasSubmenu) {
-                      setOpenSubmenu(openSubmenu === item.label ? null : item.label);
-                    } else {
+                    if (!hasSubmenu) {
                       handleNavClick(item.path);
+                    }
+                  }}
+                  onMouseEnter={() => {
+                    if (hasSubmenu) {
+                      setOpenSubmenu(item.label);
+                    }
+                  }}
+                  onMouseLeave={() => {
+                    if (hasSubmenu) {
+                      setOpenSubmenu(null);
                     }
                   }}
                   className={`w-full text-left text-sm transition-colors py-2 px-3 rounded-lg flex items-center justify-between gap-2 ${
                     isActive
                       ? 'text-[#d4af37] font-semibold bg-[#d4af37]/10'
-                      : 'text-blue-200 hover:text-[#d4af37] hover:bg-[#d4af37]/5'
+                      : 'text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/5'
                   }`}
                 >
                   <span className="flex items-center gap-2">
@@ -263,7 +271,7 @@ export function GlobalHeader() {
                       <button
                         key={subitem.label}
                         onClick={() => handleNavClick(subitem.path)}
-                        className="w-full text-left text-base text-blue-300 hover:text-[#d4af37] py-2 px-3 rounded-lg hover:bg-[#d4af37]/10 transition-colors"
+                        className="w-full text-left text-base text-slate-800 hover:text-[#d4af37] py-2 px-3 rounded-lg hover:bg-[#d4af37]/10 transition-colors"
                       >
                         {subitem.label}
                       </button>
