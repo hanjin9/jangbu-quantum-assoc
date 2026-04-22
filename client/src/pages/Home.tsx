@@ -40,8 +40,7 @@ export default function Home() {
             </Button>
             <Button
               size="lg"
-              variant="outline"
-              className="border-amber-500 text-amber-400 hover:bg-amber-500/10"
+              className="bg-amber-500/20 border-2 border-amber-500 text-amber-400 hover:bg-amber-500/40 hover:border-amber-400 transition-all duration-300 font-semibold"
               onClick={() => navigate('/appointments')}
             >
               <Calendar className="w-5 h-5 mr-2" />
