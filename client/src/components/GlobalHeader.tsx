@@ -170,17 +170,10 @@ export function GlobalHeader() {
             </h2>
           </div>
 
-          {/* 설정 + 햄버거 메뉴 - 최대한 우측 */}
+          {/* 메뉴 + 햄버거 + 설정(톱니바퀴만) - 최대한 우측 */}
           <div className="md:hidden flex items-center gap-0.5 flex-shrink-0 pr-2">
-            {/* 설정 텍스트 + 아이콘 */}
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="flex items-center gap-0.5 px-2 py-1.5 hover:bg-accent rounded-lg transition flex-shrink-0"
-              title="설정"
-            >
-              <Settings className="h-4 w-4 text-[#d4af37]" />
-              <span className="text-xs font-semibold text-[#d4af37]">설정</span>
-            </button>
+            {/* 메뉴 텍스트 */}
+            <span className="text-xs font-semibold text-[#d4af37]">메뉴</span>
             
             {/* 햄버거 메뉴 */}
             <button
@@ -193,6 +186,15 @@ export function GlobalHeader() {
               ) : (
                 <Menu className="h-5 w-5 stroke-[2.5]" />
               )}
+            </button>
+            
+            {/* 설정 아이콘만 */}
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="p-1.5 hover:bg-accent rounded-lg transition flex-shrink-0"
+              title="설정"
+            >
+              <Settings className="h-4 w-4 text-[#d4af37]" />
             </button>
           </div>
         </div>
