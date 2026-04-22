@@ -21,6 +21,7 @@ export function GlobalHeader() {
   const [languageOpen, setLanguageOpen] = useState(false);
   const [hoverProfile, setHoverProfile] = useState(false);
   const [hoverLanguage, setHoverLanguage] = useState(false);
+  const [searchTimer, setSearchTimer] = useState<NodeJS.Timeout | null>(null);
   const t = (key: string) => key;
 
   useEffect(() => {
@@ -35,6 +36,22 @@ export function GlobalHeader() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // 검색창 자동 닫힘 (입력 없으면 2-3초 후)
+  useEffect(() => {
+    if (searchOpen && !searchQuery) {
+      if (searchTimer) clearTimeout(searchTimer);
+      const timer = setTimeout(() => {
+        setSearchOpen(false);
+      }, 2500);
+      setSearchTimer(timer);
+    } else {
+      if (searchTimer) clearTimeout(searchTimer);
+    }
+    return () => {
+      if (searchTimer) clearTimeout(searchTimer);
+    };
+  }, [searchOpen, searchQuery]);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   };
@@ -47,6 +64,7 @@ export function GlobalHeader() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    if (searchTimer) clearTimeout(searchTimer);
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
       setSearchOpen(false);
@@ -254,13 +272,16 @@ export function GlobalHeader() {
                     </button>
                   </form>
                 ) : (
-                  <button
-                    onClick={() => setSearchOpen(true)}
-                    className="p-1 hover:bg-accent rounded-lg transition flex-shrink-0"
-                    title="검색"
-                  >
-                    <Search className="h-6 w-6 text-[#d4af37]" />
-                  </button>
+                  <div className="flex items-center gap-2 md:gap-0">
+                    <button
+                      onClick={() => setSearchOpen(true)}
+                      className="p-1 hover:bg-accent rounded-lg transition flex-shrink-0 md:hidden"
+                      title="검색"
+                    >
+                      <Search className="h-6 w-6 text-[#d4af37]" />
+                    </button>
+                    <span className="hidden md:inline text-sm text-slate-600 font-semibold">장•부 양자요법 관리사협회</span>
+                  </div>
                 )}
               </div>
 
@@ -390,7 +411,7 @@ export function GlobalHeader() {
                         setOpenSubmenu(openSubmenu === item.label ? null : item.label);
                       }
                     }}
-                    className={`w-full text-left text-2xl font-bold transition-colors py-4 px-4 rounded-lg flex items-center justify-between gap-2 active:scale-95 ${
+                    className={`w-full text-left text-lg font-bold transition-colors py-3 px-4 rounded-lg flex items-center justify-between gap-2 active:scale-95 ${
                       isActive
                         ? 'text-[#d4af37] font-bold bg-[#d4af37]/10'
                         : 'text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/5'
@@ -415,7 +436,7 @@ export function GlobalHeader() {
                         <button
                           key={subitem.label}
                           onClick={() => handleNavClick(subitem.path)}
-                          className="w-full text-left text-xl font-bold text-slate-800 hover:text-[#d4af37] py-3 px-4 rounded-lg hover:bg-[#d4af37]/10 transition-all duration-200 transform hover:translate-x-1"
+                          className="w-full text-left text-base font-semibold text-slate-800 hover:text-[#d4af37] py-2 px-4 rounded-lg hover:bg-[#d4af37]/10 transition-all duration-200 transform hover:translate-x-1"
                         >
                           {subitem.label}
                         </button>
