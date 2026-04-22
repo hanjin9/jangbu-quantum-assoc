@@ -21,6 +21,24 @@ export function GlobalHeader() {
   const [languageOpen, setLanguageOpen] = useState(false);
   const [hoverProfile, setHoverProfile] = useState(false);
   const [hoverLanguage, setHoverLanguage] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState('한국어');
+  const [hoveredLanguage, setHoveredLanguage] = useState<string | null>(null);
+
+  const languages = [
+    { name: '한국어', flag: '🇰🇷' },
+    { name: 'English', flag: '🇺🇸' },
+    { name: 'Español', flag: '🇪🇸' },
+    { name: '中文', flag: '🇨🇳' },
+    { name: 'हिन्दी', flag: '🇮🇳' },
+    { name: 'Français', flag: '🇫🇷' },
+    { name: 'Русский', flag: '🇷🇺' },
+    { name: 'العربية', flag: '🇸🇦' },
+    { name: 'Deutsch', flag: '🇩🇪' },
+    { name: 'Italiano', flag: '🇮🇹' },
+    { name: 'Bahasa Indonesia', flag: '🇮🇩' },
+    { name: 'ไทย', flag: '🇹🇭' },
+    { name: 'Tiếng Việt', flag: '🇻🇳' },
+  ];
   const [searchTimer, setSearchTimer] = useState<NodeJS.Timeout | null>(null);
   const t = (key: string) => key;
 
@@ -194,19 +212,26 @@ export function GlobalHeader() {
                   <Globe className="h-6 w-6 text-[#d4af37]" />
                 </button>
                 {hoverLanguage && (
-                  <div className="absolute left-0 mt-2 w-40 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200">
-                    <button className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:bg-[#d4af37]/10 transition-colors font-semibold">
-                      한국어 ✓
-                    </button>
-                    <button className="w-full text-left px-4 py-2 text-sm text-slate-400 hover:bg-[#d4af37]/10 transition-colors">
-                      English
-                    </button>
-                    <button className="w-full text-left px-4 py-2 text-sm text-slate-400 hover:bg-[#d4af37]/10 transition-colors">
-                      中文
-                    </button>
-                    <button className="w-full text-left px-4 py-2 text-sm text-slate-400 hover:bg-[#d4af37]/10 transition-colors">
-                      日本語
-                    </button>
+                  <div className="absolute left-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200 max-h-96 overflow-y-auto">
+                    {languages.map((lang) => (
+                      <button
+                        key={lang.name}
+                        onMouseEnter={() => setHoveredLanguage(lang.name)}
+                        onMouseLeave={() => setHoveredLanguage(null)}
+                        onClick={() => setSelectedLanguage(lang.name)}
+                        className={`w-full text-left px-4 py-2 text-sm transition-colors flex items-center gap-2 ${
+                          selectedLanguage === lang.name
+                            ? 'text-slate-900 bg-[#d4af37]/20 font-semibold'
+                            : hoveredLanguage === lang.name
+                            ? 'text-slate-900 bg-[#d4af37]/10'
+                            : 'text-slate-700 hover:bg-[#d4af37]/5'
+                        }`}
+                      >
+                        <span className="text-lg">{lang.flag}</span>
+                        <span>{lang.name}</span>
+                        {selectedLanguage === lang.name && <span className="ml-auto text-[#d4af37] font-bold">✓</span>}
+                      </button>
+                    ))}
                   </div>
                 )}
               </div>
