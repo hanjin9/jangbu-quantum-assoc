@@ -1,41 +1,23 @@
-import { useLocation } from 'wouter';
-import { useTranslation } from '@/hooks/useTranslation';
-import { LanguageSwitcher } from '@/components/LanguageSwitcher';
-import { Button } from '@/components/ui/button';
-import { Menu, X, ArrowUp, ChevronDown, Settings, Info, BookOpen, Users, User, Newspaper, ArrowLeft } from 'lucide-react';
-import { useState, useEffect } from 'react';
+'use client';
 
-interface NavItem {
-  label: string;
-  path?: string | null;
-  submenu?: NavItem[] | null;
-}
+import { useState, useEffect } from 'react';
+import { useLocation } from 'wouter';
+import { Menu, X, Settings, ChevronDown, Info, BookOpen, Users, User, Newspaper, ArrowLeft, ArrowUp, Globe } from 'lucide-react';
+import { LanguageSwitcher } from './LanguageSwitcher';
+
 
 export function GlobalHeader() {
-  const [location, navigate] = useLocation();
-  const { t } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showScrollTop, setShowScrollTop] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
-  const [history, setHistory] = useState<string[]>([]);
-
-  const canGoBack = history.length > 0 && location !== '/';
-
-  const handleGoBack = () => {
-    if (history.length > 0) {
-      const previousPath = history[history.length - 1];
-      navigate(previousPath);
-      setHistory(history.slice(0, -1));
-    }
-  };
+  const [canGoBack, setCanGoBack] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [, navigate] = useLocation();
+  const location = typeof window !== 'undefined' ? window.location.pathname : '';
+  const t = (key: string) => key; // 간단한 번역 함수
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-    // 히스토리 업데이트
-    if (location !== '/' && !history.includes(location)) {
-      setHistory([...history, location]);
-    }
-  }, [location]);
+    setCanGoBack(window.history.length > 1);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,15 +31,27 @@ export function GlobalHeader() {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   };
 
-  const navItems: NavItem[] = [
-    { label: t('common.home'), path: '/', submenu: null },
-    { label: t('common.about'), path: '/about', submenu: null },
+  const handleGoBack = () => {
+    window.history.back();
+  };
+
+  const navItems = [
+    {
+      label: '소개',
+      path: '/about',
+      submenu: [
+        { label: '협회소개', path: '/about' },
+        { label: '비전', path: '/about' },
+        { label: '팀 소개', path: '/team-profile' },
+      ],
+    },
     {
       label: '학습',
       path: null,
       submenu: [
-        { label: '아카데미', path: '/academy' },
-        { label: '라이브 강의', path: '/livestream' },
+        { label: '교육과정', path: '/academy' },
+        { label: '시험', path: '/exam' },
+        { label: '자료실', path: '/exam-practice-book' },
         { label: '성공사례', path: '/success-gallery' },
       ],
     },
@@ -107,7 +101,7 @@ export function GlobalHeader() {
   };
 
   const getMenuIcon = (label: string) => {
-    const iconClass = 'w-4 h-4 text-[#d4af37]';
+    const iconClass = 'w-5 h-5 text-[#d4af37]';
     switch (label) {
       case '소개':
         return <Info className={iconClass} />;
@@ -145,16 +139,22 @@ export function GlobalHeader() {
               className="flex items-center gap-0.5 md:gap-2 hover:opacity-80 transition-opacity flex-shrink-0 active:scale-95 pl-1"
               title={t('about.title')}
             >
-              <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#1a4d7a] to-[#d4af37] rounded-lg flex items-center justify-center flex-shrink-0">
+              {/* 로고 130% 확대 */}
+              <div className="w-10 h-10 md:w-13 md:h-13 bg-gradient-to-br from-[#1a4d7a] to-[#d4af37] rounded-lg flex items-center justify-center flex-shrink-0">
                 <span className="text-white font-bold text-xs md:text-sm">장•부</span>
               </div>
               <h1 className="text-xs md:text-lg font-bold text-[#1a4d7a] hidden md:inline whitespace-nowrap">
                 {t('about.title')}
               </h1>
             </button>
-            {/* 로고 옆 글로벌 선택 - 모바일 */}
+            {/* 로고 옆 글로벌 선택 - 모바일 (지구본 200% 확대) */}
             <div className="md:hidden">
-              <LanguageSwitcher />
+              <button
+                className="p-1 hover:bg-accent rounded-lg transition flex-shrink-0"
+                title="언어 선택"
+              >
+                <Globe className="h-8 w-8 text-[#d4af37]" />
+              </button>
             </div>
           </div>
 
@@ -163,7 +163,6 @@ export function GlobalHeader() {
             {navItems.map((item) => {
               const isActive = location === item.path;
               const hasSubmenu = item.submenu && item.submenu.length > 0;
-
               return (
                 <div key={item.label} className="relative group">
                   <button
@@ -177,7 +176,6 @@ export function GlobalHeader() {
                     {item.label}
                     {hasSubmenu && <ChevronDown className="w-3 h-3" />}
                   </button>
-
                   {/* Desktop Submenu */}
                   {hasSubmenu && item.submenu && (
                     <div className="absolute left-0 mt-0 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2">
@@ -205,7 +203,7 @@ export function GlobalHeader() {
             </h2>
           </div>
 
-          {/* 뒤로가기 + 메뉴 + 햄버거 + 설정(톱니바퀴만) - 최대한 우측 */}
+          {/* 뒤로가기 + 메뉴 텍스트 + 햄버거 + 설정(톱니바퀴만) - 최대한 우측 */}
           <div className="md:hidden flex items-center gap-0.5 flex-shrink-0 pr-2">
             {/* 뒤로가기 버튼 */}
             {canGoBack && (
@@ -217,30 +215,30 @@ export function GlobalHeader() {
                 <ArrowLeft className="h-5 w-5 stroke-[2.5] text-slate-600" />
               </button>
             )}
-            
-            {/* 메뉴 텍스트 */}
-            <span className="text-xs font-semibold text-[#d4af37]">메뉴</span>
-            
-            {/* 햄버거 메뉴 */}
+
+            {/* 메뉴 텍스트 250% 확대 */}
+            <span className="text-base font-semibold text-[#d4af37]">메뉴</span>
+
+            {/* 햄버거 메뉴 250% 확대 */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-1.5 hover:bg-accent rounded-lg transition"
               title="메뉴"
             >
               {mobileMenuOpen ? (
-                <X className="h-5 w-5 stroke-[2.5]" />
+                <X className="h-12 w-12 stroke-[2.5]" />
               ) : (
-                <Menu className="h-5 w-5 stroke-[2.5]" />
+                <Menu className="h-12 w-12 stroke-[2.5]" />
               )}
             </button>
-            
-            {/* 설정 아이콘만 */}
+
+            {/* 설정 아이콘 200% 확대 */}
             <button
               onClick={() => navigate('/dashboard')}
               className="p-1.5 hover:bg-accent rounded-lg transition flex-shrink-0"
               title="설정"
             >
-              <Settings className="h-4 w-4 text-[#d4af37]" />
+              <Settings className="h-8 w-8 text-[#d4af37]" />
             </button>
           </div>
         </div>
@@ -252,7 +250,6 @@ export function GlobalHeader() {
           {navItems.map((item) => {
             const isActive = location === item.path;
             const hasSubmenu = item.submenu && item.submenu.length > 0;
-
             return (
               <div key={item.label}>
                 <button
@@ -289,7 +286,6 @@ export function GlobalHeader() {
                     />
                   )}
                 </button>
-
                 {/* Mobile Submenu */}
                 {hasSubmenu && openSubmenu === item.label && item.submenu && (
                   <div className="pl-4 space-y-1 mt-1">
