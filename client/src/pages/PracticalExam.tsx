@@ -21,7 +21,7 @@ export default function PracticalExam() {
       title: '기초 양자요법 이론',
       level: 'beginner',
       duration: 60,
-      questions: 20,
+      questions: 9,
       passingScore: 70,
       description: '양자요법의 기본 이론과 원리를 이해하는 시험'
     },
@@ -30,7 +30,7 @@ export default function PracticalExam() {
       title: '중급 양자에너지 치료',
       level: 'intermediate',
       duration: 90,
-      questions: 30,
+      questions: 9,
       passingScore: 75,
       description: '양자에너지를 활용한 실제 치료 방법'
     },
@@ -39,13 +39,13 @@ export default function PracticalExam() {
       title: '고급 양자요법 전문가',
       level: 'advanced',
       duration: 120,
-      questions: 40,
+      questions: 9,
       passingScore: 80,
       description: '양자요법 전문가 자격증 시험'
     }
   ];
 
-  // 샘플 시험 문제
+  // 샘플 시험 문제 (과목별 9개)
   const examQuestions = [
     {
       id: 1,
@@ -82,6 +82,78 @@ export default function PracticalExam() {
         '비용이 저렴'
       ],
       correctAnswer: '부작용이 적고 자연친화적'
+    },
+    {
+      id: 4,
+      question: '양자요법에서 에너지 주파수의 역할은?',
+      type: 'multiple_choice',
+      options: [
+        '세포의 진동 상태를 조정하여 자가 치유력 활성화',
+        '단순히 체온을 높이는 것',
+        '신경을 마비시키는 것',
+        '혈액 순환만 개선'
+      ],
+      correctAnswer: '세포의 진동 상태를 조정하여 자가 치유력 활성화'
+    },
+    {
+      id: 5,
+      question: '양자요법 치료 시 피해야 할 행동은?',
+      type: 'multiple_choice',
+      options: [
+        '환자와의 신뢰 구축',
+        '치료 중 부정적 생각이나 의심',
+        '정확한 기록 유지',
+        '지속적인 모니터링'
+      ],
+      correctAnswer: '치료 중 부정적 생각이나 의심'
+    },
+    {
+      id: 6,
+      question: '양자요법의 과학적 근거는 무엇인가?',
+      type: 'multiple_choice',
+      options: [
+        '양자역학과 생물물리학',
+        '고전 물리학만 적용',
+        '종교적 신념',
+        '경험적 추측'
+      ],
+      correctAnswer: '양자역학과 생물물리학'
+    },
+    {
+      id: 7,
+      question: '양자요법 관리사의 윤리 기준으로 가장 중요한 것은?',
+      type: 'multiple_choice',
+      options: [
+        '환자의 개인정보 보호와 신뢰 유지',
+        '치료비 최대화',
+        '자신의 이익 우선',
+        '치료 결과 과장 광고'
+      ],
+      correctAnswer: '환자의 개인정보 보호와 신뢰 유지'
+    },
+    {
+      id: 8,
+      question: '양자요법에서 환자 상담 시 포함되어야 할 내용은?',
+      type: 'multiple_choice',
+      options: [
+        '증상, 병력, 생활습관, 기대 효과 등 종합 상담',
+        '증상만 간단히 확인',
+        '의료 진단',
+        '약물 처방'
+      ],
+      correctAnswer: '증상, 병력, 생활습관, 기대 효과 등 종합 상담'
+    },
+    {
+      id: 9,
+      question: '양자요법 치료 후 관리에서 중요한 것은?',
+      type: 'multiple_choice',
+      options: [
+        '치료 후 반응 관찰, 추후 관리 계획 수립, 정기적 재평가',
+        '한 번의 치료로 완료',
+        '환자 추적 없음',
+        '비용 청구만 중요'
+      ],
+      correctAnswer: '치료 후 반응 관찰, 추후 관리 계획 수립, 정기적 재평가'
     }
   ];
 

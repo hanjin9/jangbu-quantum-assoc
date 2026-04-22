@@ -42,6 +42,7 @@ import { AdminLogin } from "./pages/AdminLogin";
 import { AuditLogDashboard } from "./pages/AuditLogDashboard";
 import { MobileNotificationCenter } from "./pages/MobileNotificationCenter";
 import { BottomNavBar } from "./components/BottomNavBar";
+import MyCertificates from "./pages/MyCertificates";
 
 function Router() {
   return (
@@ -82,6 +83,7 @@ function Router() {
       <Route path="/admin-login" component={AdminLogin} />
       <Route path="/audit-logs" component={AuditLogDashboard} />
       <Route path="/mobile-notifications" component={MobileNotificationCenter} />
+      <Route path="/my-certificates" component={MyCertificates} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

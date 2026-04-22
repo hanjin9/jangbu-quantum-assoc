@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle2, Loader2, AlertCircle, Download, FileText } from 'lucide-react';
+import { CheckCircle2, Loader2, AlertCircle, Download, FileText, Share2 } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { trpc } from '@/lib/trpc';
+import { toast } from 'sonner';
 
 interface CertificateData {
   id: number;
@@ -42,7 +43,52 @@ export default function PaymentSuccess() {
       link.href = certificate.pdfUrl;
       link.download = `${certificate.certificateNumber}.pdf`;
       link.click();
+      toast.success('수료증이 다운로드되었습니다.');
     }
+  };
+
+  // SNS 공유 함수
+  const handleShare = () => {
+    if (!certificate) return;
+    const shareText = `${certificate.courseName} 수료증을 취득했습니다!\n수료증 번호: ${certificate.certificateNumber}`;
+    const shareUrl = `${window.location.origin}/verify-certificate?cert=${certificate.certificateNumber}`;
+
+    // 카카오톡 공유
+    if ((window as any).Kakao) {
+      (window as any).Kakao.Link.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: '양자요법 수료증',
+          description: shareText,
+          imageUrl: 'https://via.placeholder.com/300x300?text=Certificate',
+          link: {
+            mobileWebUrl: shareUrl,
+            webUrl: shareUrl,
+          },
+        },
+      });
+    } else {
+      toast.error('카카오톡 공유 기능을 사용할 수 없습니다.');
+    }
+  };
+
+  // 링크 복사
+  const handleCopyLink = () => {
+    if (!certificate) return;
+    const shareUrl = `${window.location.origin}/verify-certificate?cert=${certificate.certificateNumber}`;
+    navigator.clipboard.writeText(shareUrl);
+    toast.success('링크가 복사되었습니다.');
+  };
+
+  // 페이스북 공유
+  const handleShareFacebook = () => {
+    if (!certificate) return;
+    const shareUrl = `${window.location.origin}/verify-certificate?cert=${certificate.certificateNumber}`;
+    window.open(
+      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+      'facebook-share-dialog',
+      'width=800,height=600'
+    );
   };
 
   useEffect(() => {
@@ -196,13 +242,43 @@ export default function PaymentSuccess() {
                     <span className="font-semibold">{certificate.courseName}</span>
                   </div>
                 </div>
-                <Button
-                  onClick={handleDownloadPDF}
-                  className="w-full mt-4 bg-gold-500 hover:bg-gold-600 text-slate-900 font-semibold"
-                >
-                  <Download size={18} className="mr-2" />
-                  수료증 PDF 다운로드
-                </Button>
+                <div className="space-y-3 mt-4">
+                  <Button
+                    onClick={handleDownloadPDF}
+                    className="w-full bg-gold-500 hover:bg-gold-600 text-slate-900 font-semibold"
+                  >
+                    <Download size={18} className="mr-2" />
+                    수료증 PDF 다운로드
+                  </Button>
+                  
+                  <div className="grid grid-cols-3 gap-2">
+                    <Button
+                      onClick={handleShare}
+                      variant="outline"
+                      className="border-gold-500/30 text-gold-600 hover:bg-gold-500/10"
+                      title="카카오톡 공유"
+                    >
+                      <Share2 size={16} className="mr-1" />
+                      카톡
+                    </Button>
+                    <Button
+                      onClick={handleShareFacebook}
+                      variant="outline"
+                      className="border-gold-500/30 text-gold-600 hover:bg-gold-500/10"
+                      title="페이스북 공유"
+                    >
+                      f
+                    </Button>
+                    <Button
+                      onClick={handleCopyLink}
+                      variant="outline"
+                      className="border-gold-500/30 text-gold-600 hover:bg-gold-500/10"
+                      title="링크 복사"
+                    >
+                      🔗
+                    </Button>
+                  </div>
+                </div>
               </div>
             )}
 
