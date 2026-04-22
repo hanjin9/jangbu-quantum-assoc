@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, consultationBookings } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -87,6 +87,108 @@ export async function getUserByOpenId(openId: string) {
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
 
   return result.length > 0 ? result[0] : undefined;
+}
+
+/**
+ * Save consultation booking
+ */
+export async function saveConsultationBooking(data: {
+  userId: number;
+  name: string;
+  phone: string;
+  consultationContent?: string;
+  recordingUrl?: string;
+  recordingDuration?: number;
+  fileUrls?: string; // JSON array
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot save consultation booking: database not available");
+    return null;
+  }
+
+  try {
+    const result = await db.insert(consultationBookings).values({
+      userId: data.userId,
+      name: data.name,
+      phone: data.phone,
+      consultationContent: data.consultationContent,
+      recordingUrl: data.recordingUrl,
+      recordingDuration: data.recordingDuration,
+      fileUrls: data.fileUrls,
+      status: "pending",
+    });
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to save consultation booking:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get consultation bookings by user ID
+ */
+export async function getConsultationBookingsByUserId(userId: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get consultation bookings: database not available");
+    return [];
+  }
+
+  try {
+    const result = await db
+      .select()
+      .from(consultationBookings)
+      .where(eq(consultationBookings.userId, userId));
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to get consultation bookings:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get all consultation bookings (admin)
+ */
+export async function getAllConsultationBookings() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get consultation bookings: database not available");
+    return [];
+  }
+
+  try {
+    const result = await db.select().from(consultationBookings);
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to get all consultation bookings:", error);
+    throw error;
+  }
+}
+
+/**
+ * Update consultation booking status
+ */
+export async function updateConsultationBookingStatus(
+  bookingId: number,
+  status: "pending" | "confirmed" | "completed" | "cancelled"
+) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot update consultation booking: database not available");
+    return null;
+  }
+
+  try {
+    const result = await db
+      .update(consultationBookings)
+      .set({ status })
+      .where(eq(consultationBookings.id, bookingId));
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to update consultation booking:", error);
+    throw error;
+  }
 }
 
 // TODO: add feature queries here as your schema grows.

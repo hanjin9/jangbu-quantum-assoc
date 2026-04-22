@@ -376,7 +376,7 @@ export function GlobalHeader() {
                 {mobileMenuOpen ? (
                   <X className="h-6 w-6 stroke-[1.5]" />
                 ) : (
-                  <Menu className="h-6 w-6 stroke-[2.5]" />
+                  <Menu className="h-12 w-12 stroke-[2.5]" />
                 )}
               </button>
             </div>
@@ -411,8 +411,10 @@ export function GlobalHeader() {
                         setOpenSubmenu(openSubmenu === item.label ? null : item.label);
                       }
                     }}
-                    className={`w-full text-left text-lg font-bold transition-colors py-3 px-4 rounded-lg flex items-center justify-between gap-2 active:scale-95 ${
-                      isActive
+                    className={`w-full text-left text-lg font-bold transition-all py-3 px-4 rounded-lg flex items-center justify-between gap-2 active:scale-95 ${
+                      openSubmenu === item.label
+                        ? 'text-[#d4af37] font-bold bg-[#d4af37]/10'
+                        : isActive
                         ? 'text-[#d4af37] font-bold bg-[#d4af37]/10'
                         : 'text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/5'
                     }`}
@@ -429,9 +431,9 @@ export function GlobalHeader() {
                       />
                     )}
                   </button>
-                  {/* Mobile Submenu - 호버 시 자동 펼쳐지는 애니메이션 */}
+                  {/* Mobile Submenu - 아래로 펼쳐지는 애니메이션 */}
                   {hasSubmenu && openSubmenu === item.label && item.submenu && (
-                    <div className="pl-4 space-y-1 mt-1 animate-in slide-in-from-top-2 duration-300">
+                    <div className="pl-4 space-y-1 mt-2 animate-in slide-in-from-top-2 duration-300 border-l-2 border-[#d4af37]/30">
                       {item.submenu.map((subitem) => (
                         <button
                           key={subitem.label}

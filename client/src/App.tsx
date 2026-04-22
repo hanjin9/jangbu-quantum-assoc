@@ -54,6 +54,7 @@ import CertificateGenerator from "./pages/CertificateGenerator";
 import ConsultationBooking from "./pages/ConsultationBooking";
 import SearchResults from "./pages/SearchResults";
 import AdminMembers from "./pages/AdminMembers";
+import { MyPage } from "./pages/MyPage";
 
 function Router() {
   return (
@@ -104,6 +105,7 @@ function Router() {
       <Route path="/certificates-download" component={CertificateGenerator} />
       <Route path="/search" component={SearchResults} />
       <Route path="/admin-members" component={AdminMembers} />
+      <Route path="/my-page" component={MyPage} />
       <Route path="*" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

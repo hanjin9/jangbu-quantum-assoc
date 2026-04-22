@@ -258,6 +258,27 @@ export type Certification = typeof certifications.$inferSelect;
 export type InsertCertification = typeof certifications.$inferInsert;
 
 /**
+ * Consultation bookings table for storing consultation requests
+ */
+export const consultationBookings = mysqlTable("consultation_bookings", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("user_id").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  phone: varchar("phone", { length: 20 }).notNull(),
+  consultationContent: text("consultation_content"),
+  recordingUrl: varchar("recording_url", { length: 500 }),
+  recordingDuration: int("recording_duration"), // in seconds
+  fileUrls: text("file_urls"), // JSON array of file URLs
+  status: mysqlEnum("status", ["pending", "confirmed", "completed", "cancelled"]).default("pending").notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ConsultationBooking = typeof consultationBookings.$inferSelect;
+export type InsertConsultationBooking = typeof consultationBookings.$inferInsert;
+
+/**
  * User notifications table
  */
 export const notifications = mysqlTable("notifications", {
