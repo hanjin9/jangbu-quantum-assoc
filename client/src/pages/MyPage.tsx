@@ -2,7 +2,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, CreditCard, ShoppingBag, LogOut, CheckCircle2, AlertCircle, Settings } from "lucide-react";
+import { User, CreditCard, ShoppingBag, LogOut, CheckCircle2, AlertCircle, BookOpen, Trophy, Award } from "lucide-react";
 import { useLocation } from "wouter";
 import { useState, useEffect } from "react";
 
@@ -23,11 +23,37 @@ interface Order {
   created_at: string;
 }
 
+interface LearningProgress {
+  courseId: string;
+  courseName: string;
+  progress: number;
+  status: "진행중" | "완료" | "미시작";
+}
+
+interface Certificate {
+  id: string;
+  name: string;
+  issueDate: string;
+  expiryDate?: string;
+}
+
+interface ExamResult {
+  id: string;
+  examName: string;
+  score: number;
+  totalScore: number;
+  passStatus: "합격" | "불합격";
+  testDate: string;
+}
+
 export function MyPage() {
   const { user, logout, loading } = useAuth();
   const [, navigate] = useLocation();
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [learningProgress, setLearningProgress] = useState<LearningProgress[]>([]);
+  const [certificates, setCertificates] = useState<Certificate[]>([]);
+  const [examResults, setExamResults] = useState<ExamResult[]>([]);
   const [dashboardLoading, setDashboardLoading] = useState(true);
 
   useEffect(() => {
@@ -51,6 +77,44 @@ export function MyPage() {
           amount: 99.99,
           status: "completed",
           created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+        },
+      ]);
+
+      // Mock learning progress data
+      setLearningProgress([
+        {
+          courseId: "course_001",
+          courseName: "양자요법 기초",
+          progress: 75,
+          status: "진행중",
+        },
+        {
+          courseId: "course_002",
+          courseName: "고급 에너지 치료",
+          progress: 100,
+          status: "완료",
+        },
+      ]);
+
+      // Mock certificates data
+      setCertificates([
+        {
+          id: "cert_001",
+          name: "양자요법 관리사 1급",
+          issueDate: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString(),
+          expiryDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+        },
+      ]);
+
+      // Mock exam results data
+      setExamResults([
+        {
+          id: "exam_001",
+          examName: "양자요법 기초 시험",
+          score: 92,
+          totalScore: 100,
+          passStatus: "합격",
+          testDate: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
         },
       ]);
     } catch (error) {
@@ -95,7 +159,7 @@ export function MyPage() {
       <div className="bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d] text-white py-8 px-4">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold mb-2">마이페이지</h1>
-          <p className="text-gray-300">개인정보, 구독, 주문이력을 관리하세요</p>
+          <p className="text-gray-300">개인정보, 구독/주문, 학습 진도를 관리하세요</p>
         </div>
       </div>
 
@@ -103,18 +167,15 @@ export function MyPage() {
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Tabs Navigation */}
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="bg-slate-200 border border-slate-300 grid w-full grid-cols-4">
+          <TabsList className="bg-slate-200 border border-slate-300 grid w-full grid-cols-3">
             <TabsTrigger value="profile" className="data-[state=active]:bg-[#d4af37] text-slate-800">
               개인정보
             </TabsTrigger>
             <TabsTrigger value="subscription" className="data-[state=active]:bg-[#d4af37] text-slate-800">
-              구독정보
+              구독/주문
             </TabsTrigger>
-            <TabsTrigger value="orders" className="data-[state=active]:bg-[#d4af37] text-slate-800">
-              주문이력
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="data-[state=active]:bg-[#d4af37] text-slate-800">
-              설정
+            <TabsTrigger value="learning" className="data-[state=active]:bg-[#d4af37] text-slate-800">
+              학습 진도
             </TabsTrigger>
           </TabsList>
 
@@ -163,15 +224,16 @@ export function MyPage() {
             </Card>
           </TabsContent>
 
-          {/* Subscription Tab */}
+          {/* Subscription & Orders Tab */}
           <TabsContent value="subscription" className="space-y-6">
+            {/* Subscription Section */}
             {subscription ? (
-              <Card className="border-[#d4af37]/20 shadow-lg">
+              <Card className="border-[#d4af37]/20 shadow-lg mb-6">
                 <CardHeader className="bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d] text-white rounded-t-lg">
                   <div className="flex items-center gap-3">
                     <CreditCard className="w-6 h-6 text-[#d4af37]" />
                     <div>
-                      <CardTitle>구독정보</CardTitle>
+                      <CardTitle>구독 정보</CardTitle>
                       <CardDescription className="text-gray-300">현재 구독 상태 및 플랜</CardDescription>
                     </div>
                   </div>
@@ -205,9 +267,9 @@ export function MyPage() {
                     </div>
 
                     <Button
-                      variant="destructive"
-                      className="w-full"
                       onClick={handleCancelSubscription}
+                      variant="outline"
+                      className="w-full border-red-300 text-red-600 hover:bg-red-50"
                     >
                       구독 취소
                     </Button>
@@ -215,88 +277,205 @@ export function MyPage() {
                 </CardContent>
               </Card>
             ) : (
-              <Card className="border-[#d4af37]/20 shadow-lg">
+              <Card className="border-[#d4af37]/20 shadow-lg mb-6">
                 <CardContent className="pt-6">
-                  <div className="text-center">
-                    <AlertCircle className="w-12 h-12 text-[#d4af37] mx-auto mb-4" />
-                    <p className="text-slate-900 mb-4">현재 활성 구독이 없습니다</p>
-                    <Button className="bg-[#d4af37] hover:bg-[#c99f2e] text-black font-semibold">
-                      멤버십 구매하기
-                    </Button>
+                  <div className="flex items-center gap-3 text-slate-600">
+                    <AlertCircle className="w-5 h-5" />
+                    <p>현재 활성 구독이 없습니다.</p>
                   </div>
                 </CardContent>
               </Card>
             )}
-          </TabsContent>
 
-          {/* Orders Tab */}
-          <TabsContent value="orders" className="space-y-6">
-            {orders.length > 0 ? (
-              <div className="space-y-4">
-                {orders.map((order) => (
-                  <Card key={order.id} className="border-[#d4af37]/20 shadow-lg">
-                    <CardContent className="pt-6">
-                      <div className="flex justify-between items-start mb-2">
+            {/* Orders Section */}
+            <Card className="border-[#d4af37]/20 shadow-lg">
+              <CardHeader className="bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d] text-white rounded-t-lg">
+                <div className="flex items-center gap-3">
+                  <ShoppingBag className="w-6 h-6 text-[#d4af37]" />
+                  <div>
+                    <CardTitle>주문 이력</CardTitle>
+                    <CardDescription className="text-gray-300">학습 과정 및 상품 구매 이력</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6">
+                {orders.length > 0 ? (
+                  <div className="space-y-4">
+                    {orders.map((order) => (
+                      <div key={order.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-200">
                         <div>
-                          <p className="font-semibold text-slate-900">주문 #{order.id}</p>
+                          <p className="font-semibold text-slate-900">{order.tier_id.toUpperCase()} 플랜</p>
                           <p className="text-sm text-slate-600">
                             {new Date(order.created_at).toLocaleDateString("ko-KR")}
                           </p>
                         </div>
-                        <span className="text-lg font-bold text-[#d4af37]">${order.amount}</span>
+                        <div className="text-right">
+                          <p className="font-bold text-[#d4af37]">${order.amount}</p>
+                          <p className="text-sm text-green-600 font-semibold">{order.status === "completed" ? "완료" : "진행중"}</p>
+                        </div>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-green-600 font-semibold">✓ {order.status}</span>
-                        <Button variant="outline" size="sm" className="text-[#d4af37] border-[#d4af37]">
-                          상세보기
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <Card className="border-[#d4af37]/20 shadow-lg">
-                <CardContent className="pt-6">
-                  <div className="text-center">
-                    <ShoppingBag className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-                    <p className="text-slate-600 mb-4">주문 이력이 없습니다</p>
+                    ))}
                   </div>
-                </CardContent>
-              </Card>
-            )}
+                ) : (
+                  <div className="flex items-center gap-3 text-slate-600">
+                    <AlertCircle className="w-5 h-5" />
+                    <p>주문 이력이 없습니다.</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
 
-          {/* Settings Tab */}
-          <TabsContent value="settings" className="space-y-6">
-            <Card className="border-[#d4af37]/20 shadow-lg">
+          {/* Learning Progress Tab */}
+          <TabsContent value="learning" className="space-y-6">
+            {/* Learning Progress Section */}
+            <Card className="border-[#d4af37]/20 shadow-lg mb-6">
               <CardHeader className="bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d] text-white rounded-t-lg">
-                <CardTitle>설정</CardTitle>
-                <CardDescription className="text-gray-300">계정 설정 및 환경설정</CardDescription>
+                <div className="flex items-center gap-3">
+                  <BookOpen className="w-6 h-6 text-[#d4af37]" />
+                  <div>
+                    <CardTitle>학습 진도</CardTitle>
+                    <CardDescription className="text-gray-300">현재 수강 중인 과정의 진도율</CardDescription>
+                  </div>
+                </div>
               </CardHeader>
               <CardContent className="pt-6">
-                <div className="space-y-4">
-                  <Button
-                    onClick={() => navigate("/settings")}
-                    className="w-full bg-[#d4af37] hover:bg-[#c99f2e] text-black font-semibold"
-                  >
-                    <Settings className="w-5 h-5 mr-2" />
-                    전체 설정으로 이동
-                  </Button>
+                {learningProgress.length > 0 ? (
+                  <div className="space-y-4">
+                    {learningProgress.map((course) => (
+                      <div key={course.courseId} className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <p className="font-semibold text-slate-900">{course.courseName}</p>
+                          <span className={`text-sm font-bold px-3 py-1 rounded-full ${
+                            course.status === "완료" ? "bg-green-100 text-green-700" :
+                            course.status === "진행중" ? "bg-blue-100 text-blue-700" :
+                            "bg-gray-100 text-gray-700"
+                          }`}>
+                            {course.status}
+                          </span>
+                        </div>
+                        <div className="w-full bg-slate-200 rounded-full h-2">
+                          <div
+                            className="bg-[#d4af37] h-2 rounded-full transition-all"
+                            style={{ width: `${course.progress}%` }}
+                          />
+                        </div>
+                        <p className="text-sm text-slate-600">{course.progress}% 완료</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-3 text-slate-600">
+                    <AlertCircle className="w-5 h-5" />
+                    <p>수강 중인 과정이 없습니다.</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Certificates Section */}
+            <Card className="border-[#d4af37]/20 shadow-lg mb-6">
+              <CardHeader className="bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d] text-white rounded-t-lg">
+                <div className="flex items-center gap-3">
+                  <Award className="w-6 h-6 text-[#d4af37]" />
+                  <div>
+                    <CardTitle>수료증</CardTitle>
+                    <CardDescription className="text-gray-300">취득한 자격증 및 수료증</CardDescription>
+                  </div>
                 </div>
+              </CardHeader>
+              <CardContent className="pt-6">
+                {certificates.length > 0 ? (
+                  <div className="space-y-4">
+                    {certificates.map((cert) => (
+                      <div key={cert.id} className="p-4 bg-gradient-to-r from-[#d4af37]/10 to-[#d4af37]/5 rounded-lg border border-[#d4af37]/20">
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="w-6 h-6 text-[#d4af37] flex-shrink-0 mt-1" />
+                          <div className="flex-1">
+                            <p className="font-semibold text-slate-900">{cert.name}</p>
+                            <p className="text-sm text-slate-600">
+                              발급일: {new Date(cert.issueDate).toLocaleDateString("ko-KR")}
+                            </p>
+                            {cert.expiryDate && (
+                              <p className="text-sm text-slate-600">
+                                유효기간: {new Date(cert.expiryDate).toLocaleDateString("ko-KR")}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-3 text-slate-600">
+                    <AlertCircle className="w-5 h-5" />
+                    <p>취득한 수료증이 없습니다.</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Exam Results Section */}
+            <Card className="border-[#d4af37]/20 shadow-lg">
+              <CardHeader className="bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d] text-white rounded-t-lg">
+                <div className="flex items-center gap-3">
+                  <Trophy className="w-6 h-6 text-[#d4af37]" />
+                  <div>
+                    <CardTitle>시험 결과</CardTitle>
+                    <CardDescription className="text-gray-300">응시한 시험의 성적 및 합격 여부</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6">
+                {examResults.length > 0 ? (
+                  <div className="space-y-4">
+                    {examResults.map((exam) => (
+                      <div key={exam.id} className="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                        <div className="flex items-center justify-between mb-3">
+                          <p className="font-semibold text-slate-900">{exam.examName}</p>
+                          <span className={`text-sm font-bold px-3 py-1 rounded-full ${
+                            exam.passStatus === "합격" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                          }`}>
+                            {exam.passStatus}
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-xs text-slate-600 mb-1">성적</p>
+                            <p className="text-lg font-bold text-[#d4af37]">{exam.score}/{exam.totalScore}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-slate-600 mb-1">응시일</p>
+                            <p className="text-slate-900 font-semibold">
+                              {new Date(exam.testDate).toLocaleDateString("ko-KR")}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-3 text-slate-600">
+                    <AlertCircle className="w-5 h-5" />
+                    <p>시험 결과가 없습니다.</p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
 
         {/* Logout Button */}
-        <Button
-          onClick={handleLogout}
-          className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-6 text-lg mt-6"
-        >
-          <LogOut className="w-5 h-5 mr-2" />
-          로그아웃
-        </Button>
+        <div className="mt-8 flex justify-end">
+          <Button
+            onClick={handleLogout}
+            variant="outline"
+            className="border-red-300 text-red-600 hover:bg-red-50 flex items-center gap-2"
+          >
+            <LogOut className="w-4 h-4" />
+            로그아웃
+          </Button>
+        </div>
       </div>
     </div>
   );
