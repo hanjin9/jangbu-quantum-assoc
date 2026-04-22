@@ -157,9 +157,9 @@ export function GlobalHeader() {
             <LanguageSwitcher />
           </nav>
 
-          {/* 중간 텍스트 - 모바일 (한 줄, 2배 크기) */}
+          {/* 중간 텍스트 - 모바일 (한 줄, 4배 크기) */}
           <div className="md:hidden flex-1 text-center px-1">
-            <h2 className="text-sm font-bold text-[#d4af37] leading-tight whitespace-nowrap">
+            <h2 className="text-lg font-bold text-[#d4af37] leading-tight whitespace-nowrap">
               장•부 (양자요법) 관리사협회
             </h2>
           </div>
