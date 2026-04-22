@@ -551,10 +551,17 @@ export default function ExamPracticeBook() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {Object.entries(examBooks).map(([key, exam]) => (
-              <Card
+              <div
                 key={key}
-                className="p-6 bg-slate-800 border-slate-700 hover:border-amber-500/50 transition cursor-pointer"
+                className="p-6 bg-slate-800 border-slate-700 hover:border-amber-500/50 transition cursor-pointer rounded-lg border"
                 onClick={() => setSelectedExam(key)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setSelectedExam(key);
+                  }
+                }}
               >
                 <h3 className="text-2xl font-bold text-white mb-3">
                   {exam.title}
@@ -565,7 +572,7 @@ export default function ExamPracticeBook() {
                 <div className="text-amber-400 font-semibold">
                   {exam.questions.length}개 문제
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         </div>
