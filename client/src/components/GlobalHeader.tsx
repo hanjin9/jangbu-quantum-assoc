@@ -2,7 +2,7 @@ import { useLocation } from 'wouter';
 import { useTranslation } from '@/hooks/useTranslation';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { Button } from '@/components/ui/button';
-import { Menu, X, ArrowUp, ChevronDown, Settings } from 'lucide-react';
+import { Menu, X, ArrowUp, ChevronDown, Settings, Info, BookOpen, Users, User, Newspaper } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 interface NavItem {
@@ -91,6 +91,26 @@ export function GlobalHeader() {
     }, 0);
   };
 
+  const getMenuIcon = (label: string) => {
+    const iconClass = 'w-4 h-4 text-[#d4af37]';
+    switch (label) {
+      case '소개':
+        return <Info className={iconClass} />;
+      case '학습':
+        return <BookOpen className={iconClass} />;
+      case '커뮤니티':
+        return <Users className={iconClass} />;
+      case '회원':
+        return <User className={iconClass} />;
+      case '소식':
+        return <Newspaper className={iconClass} />;
+      case '관리자':
+        return <Settings className={iconClass} />;
+      default:
+        return null;
+    }
+  };
+
   const handleNavClick = (path?: string | null) => {
     if (path) {
       navigate(path);
@@ -100,7 +120,7 @@ export function GlobalHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border safe-top">
+    <header className="sticky top-0 z-50 bg-gradient-to-r from-background via-background to-[#d4af37]/5 backdrop-blur border-b border-border safe-top">
       <div className="w-full px-0 py-2 md:py-4">
         <div className="flex justify-between items-center px-1 md:px-6 gap-0.5 md:gap-8 h-14 md:h-auto">
           {/* Logo + Language Switcher - 좌측 */}
@@ -200,9 +220,9 @@ export function GlobalHeader() {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Navigation - 애니메이션 추가 */}
       {mobileMenuOpen && (
-        <nav className="md:hidden mt-4 pb-4 border-t border-border pt-4 flex flex-col gap-1 px-4">
+        <nav className="md:hidden mt-4 pb-4 border-t border-border pt-4 flex flex-col gap-1 px-4 animate-in slide-in-from-top-2 duration-300">
           {navItems.map((item) => {
             const isActive = location === item.path;
             const hasSubmenu = item.submenu && item.submenu.length > 0;
@@ -217,13 +237,16 @@ export function GlobalHeader() {
                       handleNavClick(item.path);
                     }
                   }}
-                  className={`w-full text-left text-sm transition-colors py-2 px-3 rounded-lg flex items-center justify-between ${
+                  className={`w-full text-left text-sm transition-colors py-2 px-3 rounded-lg flex items-center justify-between gap-2 ${
                     isActive
                       ? 'text-[#d4af37] font-semibold bg-[#d4af37]/10'
                       : 'hover:text-[#d4af37] hover:bg-[#d4af37]/5'
                   }`}
                 >
-                  {item.label}
+                  <span className="flex items-center gap-2">
+                    {getMenuIcon(item.label)}
+                    {item.label}
+                  </span>
                   {hasSubmenu && (
                     <ChevronDown
                       className={`w-4 h-4 transition-transform ${
