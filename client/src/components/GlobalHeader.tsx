@@ -116,11 +116,11 @@ export function GlobalHeader() {
       ],
     },
     {
-      label: '회원',
-      path: '/members',
+      label: '멤버십',
+      path: '/membership',
       submenu: [
-        { label: '회원 가입', path: '/members' },
-        { label: '멤버십', path: '/membership' },
+        { label: '회원 가입', path: '/signup' },
+        { label: '멤버십 선택', path: '/membership' },
       ],
     },
     {
@@ -144,7 +144,7 @@ export function GlobalHeader() {
   // 권한 기반 메뉴 필터링
   const navItems = baseNavItems.filter(item => {
     // 모든 사용자에게 기본 메뉴 표시 (로그인 상태 관계없음)
-    if (['소개', '학습', '커뮤니티', '회원', '소식'].includes(item.label)) {
+    if (['소개', '학습', '커뮤니티', '멤버십', '소식'].includes(item.label)) {
       return true;
     }
     // 쇼핑몰은 Admin 이상만 표시

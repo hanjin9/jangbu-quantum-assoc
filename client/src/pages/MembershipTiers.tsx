@@ -83,20 +83,15 @@ export default function MembershipTiers() {
   const { user, isAuthenticated } = useAuth();
   const [, navigate] = useLocation();
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
-  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const handleSelectTier = (tierId: string) => {
     if (!isAuthenticated) {
-      setSelectedTier(tierId);
-      setShowLoginModal(true);
+      // 미로그인 사용자는 로그인 페이지로 이동 (선택된 멤버십 정보 전달)
+      window.location.href = getLoginUrl(`/checkout?tier=${tierId}`);
     } else {
       // 로그인된 사용자는 결제 페이지로 이동
-      window.location.href = `/checkout?tier=${tierId}`;
+      navigate(`/checkout?tier=${tierId}`);
     }
-  };
-
-  const handleLogin = () => {
-    window.location.href = getLoginUrl();
   };
 
   return (
@@ -225,48 +220,7 @@ export default function MembershipTiers() {
         </Card>
       </div>
 
-      {/* 중앙 로그인 팝업 */}
-      {showLoginModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <Card className="bg-slate-800 border-yellow-400/20 max-w-md w-full">
-            <div className="flex items-center justify-between p-6 border-b border-slate-700">
-              <h2 className="text-xl font-bold text-white">로그인 필요</h2>
-              <button
-                onClick={() => setShowLoginModal(false)}
-                className="text-gray-400 hover:text-white"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
 
-            <CardContent className="p-6 space-y-6">
-              <div className="text-center">
-                <p className="text-gray-300 mb-4">
-                  {selectedTier && tiers.find(t => t.id === selectedTier)?.name} 등급을 선택하셨습니다.
-                </p>
-                <p className="text-gray-400 text-sm">
-                  결제를 진행하려면 로그인이 필요합니다.
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <Button
-                  onClick={handleLogin}
-                  className="w-full bg-yellow-400 text-slate-900 hover:bg-yellow-500 font-bold"
-                >
-                  로그인하기
-                </Button>
-                <Button
-                  onClick={() => setShowLoginModal(false)}
-                  className="w-full bg-slate-700 text-gray-300 hover:bg-slate-600"
-                >
-                  취소
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
     </div>
   );
 }
