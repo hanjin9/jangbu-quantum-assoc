@@ -102,17 +102,17 @@ export function GlobalHeader() {
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border safe-top">
       <div className="w-full px-0 py-2 md:py-4">
-        <div className="flex justify-between items-center px-4 md:px-6 gap-4 md:gap-8">
-          {/* Logo */}
+        <div className="flex justify-between items-center px-1 md:px-6 gap-1 md:gap-8 h-14 md:h-auto">
+          {/* Logo - 최대한 좌측 */}
           <button
             onClick={handleLogoClick}
-            className="flex items-center gap-1 md:gap-2 hover:opacity-80 transition-opacity flex-shrink-0 active:scale-95"
+            className="flex items-center gap-0.5 md:gap-2 hover:opacity-80 transition-opacity flex-shrink-0 active:scale-95 pl-1"
             title={t('about.title')}
           >
-            <div className="w-9 h-9 md:w-10 md:h-10 bg-gradient-to-br from-[#1a4d7a] to-[#d4af37] rounded-lg flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#1a4d7a] to-[#d4af37] rounded-lg flex items-center justify-center flex-shrink-0">
               <span className="text-white font-bold text-xs md:text-sm">장•부</span>
             </div>
-            <h1 className="text-sm md:text-lg font-bold text-[#1a4d7a] hidden sm:inline whitespace-nowrap">
+            <h1 className="text-xs md:text-lg font-bold text-[#1a4d7a] hidden sm:inline whitespace-nowrap">
               {t('about.title')}
             </h1>
           </button>
@@ -157,27 +157,25 @@ export function GlobalHeader() {
             <LanguageSwitcher />
           </nav>
 
-          {/* 중간 텍스트 - 모바일 */}
-          <div className="md:hidden flex-1 text-center px-2">
-            <h2 className="text-xs font-bold text-[#d4af37] leading-tight">
-              장•부 (양자요법)
-              <br />
-              관리사협회
+          {/* 중간 텍스트 - 모바일 (한 줄, 2배 크기) */}
+          <div className="md:hidden flex-1 text-center px-1">
+            <h2 className="text-sm font-bold text-[#d4af37] leading-tight whitespace-nowrap">
+              장•부 (양자요법) 관리사협회
             </h2>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center gap-2 flex-shrink-0">
+          {/* Mobile Menu Button - 최대한 우측 */}
+          <div className="md:hidden flex items-center gap-1 flex-shrink-0 pr-1">
             <LanguageSwitcher />
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 hover:bg-accent rounded-lg transition"
+              className="p-1.5 hover:bg-accent rounded-lg transition"
               title="메뉴"
             >
               {mobileMenuOpen ? (
-                <X className="h-6 w-6 stroke-[2.5]" />
+                <X className="h-5 w-5 stroke-[2.5]" />
               ) : (
-                <Menu className="h-6 w-6 stroke-[2.5]" />
+                <Menu className="h-5 w-5 stroke-[2.5]" />
               )}
             </button>
           </div>
