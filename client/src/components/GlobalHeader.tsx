@@ -99,8 +99,8 @@ export function GlobalHeader() {
     }, 0);
   };
 
-  const getMenuIcon = (label: string) => {
-    const iconClass = 'w-5 h-5 text-[#d4af37]';
+  const getMenuIcon = (label: string, isMobile = false) => {
+    const iconClass = isMobile ? 'w-7 h-7 text-[#d4af37]' : 'w-5 h-5 text-[#d4af37]';
     switch (label) {
       case '소개':
         return <Info className={iconClass} />;
@@ -215,8 +215,8 @@ export function GlobalHeader() {
               </button>
             )}
 
-            {/* 메뉴 텍스트 250% 확대 */}
-            <span className="text-base font-semibold text-[#d4af37]">메뉴</span>
+            {/* 메뉴 텍스트 2배 확대 + 색상 변경 */}
+            <span className="text-2xl font-bold text-slate-600">메뉴</span>
 
             {/* 햄버거 메뉴 250% 확대 */}
             <button
@@ -267,14 +267,14 @@ export function GlobalHeader() {
                       setOpenSubmenu(null);
                     }
                   }}
-                  className={`w-full text-left text-sm transition-colors py-2 px-3 rounded-lg flex items-center justify-between gap-2 ${
+                  className={`w-full text-left text-xl font-bold transition-colors py-3 px-3 rounded-lg flex items-center justify-between gap-2 ${
                     isActive
-                      ? 'text-[#d4af37] font-semibold bg-[#d4af37]/10'
+                      ? 'text-[#d4af37] font-bold bg-[#d4af37]/10'
                       : 'text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/5'
                   }`}
                 >
-                  <span className="flex items-center gap-2">
-                    {getMenuIcon(item.label)}
+                  <span className="flex items-center gap-3">
+                    {getMenuIcon(item.label, true)}
                     {item.label}
                   </span>
                   {hasSubmenu && (
