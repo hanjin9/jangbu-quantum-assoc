@@ -113,7 +113,7 @@ export function GlobalHeader() {
               <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#1a4d7a] to-[#d4af37] rounded-lg flex items-center justify-center flex-shrink-0">
                 <span className="text-white font-bold text-xs md:text-sm">장•부</span>
               </div>
-              <h1 className="text-xs md:text-lg font-bold text-[#1a4d7a] hidden sm:inline whitespace-nowrap">
+              <h1 className="text-xs md:text-lg font-bold text-[#1a4d7a] hidden md:inline whitespace-nowrap">
                 {t('about.title')}
               </h1>
             </button>
@@ -171,7 +171,7 @@ export function GlobalHeader() {
           </div>
 
           {/* 설정 + 햄버거 메뉴 - 최대한 우측 */}
-          <div className="md:hidden flex items-center gap-0.5 flex-shrink-0 pr-1">
+          <div className="md:hidden flex items-center gap-0.5 flex-shrink-0 pr-2">
             {/* 설정 텍스트 + 아이콘 */}
             <button
               onClick={() => navigate('/dashboard')}
