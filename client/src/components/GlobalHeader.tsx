@@ -157,9 +157,17 @@ export function GlobalHeader() {
             <LanguageSwitcher />
           </nav>
 
+          {/* 중간 텍스트 - 모바일 */}
+          <div className="md:hidden flex-1 text-center px-2">
+            <h2 className="text-xs font-bold text-[#d4af37] leading-tight">
+              장•부 (양자요법)
+              <br />
+              관리사협회
+            </h2>
+          </div>
+
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center gap-3 flex-shrink-0">
-            <span className="text-sm font-semibold text-[#d4af37]">설정</span>
+          <div className="md:hidden flex items-center gap-2 flex-shrink-0">
             <LanguageSwitcher />
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
