@@ -18,6 +18,7 @@ export function GlobalHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [profileOpen, setProfileOpen] = useState(false);
+  const [languageOpen, setLanguageOpen] = useState(false);
   const t = (key: string) => key;
 
   useEffect(() => {
@@ -140,7 +141,7 @@ export function GlobalHeader() {
                 </button>
               )}
 
-              {/* 로고 */}
+              {/* 로고 - 모바일에서는 박스만, PC에서는 텍스트 없음 */}
               <button
                 onClick={() => handleNavClick('/')}
                 className="flex items-center gap-2 hover:opacity-80 transition flex-shrink-0"
@@ -149,19 +150,33 @@ export function GlobalHeader() {
                 <div className="w-10 h-10 md:w-13 md:h-13 bg-gradient-to-br from-[#1a4d7a] to-[#d4af37] rounded-lg flex items-center justify-center flex-shrink-0">
                   <span className="text-white font-bold text-xs md:text-sm">장•부</span>
                 </div>
-                <h1 className="text-xs md:text-lg font-bold text-[#1a4d7a] hidden md:inline whitespace-nowrap">
-                  {t('about.title')}
-                </h1>
               </button>
 
-              {/* 로고 옆 글로벌 선택 - 모바일 (지구본 200% 확대) */}
-              <div className="md:hidden">
+              {/* 언어 선택 - 모바일 (지구본만 표시) */}
+              <div className="md:hidden relative">
                 <button
+                  onClick={() => setLanguageOpen(!languageOpen)}
                   className="p-1 hover:bg-accent rounded-lg transition flex-shrink-0"
                   title="언어 선택"
                 >
-                  <Globe className="h-8 w-8 text-[#d4af37]" />
+                  <Globe className="h-6 w-6 text-[#d4af37]" />
                 </button>
+                {languageOpen && (
+                  <div className="absolute left-0 mt-2 w-40 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50">
+                    <button className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:bg-[#d4af37]/10 transition-colors">
+                      한국어
+                    </button>
+                    <button className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:bg-[#d4af37]/10 transition-colors">
+                      English
+                    </button>
+                    <button className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:bg-[#d4af37]/10 transition-colors">
+                      中文
+                    </button>
+                    <button className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:bg-[#d4af37]/10 transition-colors">
+                      日本語
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -302,16 +317,16 @@ export function GlobalHeader() {
                 </button>
               )}
 
-              {/* 모바일 메뉴 버튼 */}
+              {/* 모바일 메뉴 버튼 - X 크기/굵기 50% 축소 */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="md:hidden p-1.5 hover:bg-accent rounded-lg transition flex-shrink-0"
                 title="메뉴"
               >
                 {mobileMenuOpen ? (
-                  <X className="h-12 w-12 stroke-[2.5]" />
+                  <X className="h-6 w-6 stroke-[1.5]" />
                 ) : (
-                  <Menu className="h-12 w-12 stroke-[2.5]" />
+                  <Menu className="h-6 w-6 stroke-[2.5]" />
                 )}
               </button>
             </div>
@@ -346,7 +361,7 @@ export function GlobalHeader() {
                         setOpenSubmenu(openSubmenu === item.label ? null : item.label);
                       }
                     }}
-                    className={`w-full text-left text-xl font-bold transition-colors py-4 px-4 rounded-lg flex items-center justify-between gap-2 active:scale-95 ${
+                    className={`w-full text-left text-2xl font-bold transition-colors py-4 px-4 rounded-lg flex items-center justify-between gap-2 active:scale-95 ${
                       isActive
                         ? 'text-[#d4af37] font-bold bg-[#d4af37]/10'
                         : 'text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/5'
@@ -371,7 +386,7 @@ export function GlobalHeader() {
                         <button
                           key={subitem.label}
                           onClick={() => handleNavClick(subitem.path)}
-                          className="w-full text-left text-base font-semibold text-slate-800 hover:text-[#d4af37] py-3 px-4 rounded-lg hover:bg-[#d4af37]/10 transition-all duration-200 transform hover:translate-x-1"
+                          className="w-full text-left text-xl font-bold text-slate-800 hover:text-[#d4af37] py-3 px-4 rounded-lg hover:bg-[#d4af37]/10 transition-all duration-200 transform hover:translate-x-1"
                         >
                           {subitem.label}
                         </button>
