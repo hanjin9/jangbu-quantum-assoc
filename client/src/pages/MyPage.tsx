@@ -159,7 +159,7 @@ export function MyPage() {
       <div className="bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d] text-white py-8 px-4">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold mb-2">마이페이지</h1>
-          <p className="text-gray-300">개인정보, 구독/주문, 학습 진도를 관리하세요</p>
+          <p className="text-gray-300">개인정보, 멤버쉽, 학습 진도, 쇼핑, 포인트를 관리하세요</p>
         </div>
       </div>
 
@@ -167,15 +167,21 @@ export function MyPage() {
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Tabs Navigation */}
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="bg-slate-200 border border-slate-300 grid w-full grid-cols-3">
-            <TabsTrigger value="profile" className="data-[state=active]:bg-[#d4af37] text-slate-800">
+          <TabsList className="bg-slate-200 border border-slate-300 grid w-full grid-cols-5">
+            <TabsTrigger value="profile" className="data-[state=active]:bg-[#d4af37] text-slate-800 text-xs md:text-sm">
               개인정보
             </TabsTrigger>
-            <TabsTrigger value="subscription" className="data-[state=active]:bg-[#d4af37] text-slate-800">
-              구독/주문
+            <TabsTrigger value="subscription" className="data-[state=active]:bg-[#d4af37] text-slate-800 text-xs md:text-sm">
+              멤버쉽/강의
             </TabsTrigger>
-            <TabsTrigger value="learning" className="data-[state=active]:bg-[#d4af37] text-slate-800">
+            <TabsTrigger value="learning" className="data-[state=active]:bg-[#d4af37] text-slate-800 text-xs md:text-sm">
               학습 진도
+            </TabsTrigger>
+            <TabsTrigger value="shopping" className="data-[state=active]:bg-[#d4af37] text-slate-800 text-xs md:text-sm">
+              쇼핑 주문
+            </TabsTrigger>
+            <TabsTrigger value="points" className="data-[state=active]:bg-[#d4af37] text-slate-800 text-xs md:text-sm">
+              포인트
             </TabsTrigger>
           </TabsList>
 
@@ -460,6 +466,91 @@ export function MyPage() {
                     <p>시험 결과가 없습니다.</p>
                   </div>
                 )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Shopping Orders Tab */}
+          <TabsContent value="shopping" className="space-y-6">
+            <Card className="border-[#d4af37]/20 shadow-lg">
+              <CardHeader className="bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d] text-white rounded-t-lg">
+                <div className="flex items-center gap-3">
+                  <ShoppingBag className="w-6 h-6 text-[#d4af37]" />
+                  <div>
+                    <CardTitle>쇼핑 주문 이력</CardTitle>
+                    <CardDescription className="text-gray-300">건강 제품 및 기기 구매 이력</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <div className="space-y-4">
+                  <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="font-semibold text-slate-900">건강 기기 - 양자 에너지 펜</p>
+                      <span className="text-sm font-bold px-3 py-1 rounded-full bg-green-100 text-green-700">배송완료</span>
+                    </div>
+                    <p className="text-sm text-slate-600 mb-2">2026년 4월 10일</p>
+                    <p className="font-bold text-[#d4af37]">$199.99</p>
+                  </div>
+                  <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="font-semibold text-slate-900">건강 제품 - 에너지 크림</p>
+                      <span className="text-sm font-bold px-3 py-1 rounded-full bg-blue-100 text-blue-700">배송중</span>
+                    </div>
+                    <p className="text-sm text-slate-600 mb-2">2026년 4월 15일</p>
+                    <p className="font-bold text-[#d4af37]">$49.99</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Points Tab */}
+          <TabsContent value="points" className="space-y-6">
+            <Card className="border-[#d4af37]/20 shadow-lg mb-6">
+              <CardHeader className="bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d] text-white rounded-t-lg">
+                <div className="flex items-center gap-3">
+                  <Trophy className="w-6 h-6 text-[#d4af37]" />
+                  <div>
+                    <CardTitle>포인트 현황</CardTitle>
+                    <CardDescription className="text-gray-300">보유 포인트 및 사용 내역</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <div className="space-y-4">
+                  <div className="bg-gradient-to-r from-[#d4af37]/20 to-[#d4af37]/10 rounded-lg p-6 border border-[#d4af37]/30">
+                    <p className="text-sm text-slate-600 mb-2">현재 보유 포인트</p>
+                    <p className="text-4xl font-bold text-[#d4af37]">2,450</p>
+                    <p className="text-xs text-slate-600 mt-2">마지막 적립: 2026년 4월 20일</p>
+                  </div>
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-slate-900">최근 포인트 내역</h4>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                        <div>
+                          <p className="text-sm font-semibold text-slate-900">강의 수강 완료</p>
+                          <p className="text-xs text-slate-600">2026년 4월 20일</p>
+                        </div>
+                        <p className="text-sm font-bold text-green-600">+500</p>
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                        <div>
+                          <p className="text-sm font-semibold text-slate-900">상품 구매</p>
+                          <p className="text-xs text-slate-600">2026년 4월 15일</p>
+                        </div>
+                        <p className="text-sm font-bold text-green-600">+100</p>
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                        <div>
+                          <p className="text-sm font-semibold text-slate-900">포인트 사용</p>
+                          <p className="text-xs text-slate-600">2026년 4월 10일</p>
+                        </div>
+                        <p className="text-sm font-bold text-red-600">-150</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
