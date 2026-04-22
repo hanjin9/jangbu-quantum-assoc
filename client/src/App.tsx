@@ -47,6 +47,8 @@ import ExamPracticeBook from "./pages/ExamPracticeBook";
 import { OwnerDashboard } from "./pages/OwnerDashboard";
 import BlogDetail from "./pages/BlogDetail";
 import SMSLogin from "./pages/SMSLogin";
+import PaymentCheckout from "./pages/PaymentCheckout";
+import CertificateGenerator from "./pages/CertificateGenerator";
 
 function Router() {
   return (
@@ -92,6 +94,8 @@ function Router() {
          <Route path="/owner-dashboard" component={OwnerDashboard} />
       <Route path="/blog/:id" component={BlogDetail} />
       <Route path="/sms-login" component={SMSLogin} />
+      <Route path="/payment-checkout" component={PaymentCheckout} />
+      <Route path="/certificates-download" component={CertificateGenerator} />
       <Route path="*" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

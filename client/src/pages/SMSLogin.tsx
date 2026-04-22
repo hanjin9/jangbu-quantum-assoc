@@ -1,23 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Phone, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
+import { Phone, CheckCircle2, Loader2, AlertCircle, Mail, MessageCircle } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
 
-type Step = 'phone' | 'otp' | 'success';
+type Step = 'phone' | 'otp' | 'success' | 'social';
+type LoginMethod = 'sms' | 'google' | 'kakao';
 
 export default function SMSLogin() {
   const [, navigate] = useLocation();
-  const [step, setStep] = useState<Step>('phone');
+  const [step, setStep] = useState<Step>('social');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [otpCode, setOtpCode] = useState('');
   const [sessionToken, setSessionToken] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [timeLeft, setTimeLeft] = useState(0);
+  const [loginMethod, setLoginMethod] = useState<LoginMethod>('sms');
 
   const sendOTPMutation = trpc.smsAuth.sendOTP.useMutation();
   const verifyOTPMutation = trpc.smsAuth.verifyOTP.useMutation();
@@ -34,7 +36,6 @@ export default function SMSLogin() {
   // 국제 형식으로 변환
   const toInternationalFormat = (formatted: string): string => {
     const cleaned = formatted.replace(/\D/g, '');
-    // 한국 번호 (+82로 변환)
     if (cleaned.startsWith('0')) {
       return `+82${cleaned.slice(1)}`;
     }
@@ -44,279 +45,315 @@ export default function SMSLogin() {
     return `+${cleaned}`;
   };
 
+  // 타이머
+  useEffect(() => {
+    if (timeLeft <= 0) return;
+    const timer = setInterval(() => setTimeLeft(t => t - 1), 1000);
+    return () => clearInterval(timer);
+  }, [timeLeft]);
+
   // 1단계: SMS 인증 코드 발송
   const handleSendOTP = async () => {
     setError('');
-
-    if (!phoneNumber.replace(/\D/g, '')) {
-      setError('휴대폰 번호를 입력해주세요.');
+    if (!phoneNumber || phoneNumber.replace(/\D/g, '').length < 10) {
+      setError('올바른 휴대폰 번호를 입력해주세요.');
       return;
     }
 
     setLoading(true);
     try {
-      const internationalNumber = toInternationalFormat(phoneNumber);
-      const result = await sendOTPMutation.mutateAsync({
-        phoneNumber: internationalNumber,
-      });
-
-      if (result.success) {
-        setStep('otp');
-        setTimeLeft(result.expiresIn);
-        toast.success('인증 코드가 발송되었습니다.');
-
-        // 타이머 시작
-        const interval = setInterval(() => {
-          setTimeLeft((prev) => {
-            if (prev <= 1) {
-              clearInterval(interval);
-              return 0;
-            }
-            return prev - 1;
-          });
-        }, 1000);
-      }
-    } catch (err: any) {
-      setError(err.message || 'SMS 발송에 실패했습니다.');
-      toast.error(err.message || 'SMS 발송에 실패했습니다.');
+      const internationalPhone = toInternationalFormat(phoneNumber);
+      await sendOTPMutation.mutateAsync({ phoneNumber: internationalPhone });
+      setStep('otp');
+      setTimeLeft(300); // 5분
+      toast.success('인증 코드가 발송되었습니다.');
+    } catch (err) {
+      setError('인증 코드 발송에 실패했습니다. 다시 시도해주세요.');
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  // 2단계: OTP 코드 검증
+  // 2단계: OTP 검증
   const handleVerifyOTP = async () => {
     setError('');
-
-    if (otpCode.length !== 6) {
-      setError('인증 코드는 6자리입니다.');
+    if (!otpCode || otpCode.length !== 6) {
+      setError('6자리 인증 코드를 입력해주세요.');
       return;
     }
 
     setLoading(true);
     try {
-      const internationalNumber = toInternationalFormat(phoneNumber);
+      const internationalPhone = toInternationalFormat(phoneNumber);
       const result = await verifyOTPMutation.mutateAsync({
-        phoneNumber: internationalNumber,
+        phoneNumber: internationalPhone,
         otpCode,
       });
-
-      if (result.success) {
-        setSessionToken(result.sessionToken);
-        setStep('success');
-        toast.success('인증이 완료되었습니다.');
-
-        // 자동 로그인
-        setTimeout(() => handleAutoLogin(result.sessionToken), 1000);
-      }
-    } catch (err: any) {
-      setError(err.message || '인증 코드가 올바르지 않습니다.');
-      toast.error(err.message || '인증 코드가 올바르지 않습니다.');
+      setSessionToken(result.sessionToken);
+      setStep('success');
+      toast.success('인증이 완료되었습니다.');
+    } catch (err) {
+      setError('인증 코드가 올바르지 않습니다. 다시 시도해주세요.');
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  // 3단계: 자동 로그인
-  const handleAutoLogin = async (token: string) => {
+  // 3단계: 세션으로 로그인
+  const handleLoginWithSession = async () => {
+    setLoading(true);
     try {
-      const result = await loginWithSessionMutation.mutateAsync({
-        sessionToken: token,
-      });
-
-      if (result.success) {
-        toast.success('로그인되었습니다.');
-        // 대시보드로 이동
-        setTimeout(() => navigate('/dashboard'), 500);
-      }
-    } catch (err: any) {
-      setError(err.message || '로그인에 실패했습니다.');
-      toast.error(err.message || '로그인에 실패했습니다.');
+      await loginWithSessionMutation.mutateAsync({ sessionToken });
+      toast.success('로그인되었습니다.');
+      navigate('/');
+    } catch (err) {
+      setError('로그인에 실패했습니다.');
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // 1단계: 휴대폰 번호 입력
-  if (step === 'phone') {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center py-12 px-4">
-        <Card className="w-full max-w-md card-luxury">
-          <CardHeader>
-            <div className="flex items-center justify-center mb-4">
-              <div className="bg-accent/10 rounded-full p-3">
-                <Phone className="text-accent" size={32} />
-              </div>
-            </div>
-            <CardTitle className="text-center">SMS 인증 로그인</CardTitle>
-            <CardDescription className="text-center">
-              휴대폰 번호로 간편하게 로그인하세요
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">
-                휴대폰 번호
-              </label>
-              <Input
-                type="tel"
-                placeholder="010-1234-5678"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(formatPhoneNumber(e.target.value))}
-                disabled={loading}
-                className="text-lg"
-              />
-              <p className="text-xs text-foreground/50">
-                한국 휴대폰 번호를 입력해주세요
-              </p>
-            </div>
+  // Google 로그인
+  const handleGoogleLogin = () => {
+    setLoading(true);
+    try {
+      // 간단한 Google OAuth 리다이렉트
+      const clientId = 'YOUR_GOOGLE_CLIENT_ID'; // 실제로는 환경변수에서 가져옴
+      const redirectUri = `${window.location.origin}/api/auth/google/callback`;
+      const scope = 'openid profile email';
+      const responseType = 'code';
+      
+      const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=${responseType}&scope=${encodeURIComponent(scope)}`;
+      
+      window.location.href = googleAuthUrl;
+    } catch (err) {
+      setError('Google 로그인에 실패했습니다.');
+      console.error(err);
+      setLoading(false);
+    }
+  };
 
-            {error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex gap-2">
-                <AlertCircle className="text-red-500 flex-shrink-0" size={18} />
-                <p className="text-sm text-red-700">{error}</p>
-              </div>
-            )}
+  // 카카오톡 로그인
+  const handleKakaoLogin = () => {
+    setLoading(true);
+    try {
+      // 간단한 카카오 OAuth 리다이렉트
+      const clientId = 'YOUR_KAKAO_CLIENT_ID'; // 실제로는 환경변수에서 가져옴
+      const redirectUri = `${window.location.origin}/api/auth/kakao/callback`;
+      
+      const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code`;
+      
+      window.location.href = kakaoAuthUrl;
+    } catch (err) {
+      setError('카카오톡 로그인에 실패했습니다.');
+      console.error(err);
+      setLoading(false);
+    }
+  };
 
-            <Button
-              onClick={handleSendOTP}
-              disabled={loading || !phoneNumber.replace(/\D/g, '')}
-              className="w-full btn-primary"
-              size="lg"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="animate-spin mr-2" size={18} />
-                  발송 중...
-                </>
-              ) : (
-                '인증 코드 발송'
-              )}
-            </Button>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-border"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-background text-foreground/50">또는</span>
-              </div>
-            </div>
-
-            <Button
-              variant="outline"
-              onClick={() => navigate('/login')}
-              className="w-full"
-            >
-              기존 로그인으로 돌아가기
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  // 2단계: OTP 코드 입력
-  if (step === 'otp') {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center py-12 px-4">
-        <Card className="w-full max-w-md card-luxury">
-          <CardHeader>
-            <div className="flex items-center justify-center mb-4">
-              <div className="bg-accent/10 rounded-full p-3">
-                <CheckCircle2 className="text-accent" size={32} />
-              </div>
-            </div>
-            <CardTitle className="text-center">인증 코드 입력</CardTitle>
-            <CardDescription className="text-center">
-              {phoneNumber}로 발송된 인증 코드를 입력해주세요
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">
-                인증 코드 (6자리)
-              </label>
-              <Input
-                type="text"
-                placeholder="000000"
-                value={otpCode}
-                onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                disabled={loading}
-                maxLength={6}
-                className="text-center text-2xl tracking-widest font-mono"
-              />
-              <div className="flex justify-between items-center">
-                <p className="text-xs text-foreground/50">
-                  인증 코드는 5분 동안 유효합니다
-                </p>
-                <p className={`text-sm font-semibold ${timeLeft < 60 ? 'text-red-500' : 'text-foreground'}`}>
-                  {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
-                </p>
-              </div>
-            </div>
-
-            {error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex gap-2">
-                <AlertCircle className="text-red-500 flex-shrink-0" size={18} />
-                <p className="text-sm text-red-700">{error}</p>
-              </div>
-            )}
-
-            <Button
-              onClick={handleVerifyOTP}
-              disabled={loading || otpCode.length !== 6}
-              className="w-full btn-primary"
-              size="lg"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="animate-spin mr-2" size={18} />
-                  확인 중...
-                </>
-              ) : (
-                '인증 완료'
-              )}
-            </Button>
-
-            <Button
-              variant="outline"
-              onClick={() => {
-                setStep('phone');
-                setOtpCode('');
-                setError('');
-              }}
-              className="w-full"
-              disabled={loading}
-            >
-              다시 입력
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  // 3단계: 성공
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center py-12 px-4">
-      <Card className="w-full max-w-md card-luxury border-green-200">
-        <CardHeader>
-          <div className="flex items-center justify-center mb-4">
-            <div className="bg-green-100 rounded-full p-3">
-              <CheckCircle2 className="text-green-500" size={32} />
-            </div>
-          </div>
-          <CardTitle className="text-center text-green-600">로그인 완료!</CardTitle>
-          <CardDescription className="text-center">
-            대시보드로 이동 중입니다...
-          </CardDescription>
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md bg-slate-800 border-amber-500/20">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl text-white">로그인</CardTitle>
+          <CardDescription className="text-gray-400">편리한 방법을 선택해주세요</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="flex justify-center">
-            <Loader2 className="animate-spin text-accent" size={40} />
-          </div>
-          <p className="text-center text-sm text-foreground/70">
-            잠시만 기다려주세요
-          </p>
+          {/* 소셜 로그인 선택 화면 */}
+          {step === 'social' && (
+            <div className="space-y-4">
+              {/* Google 로그인 */}
+              <button
+                onClick={() => {
+                  setLoginMethod('google');
+                  handleGoogleLogin();
+                }}
+                disabled={loading}
+                className="w-full px-4 py-3 bg-white hover:bg-gray-100 text-gray-800 rounded-lg transition font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                <Mail className="w-5 h-5" />
+                Google로 로그인
+              </button>
+
+              {/* 카카오톡 로그인 */}
+              <button
+                onClick={() => {
+                  setLoginMethod('kakao');
+                  handleKakaoLogin();
+                }}
+                disabled={loading}
+                className="w-full px-4 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-800 rounded-lg transition font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                <MessageCircle className="w-5 h-5" />
+                카카오톡으로 로그인
+              </button>
+
+              {/* SMS 로그인 */}
+              <button
+                onClick={() => {
+                  setStep('phone');
+                  setLoginMethod('sms');
+                }}
+                className="w-full px-4 py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-lg transition font-semibold flex items-center justify-center gap-2"
+              >
+                <Phone className="w-5 h-5" />
+                휴대폰 번호로 로그인
+              </button>
+
+              {/* 회원가입 링크 */}
+              <p className="text-center text-gray-400 text-sm">
+                계정이 없으신가요?{' '}
+                <button
+                  onClick={() => navigate('/signup')}
+                  className="text-amber-400 hover:text-amber-300 font-semibold"
+                >
+                  회원가입
+                </button>
+              </p>
+            </div>
+          )}
+
+          {/* SMS 로그인 - 휴대폰 번호 입력 */}
+          {step === 'phone' && (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-300 mb-2">
+                  휴대폰 번호
+                </label>
+                <Input
+                  type="tel"
+                  placeholder="010-1234-5678"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(formatPhoneNumber(e.target.value))}
+                  className="bg-slate-700 border-amber-500/30 text-white placeholder-gray-500"
+                  disabled={loading}
+                />
+              </div>
+
+              {error && (
+                <div className="flex gap-2 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                  <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm text-red-300">{error}</p>
+                </div>
+              )}
+
+              <Button
+                onClick={handleSendOTP}
+                disabled={loading || !phoneNumber}
+                className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-semibold"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    발송 중...
+                  </>
+                ) : (
+                  '인증 코드 발송'
+                )}
+              </Button>
+
+              <button
+                onClick={() => {
+                  setStep('social');
+                  setError('');
+                }}
+                className="w-full text-amber-400 hover:text-amber-300 font-semibold text-sm"
+              >
+                다른 방법으로 로그인
+              </button>
+            </div>
+          )}
+
+          {/* SMS 로그인 - OTP 입력 */}
+          {step === 'otp' && (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-300 mb-2">
+                  인증 코드 (6자리)
+                </label>
+                <Input
+                  type="text"
+                  placeholder="000000"
+                  value={otpCode}
+                  onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  maxLength={6}
+                  className="bg-slate-700 border-amber-500/30 text-white placeholder-gray-500 text-center text-2xl tracking-widest"
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="text-center text-sm text-gray-400">
+                {timeLeft > 0 ? (
+                  <p>
+                    남은 시간: <span className="text-amber-400 font-semibold">{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</span>
+                  </p>
+                ) : (
+                  <p className="text-red-400">인증 코드가 만료되었습니다.</p>
+                )}
+              </div>
+
+              {error && (
+                <div className="flex gap-2 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                  <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm text-red-300">{error}</p>
+                </div>
+              )}
+
+              <Button
+                onClick={handleVerifyOTP}
+                disabled={loading || otpCode.length !== 6 || timeLeft === 0}
+                className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-semibold"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    검증 중...
+                  </>
+                ) : (
+                  '인증 완료'
+                )}
+              </Button>
+
+              <button
+                onClick={() => {
+                  setStep('phone');
+                  setError('');
+                  setOtpCode('');
+                }}
+                className="w-full text-amber-400 hover:text-amber-300 font-semibold text-sm"
+              >
+                다시 입력
+              </button>
+            </div>
+          )}
+
+          {/* 로그인 성공 */}
+          {step === 'success' && (
+            <div className="text-center space-y-4 py-6">
+              <CheckCircle2 className="w-16 h-16 text-green-400 mx-auto" />
+              <div>
+                <h3 className="text-lg font-bold text-white mb-1">인증 완료!</h3>
+                <p className="text-gray-400">로그인 중입니다...</p>
+              </div>
+              <Button
+                onClick={handleLoginWithSession}
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    로그인 중...
+                  </>
+                ) : (
+                  '로그인'
+                )}
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
