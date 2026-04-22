@@ -125,13 +125,13 @@ export function GlobalHeader() {
 
   // 권한 기반 메뉴 필터링
   const navItems = baseNavItems.filter(item => {
-    // 모든 사용자에게 기본 메뉴 표시
+    // 모든 사용자에게 기본 메뉴 표시 (로그인 상태 관계없음)
     if (['소개', '학습', '커뮤니티', '회원', '소식'].includes(item.label)) {
       return true;
     }
     // 쇼핑몰은 Admin 이상만 표시
-    if (item.label === '쇼핑몰' && user && (user.role === 'admin' || user.role === 'owner')) {
-      return true;
+    if (item.label === '쇼핑몰') {
+      return user && (user.role === 'admin' || user.role === 'owner');
     }
     return false;
   });
@@ -149,7 +149,7 @@ export function GlobalHeader() {
         return <User className={size} />;
       case '소식':
         return <Newspaper className={size} />;
-       case '쇼핑몰':
+      case '쇼핑몰':
         return <Newspaper className={size} />;
       default:
         return null;
