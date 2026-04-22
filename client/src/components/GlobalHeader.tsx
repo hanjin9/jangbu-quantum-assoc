@@ -21,6 +21,7 @@ export function GlobalHeader() {
   const [languageOpen, setLanguageOpen] = useState(false);
   const [hoverProfile, setHoverProfile] = useState(false);
   const [hoverLanguage, setHoverLanguage] = useState(false);
+  const [hoverSettings, setHoverSettings] = useState(false);
   const t = (key: string) => key;
 
   useEffect(() => {
@@ -167,14 +168,29 @@ export function GlobalHeader() {
                 </div>
               </button>
 
+              {/* 설정 - 호버 모드 */}
+              <div className="relative" onMouseEnter={() => setHoverSettings(true)} onMouseLeave={() => setHoverSettings(false)}>
+                <button
+                  className="p-1.5 hover:bg-accent rounded-lg transition flex-shrink-0"
+                  title="설정"
+                >
+                  <Settings className="h-8 w-8 text-[#d4af37]" />
+                </button>
+                {hoverSettings && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200">
+                    <button
+                      onClick={() => navigate('/settings')}
+                      className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors flex items-center gap-2"
+                    >
+                      <Settings className="w-4 h-4" />
+                      설정
+                    </button>
+                  </div>
+                )}
+              </div>
+
               {/* 언어 선택 - 모바일 (지구본만 표시) - 호버 모드 */}
               <div className="md:hidden relative" onMouseEnter={() => setHoverLanguage(true)} onMouseLeave={() => setHoverLanguage(false)}>
-                <button
-                  className="p-1 hover:bg-accent rounded-lg transition flex-shrink-0"
-                  title="언어 선택"
-                >
-                  <Globe className="h-6 w-6 text-[#d4af37]" />
-                </button>
                 {hoverLanguage && (
                   <div className="absolute left-0 mt-2 w-40 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200">
                     <button className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:bg-[#d4af37]/10 transition-colors font-semibold">
