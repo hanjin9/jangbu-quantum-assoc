@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, User, ArrowRight } from 'lucide-react';
+import { Link } from 'wouter';
 
 interface BlogPost {
   id: number;
@@ -184,10 +185,12 @@ export default function NewsletterBlog() {
                     {new Date(post.date).toLocaleDateString('ko-KR')}
                   </div>
                 </div>
-                <Button variant="ghost" className="w-full text-yellow-400 hover:text-yellow-300 hover:bg-yellow-400/10">
-                  자세히 읽기
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
+                <Link href={`/blog/${post.id}`}>
+                  <Button variant="ghost" className="w-full text-yellow-400 hover:text-yellow-300 hover:bg-yellow-400/10">
+                    자세히 읽기
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           ))}
