@@ -240,7 +240,7 @@ export function GlobalHeader() {
                   className={`w-full text-left text-sm transition-colors py-2 px-3 rounded-lg flex items-center justify-between gap-2 ${
                     isActive
                       ? 'text-[#d4af37] font-semibold bg-[#d4af37]/10'
-                      : 'hover:text-[#d4af37] hover:bg-[#d4af37]/5'
+                      : 'text-gray-200 hover:text-[#d4af37] hover:bg-[#d4af37]/5'
                   }`}
                 >
                   <span className="flex items-center gap-2">
@@ -263,7 +263,7 @@ export function GlobalHeader() {
                       <button
                         key={subitem.label}
                         onClick={() => handleNavClick(subitem.path)}
-                        className="w-full text-left text-sm text-gray-300 hover:text-[#d4af37] py-2 px-3 rounded-lg hover:bg-[#d4af37]/10 transition-colors"
+                        className="w-full text-left text-sm text-gray-100 hover:text-[#d4af37] py-2 px-3 rounded-lg hover:bg-[#d4af37]/10 transition-colors"
                       >
                         {subitem.label}
                       </button>
