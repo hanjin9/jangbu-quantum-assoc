@@ -9,7 +9,7 @@ export function BottomNavBar() {
     { icon: BookOpen, label: '교육', path: '/academy', id: 'academy' },
     { icon: Phone, label: '상담', path: '/chat-consultation', id: 'consultation' },
     { icon: Home, label: '홀', path: '/', id: 'home', primary: true },
-    { icon: User, label: '마이', path: '/profile', id: 'profile' },
+    { icon: User, label: '마이', path: '/dashboard', id: 'profile' },
     { icon: Users, label: '커미니티', path: '/community', id: 'community' },
   ];
 

@@ -233,7 +233,7 @@ export function GlobalHeader() {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 bg-[#d4af37] hover:bg-[#c9a227] text-white p-3 rounded-full shadow-lg transition-all duration-300 z-40"
+          className="fixed bottom-8 left-8 bg-[#d4af37] hover:bg-[#c9a227] text-white p-3 rounded-full shadow-lg transition-all duration-300 z-40"
           title="맨 위로"
         >
           <ArrowUp className="h-5 w-5" />
