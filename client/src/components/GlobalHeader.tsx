@@ -99,8 +99,8 @@ export function GlobalHeader() {
       label: '쇼핑몰',
       path: '/shopping',
       submenu: [
-        { label: '건강 강물', path: '/shopping' },
-        { label: '상품 관리', path: '/shopping/products' },
+        { label: '건강 제품', path: '/shopping/products' },
+        { label: '건강 기기', path: '/shopping/devices' },
       ],
     },
   ];
@@ -275,7 +275,7 @@ export function GlobalHeader() {
 
               {/* 사용자 프로필 드롭다운 - 호버 모드 */}
               {user ? (
-                <div className="relative" onMouseEnter={() => setHoverProfile(true)} onMouseLeave={() => setHoverProfile(false)}>
+                <div className="relative group" onMouseEnter={() => setHoverProfile(true)} onMouseLeave={() => setHoverProfile(false)}>
                   <button
                     className="flex items-center gap-2 p-1 hover:bg-accent rounded-lg transition"
                   >
@@ -285,8 +285,9 @@ export function GlobalHeader() {
                     <span className="text-sm font-semibold text-[#d4af37] hidden md:inline">{user.name || '사용자'}</span>
                   </button>
                   {hoverProfile && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200">
+                    <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200 group-hover:block">
                       <button
+                        onMouseEnter={() => setHoverProfile(true)}
                         onClick={() => navigate('/profile')}
                         className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors flex items-center gap-2"
                       >
@@ -294,6 +295,7 @@ export function GlobalHeader() {
                         마이페이지
                       </button>
                       <button
+                        onMouseEnter={() => setHoverProfile(true)}
                         onClick={() => navigate('/dashboard')}
                         className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors flex items-center gap-2"
                       >
@@ -305,6 +307,7 @@ export function GlobalHeader() {
                         <>
                           <hr className="my-1" />
                           <button
+                            onMouseEnter={() => setHoverProfile(true)}
                             onClick={() => navigate('/admin/dashboard')}
                             className="w-full text-left px-4 py-2 text-sm text-amber-600 hover:text-amber-700 hover:bg-amber-50 transition-colors flex items-center gap-2 font-semibold"
                           >
@@ -317,6 +320,7 @@ export function GlobalHeader() {
                         <>
                           <hr className="my-1" />
                           <button
+                            onMouseEnter={() => setHoverProfile(true)}
                             onClick={() => navigate('/admin/members')}
                             className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-colors flex items-center gap-2 font-semibold"
                           >
@@ -327,6 +331,7 @@ export function GlobalHeader() {
                       )}
                       <hr className="my-1" />
                       <button
+                        onMouseEnter={() => setHoverProfile(true)}
                         onClick={() => {
                           logout();
                           navigate('/');
