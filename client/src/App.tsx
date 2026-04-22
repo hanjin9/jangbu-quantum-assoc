@@ -53,6 +53,7 @@ import PaymentCheckout from "./pages/PaymentCheckout";
 import CertificateGenerator from "./pages/CertificateGenerator";
 import ConsultationBooking from "./pages/ConsultationBooking";
 import SearchResults from "./pages/SearchResults";
+import AdminMembers from "./pages/AdminMembers";
 
 function Router() {
   return (
@@ -102,6 +103,7 @@ function Router() {
       <Route path="/payment-checkout" component={PaymentCheckout} />
       <Route path="/certificates-download" component={CertificateGenerator} />
       <Route path="/search" component={SearchResults} />
+      <Route path="/admin-members" component={AdminMembers} />
       <Route path="*" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
