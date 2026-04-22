@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/_core/hooks/useAuth";
+import { useLocation } from "wouter";
 
 interface Message {
   id: string;
@@ -25,10 +25,21 @@ const consultantResponses: { [key: string]: string } = {
 
 export default function ChatConsultation() {
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const [, navigate] = useLocation();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isConnected, setIsConnected] = useState(false);
+  const [userName, setUserName] = useState("사용자");
+  const [consultationData, setConsultationData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    date: "",
+    time: "",
+    topic: "",
+    message: "",
+  });
+  const [submitted, setSubmitted] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // 초기 환영 메시지
@@ -72,7 +83,7 @@ export default function ChatConsultation() {
       sender: "user",
       content: inputValue,
       timestamp: new Date(),
-      senderName: user?.name || "사용자",
+      senderName: userName,
     };
 
     setMessages((prev) => [...prev, userMessage]);

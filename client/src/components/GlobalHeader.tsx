@@ -5,14 +5,13 @@ import { useLocation } from 'wouter';
 import { Menu, X, Settings, ChevronDown, Info, BookOpen, Users, User, Newspaper, ArrowLeft, ArrowUp, Globe } from 'lucide-react';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
-
 export function GlobalHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [canGoBack, setCanGoBack] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [location] = useLocation();
   const [, navigate] = useLocation();
-  const location = typeof window !== 'undefined' ? window.location.pathname : '';
   const t = (key: string) => key; // 간단한 번역 함수
 
   useEffect(() => {

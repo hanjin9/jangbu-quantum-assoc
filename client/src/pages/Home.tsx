@@ -49,7 +49,7 @@ export default function Home() {
             <Button
               size="lg"
               className="bg-amber-500/20 border-2 border-amber-500 text-amber-400 hover:bg-amber-500/40 hover:border-amber-400 transition-all duration-300 font-semibold md:ml-4"
-              onClick={() => navigate('/appointments')}
+              onClick={() => navigate('/consultation-booking')}
             >
               <Calendar className="w-5 h-5 mr-2" />
               상담 예약하기

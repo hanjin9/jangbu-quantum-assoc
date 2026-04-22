@@ -49,6 +49,7 @@ import BlogDetail from "./pages/BlogDetail";
 import SMSLogin from "./pages/SMSLogin";
 import PaymentCheckout from "./pages/PaymentCheckout";
 import CertificateGenerator from "./pages/CertificateGenerator";
+import ConsultationBooking from "./pages/ConsultationBooking";
 
 function Router() {
   return (
@@ -72,6 +73,7 @@ function Router() {
       <Route path={"/academy"} component={Academy} />
       <Route path={"/settings"} component={Settings} />
       <Route path={"/chat-consultation"} component={ChatConsultation} />
+      <Route path={"/consultation-booking"} component={ConsultationBooking} />
       <Route path={"/success-gallery"} component={SuccessGallery} />
       <Route path={"/team-profile"} component={TeamProfile} />
       <Route path={"/newsletter-blog"} component={NewsletterBlog} />
