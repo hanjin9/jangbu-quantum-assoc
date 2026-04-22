@@ -42,6 +42,8 @@ import { AdminLogin } from "./pages/AdminLogin";
 import { AuditLogDashboard } from "./pages/AuditLogDashboard";
 import { MobileNotificationCenter } from "./pages/MobileNotificationCenter";
 import { BottomNavBar } from "./components/BottomNavBar";
+import { useState, useEffect } from 'react';
+import { ChevronUp, ChevronLeft } from 'lucide-react';
 import MyCertificates from "./pages/MyCertificates";
 import ExamPracticeBook from "./pages/ExamPracticeBook";
 import { OwnerDashboard } from "./pages/OwnerDashboard";
@@ -105,6 +107,25 @@ function Router() {
 }
 
 function App() {
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const goBack = () => {
+    window.history.back();
+  };
+
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light">
@@ -115,6 +136,26 @@ function App() {
             <Router />
           </main>
           <BottomNavBar />
+
+          {/* PC 화면 왼쪽 하단 뒤로가기 버튼 */}
+          <button
+            onClick={goBack}
+            className="hidden md:flex fixed bottom-8 left-8 z-40 w-12 h-12 rounded-full bg-white/30 hover:bg-white/50 text-white items-center justify-center transition-all duration-300 backdrop-blur-sm"
+            title="뒤로가기"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+
+          {/* PC 화면 오른쪽 하단 위로가기 버튼 */}
+          {showScrollTop && (
+            <button
+              onClick={scrollToTop}
+              className="hidden md:flex fixed bottom-8 right-8 z-40 w-12 h-12 rounded-full bg-yellow-400 hover:bg-yellow-500 text-slate-900 items-center justify-center transition-all duration-300 shadow-lg"
+              title="맨 위로"
+            >
+              <ChevronUp className="w-6 h-6" />
+            </button>
+          )}
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
