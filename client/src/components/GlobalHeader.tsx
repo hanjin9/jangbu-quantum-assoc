@@ -2,7 +2,7 @@ import { useLocation } from 'wouter';
 import { useTranslation } from '@/hooks/useTranslation';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { Button } from '@/components/ui/button';
-import { Menu, X, ArrowUp, ChevronDown, Settings, Info, BookOpen, Users, User, Newspaper } from 'lucide-react';
+import { Menu, X, ArrowUp, ChevronDown, Settings, Info, BookOpen, Users, User, Newspaper, ArrowLeft } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 interface NavItem {
@@ -17,9 +17,24 @@ export function GlobalHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const [history, setHistory] = useState<string[]>([]);
+
+  const canGoBack = history.length > 0 && location !== '/';
+
+  const handleGoBack = () => {
+    if (history.length > 0) {
+      const previousPath = history[history.length - 1];
+      navigate(previousPath);
+      setHistory(history.slice(0, -1));
+    }
+  };
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    // 히스토리 업데이트
+    if (location !== '/' && !history.includes(location)) {
+      setHistory([...history, location]);
+    }
   }, [location]);
 
   useEffect(() => {
@@ -190,8 +205,19 @@ export function GlobalHeader() {
             </h2>
           </div>
 
-          {/* 메뉴 + 햄버거 + 설정(톱니바퀴만) - 최대한 우측 */}
+          {/* 뒤로가기 + 메뉴 + 햄버거 + 설정(톱니바퀴만) - 최대한 우측 */}
           <div className="md:hidden flex items-center gap-0.5 flex-shrink-0 pr-2">
+            {/* 뒤로가기 버튼 */}
+            {canGoBack && (
+              <button
+                onClick={handleGoBack}
+                className="p-1.5 hover:bg-accent rounded-lg transition opacity-50 hover:opacity-100"
+                title="이전 페이지"
+              >
+                <ArrowLeft className="h-5 w-5 stroke-[2.5] text-slate-600" />
+              </button>
+            )}
+            
             {/* 메뉴 텍스트 */}
             <span className="text-xs font-semibold text-[#d4af37]">메뉴</span>
             

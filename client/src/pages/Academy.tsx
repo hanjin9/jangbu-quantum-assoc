@@ -1,9 +1,32 @@
-
 import { Button } from '@/components/ui/button';
 import { useLocation } from 'wouter';
-import { useState } from 'react';
-import { Download, CheckCircle, Clock } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Download, CheckCircle, Clock, BookOpen, FileText } from 'lucide-react';
 
+interface TextbookMaterial {
+  id: string;
+  title: string;
+  grade: string;
+  url: string;
+  description: string;
+}
+
+interface ExamQuestion {
+  id: number;
+  question: string;
+  options: string[];
+  correct: number;
+}
+
+interface Course {
+  id: number;
+  title: string;
+  description: string;
+  materials: Array<{ title: string; content: string }>;
+  exam: ExamQuestion[];
+  passingScore: number;
+  certificateId: string;
+}
 
 export default function Academy() {
   const [, navigate] = useLocation();
@@ -15,8 +38,10 @@ export default function Academy() {
   const [courseProgress, setCourseProgress] = useState<Record<number, number>>({
     1: 100, 2: 100, 3: 65, 4: 40, 5: 20, 6: 0
   });
+  const [showTextbookViewer, setShowTextbookViewer] = useState(false);
+  const [selectedTextbook, setSelectedTextbook] = useState<TextbookMaterial | null>(null);
 
-  const courses = [
+  const courses: Course[] = [
     {
       id: 1,
       title: '양자요법 기초',
@@ -104,50 +129,15 @@ export default function Academy() {
     },
     {
       id: 6,
-      title: '양자요법 2급',
-      description: '양자요법 심화 과정입니다.',
+      title: '마스터 과정',
+      description: '전문 양자요법 관리사로서의 최종 단계입니다.',
       materials: [
-        { title: '고급 에너지 기법', content: '심화된 에너지 조절 및 치료 기법' },
-        { title: '복합 증상 관리', content: '복합적인 건강 문제 진단 및 치료' },
-        { title: '전문가 상담 기법', content: '고급 상담 및 치료 계획 수립' },
+        { title: '고급 진단', content: '복합 증상 분석, 에너지 패턴 인식, 맞춤 치료 계획' },
+        { title: '리더십과 멘토링', content: '팀 관리, 신입 교육, 전문 관리사 양성' },
+        { title: '사업 운영', content: '클리닉 운영, 마케팅, 재정 관리, 지속 가능성' },
       ],
       exam: [
-        { id: 1, question: '2급에서 배우는 고급 기법은?', options: ['심화 에너지 조절', '기초 이론', '초급 기법', '상담만'], correct: 0 },
-      ],
-      passingScore: 75,
-      certificateId: 'CERT-002-2026',
-    },
-    {
-      id: 7,
-      title: '양자요법 1급',
-      description: '양자요법 최고 수준의 마스터 과정입니다.',
-      materials: [
-        { title: '마스터 기법', content: '최고 수준의 에너지 치료 기법' },
-        { title: '연구 및 개발', content: '새로운 치료법 개발 및 연구' },
-        { title: '전문가 교육', content: '후진 양성 및 교육 능력' },
-      ],
-      exam: [
-        { id: 1, question: '1급 마스터의 책임은?', options: ['후진 양성 및 연구', '기초만 알기', '수익 추구', '자만'], correct: 0 },
-      ],
-      passingScore: 85,
-      certificateId: 'CERT-MASTER-2026',
-    },
-    {
-      id: 8,
-      title: '자격증 종합 시험',
-      description: '모든 과정을 통합한 최종 시험입니다.',
-      materials: [
-        { title: '통합 이론', content: '모든 과정의 핵심 이론 통합' },
-        { title: '실무 능력', content: '실제 상황에서의 문제 해결 능력' },
-        { title: '윤리 및 책임', content: '전문가로서의 윤리적 판단' },
-      ],
-      examMaterials: [
-        { title: 'A형 예상 문제 (쉬움)', url: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/A형_쉬움_예상문제_0df2fed7.pdf' },
-        { title: 'B형 예상 문제 (중간)', url: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/B형_중간_예상문제_3fae6afc.pdf' },
-        { title: 'C형 예상 문제 (어려움)', url: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/C형_어려움_예상문제_c5eb3a43.pdf' },
-      ],
-      exam: [
-        { id: 1, question: '양자요법의 궁극적 목표는?', options: ['환자 건강 회복', '돈 버는 것', '유명해지기', '권력'], correct: 0 },
+        { id: 1, question: '마스터 과정의 핵심은?', options: ['리더십 개발', '돈 버는 것', '권력', '명성'] , correct: 0 },
         { id: 2, question: '전문 관리사의 책임은?', options: ['환자 안전과 신뢰', '자신의 이익', '경쟁', '비난'], correct: 0 },
         { id: 3, question: '지속적 발전의 방법은?', options: ['학습과 성찰', '자만', '고립', '포기'], correct: 0 },
       ],
@@ -155,6 +145,30 @@ export default function Academy() {
       certificateId: 'CERT-MASTER-2026',
     },
   ];
+
+  const textbooks: TextbookMaterial[] = [
+    {
+      id: 'grade3',
+      title: '3급 교재',
+      grade: '3급',
+      url: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/grade3_jangbu_d5015981.pdf',
+      description: '장•부 양자요법 관리사 3급 과정',
+    },
+    {
+      id: 'grade2',
+      title: '2급 교재',
+      grade: '2급',
+      url: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/_____________2__________________________6d7d9024.pdf',
+      description: '장•부 양자요법 관리사 2급 과정 (실무실기 중심)',
+    },
+  ];
+
+  const handleAnswerChange = (questionId: number, answer: string) => {
+    setUserAnswers(prev => ({
+      ...prev,
+      [questionId]: answer
+    }));
+  };
 
   const handleSubmitTest = () => {
     if (!selectedCourse) return;
@@ -180,6 +194,11 @@ export default function Academy() {
     alert(`수료증 다운로드: ${course.title}\n인증번호: ${course.certificateId}\n발급일: 2026-03-19`);
   };
 
+  const openTextbookViewer = (textbook: TextbookMaterial) => {
+    setSelectedTextbook(textbook);
+    setShowTextbookViewer(true);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 py-12">
       <div className="container mx-auto px-4">
@@ -192,299 +211,226 @@ export default function Academy() {
             <span>📚</span> 공식 교재 및 자료
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* 3급 교재 */}
-            <div className="bg-slate-800/70 p-6 rounded-lg border border-amber-500/20 hover:border-amber-500 transition">
-              <div className="flex items-start gap-4 mb-4">
-                <span className="text-4xl">📚</span>
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-white mb-2">3급 교재</h3>
-                  <p className="text-sm text-gray-400">장•부 양자요법 관리사 3급 과정</p>
+            {textbooks.map((textbook) => (
+              <div key={textbook.id} className="bg-slate-800/70 p-6 rounded-lg border border-amber-500/20 hover:border-amber-500 transition">
+                <div className="flex items-start gap-4 mb-4">
+                  <span className="text-4xl">📖</span>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-white mb-2">{textbook.title}</h3>
+                    <p className="text-sm text-gray-400">{textbook.description}</p>
+                  </div>
+                </div>
+                <p className="text-gray-300 text-sm mb-4">
+                  {textbook.grade} 수준의 종합 교재입니다. HTML 뷰어로 바로 열어보거나 PDF로 다운로드할 수 있습니다.
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => openTextbookViewer(textbook)}
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition font-semibold"
+                  >
+                    <BookOpen className="w-4 h-4" />
+                    보기
+                  </button>
+                  <a
+                    href={textbook.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition font-semibold"
+                  >
+                    <Download className="w-4 h-4" />
+                    다운로드
+                  </a>
                 </div>
               </div>
-              <p className="text-gray-300 text-sm mb-4">
-                장•부 양자요법의 기초 이론부터 실기 기법까지 포함된 종합 교재입니다. 3급 수준의 모든 내용을 다룹니다.
-              </p>
-              <a
-                href="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/grade3_jangbu_d5015981.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition font-semibold"
-              >
-                <Download className="w-4 h-4" />
-                다운로드
-              </a>
-            </div>
-
-            {/* 2급 교재 - 장•부 양자요법 관리사 */}
-            <div className="bg-slate-800/70 p-6 rounded-lg border border-amber-500/20 hover:border-amber-500 transition">
-              <div className="flex items-start gap-4 mb-4">
-                <span className="text-4xl">📖</span>
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-white mb-2">2급 교재</h3>
-                  <p className="text-sm text-gray-400">장•부 양자요법 관리사 2급 과정 (실무실기 중심)</p>
-                </div>
-              </div>
-              <p className="text-gray-300 text-sm mb-4">
-                장•부 양자요법의 실무 중심 실기 교재로, 2급 수준의 실제 업무 능력을 갖추기 위한 필수 자료입니다.
-              </p>
-              <a
-                href="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/_____________2__________________________6d7d9024.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition font-semibold"
-              >
-                <Download className="w-4 h-4" />
-                다운로드
-              </a>
-            </div>
+            ))}
           </div>
         </div>
 
         {/* 과목별 문제집 섹션 */}
         <div className="mb-16 bg-gradient-to-r from-slate-900/30 to-slate-800/30 p-8 rounded-lg border border-amber-500/20">
           <h2 className="text-3xl font-bold text-amber-400 mb-8 flex items-center gap-3">
-            <span>✏️</span> 과목별 문제집
+            <span>✏️</span> 과목별 시험
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* 기초 이론 */}
-            <div className="bg-slate-800/70 p-6 rounded-lg border border-amber-500/20 hover:border-amber-500 transition">
-              <div className="flex items-start gap-3 mb-4">
-                <span className="text-3xl">🎓</span>
-                <h3 className="text-lg font-bold text-white">기초 이론</h3>
-              </div>
-              <p className="text-gray-300 text-sm mb-4">양자요법의 기본 원리와 기초 개념을 학습합니다.</p>
-              <a
-                href="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/기초_이론_고품질문제집_ab6820bd.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition font-semibold text-sm"
-              >
-                <Download className="w-4 h-4" />
-                문제집 다운로드
-              </a>
-            </div>
+            {courses.map((course) => {
+              const isCompleted = completedCourses.includes(course.id);
+              const progress = courseProgress[course.id] || 0;
 
-            {/* 에너지 관리 */}
-            <div className="bg-slate-800/70 p-6 rounded-lg border border-amber-500/20 hover:border-amber-500 transition">
-              <div className="flex items-start gap-3 mb-4">
-                <span className="text-3xl">⚡</span>
-                <h3 className="text-lg font-bold text-white">에너지 관리</h3>
-              </div>
-              <p className="text-gray-300 text-sm mb-4">에너지 흐름 최적화와 균형 유지 방법을 배웁니다.</p>
-              <a
-                href="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/에너지_관리_고품질문제집_0cc37cab.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition font-semibold text-sm"
-              >
-                <Download className="w-4 h-4" />
-                문제집 다운로드
-              </a>
-            </div>
-
-            {/* 실기 기법 */}
-            <div className="bg-slate-800/70 p-6 rounded-lg border border-amber-500/20 hover:border-amber-500 transition">
-              <div className="flex items-start gap-3 mb-4">
-                <span className="text-3xl">🙌</span>
-                <h3 className="text-lg font-bold text-white">실기 기법</h3>
-              </div>
-              <p className="text-gray-300 text-sm mb-4">실제 시술 기법과 안전한 수행 방법을 습득합니다.</p>
-              <a
-                href="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/실기_기법_고품질문제집_0ff2c02c.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition font-semibold text-sm"
-              >
-                <Download className="w-4 h-4" />
-                문제집 다운로드
-              </a>
-            </div>
-
-            {/* 안전 관리 */}
-            <div className="bg-slate-800/70 p-6 rounded-lg border border-amber-500/20 hover:border-amber-500 transition">
-              <div className="flex items-start gap-3 mb-4">
-                <span className="text-3xl">🛡️</span>
-                <h3 className="text-lg font-bold text-white">안전 관리</h3>
-              </div>
-              <p className="text-gray-300 text-sm mb-4">클라이언트 안전과 응급 상황 대응을 학습합니다.</p>
-              <a
-                href="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/안전_관리_고품질문제집_e62bc7e6.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition font-semibold text-sm"
-              >
-                <Download className="w-4 h-4" />
-                문제집 다운로드
-              </a>
-            </div>
-
-            {/* 윤리 및 법규 */}
-            <div className="bg-slate-800/70 p-6 rounded-lg border border-amber-500/20 hover:border-amber-500 transition">
-              <div className="flex items-start gap-3 mb-4">
-                <span className="text-3xl">⚖️</span>
-                <h3 className="text-lg font-bold text-white">윤리 및 법규</h3>
-              </div>
-              <p className="text-gray-300 text-sm mb-4">전문가 윤리와 관련 법규를 이해합니다.</p>
-              <a
-                href="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/윤리_법규_고품질문제집_66641d37.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition font-semibold text-sm"
-              >
-                <Download className="w-4 h-4" />
-                문제집 다운로드
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* Progress Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="bg-slate-800/50 p-6 rounded-lg border border-amber-500/20">
-            <h3 className="text-amber-400 font-bold mb-2">완료한 과정</h3>
-            <p className="text-3xl font-bold text-white">{completedCourses.length}/6</p>
-          </div>
-          <div className="bg-slate-800/50 p-6 rounded-lg border border-amber-500/20">
-            <h3 className="text-amber-400 font-bold mb-2">평균 진도율</h3>
-            <p className="text-3xl font-bold text-white">{Math.round(Object.values(courseProgress).reduce((a, b) => a + b) / 6)}%</p>
-          </div>
-          <div className="bg-slate-800/50 p-6 rounded-lg border border-amber-500/20">
-            <h3 className="text-amber-400 font-bold mb-2">자격증 상태</h3>
-            <p className="text-3xl font-bold text-white">{completedCourses.length === 6 ? '완료' : '진행중'}</p>
-          </div>
-        </div>
-
-        {/* Course List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {courses.map(course => (
-            <div key={course.id} className="bg-slate-800/50 rounded-lg border border-amber-500/20 overflow-hidden hover:border-amber-500 transition">
-              <div className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="text-xl font-bold text-white mb-2">{course.title}</h3>
-                    <p className="text-gray-300 text-sm">{course.description}</p>
-                  </div>
-                  {completedCourses.includes(course.id) && (
-                    <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
-                  )}
-                </div>
-
-                {/* Progress Bar */}
-                <div className="mb-4">
-                  <div className="flex justify-between text-sm mb-2">
-                    <span className="text-gray-400">진도율</span>
-                    <span className="text-amber-400">{courseProgress[course.id]}%</span>
-                  </div>
-                  <div className="w-full bg-slate-700 rounded-full h-2">
-                    <div
-                      className="bg-gradient-to-r from-amber-400 to-amber-600 h-2 rounded-full transition-all"
-                      style={{ width: `${courseProgress[course.id]}%` }}
-                    ></div>
-                  </div>
-                </div>
-
-                {/* Materials */}
-                <div className="mb-4">
-                  <p className="text-sm text-gray-400 mb-2">학습 자료:</p>
-                  <ul className="space-y-1">
-                    {course.materials.map((material, i) => (
-                      <li key={i} className="text-sm text-gray-300">• {material.title}</li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Actions */}
-                <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    className="flex-1 bg-amber-500 hover:bg-amber-600 text-white"
-                    onClick={() => setSelectedCourse(selectedCourse === course.id ? null : course.id)}
-                  >
-                    {selectedCourse === course.id ? '시험 닫기' : '시험 응시'}
-                  </Button>
-                  {completedCourses.includes(course.id) && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="border-amber-500 text-amber-400"
-                      onClick={() => downloadCertificate(course.id)}
-                    >
-                      <Download className="w-4 h-4" />
-                    </Button>
-                  )}
-                </div>
-              </div>
-
-              {/* Exam Materials for Certificate Test */}
-              {selectedCourse === course.id && course.id === 6 && 'examMaterials' in course && (
-                <div className="bg-slate-900/50 p-6 border-t border-amber-500/20">
-                  <h4 className="text-lg font-bold text-white mb-4">📝 예상 문제</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    {(course as any).examMaterials.map((material: any, idx: number) => (
-                      <a
-                        key={idx}
-                        href={material.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-4 bg-slate-800 border border-amber-500/30 rounded-lg hover:border-amber-500 transition flex items-center gap-3"
-                      >
-                        <Download className="w-5 h-5 text-amber-400" />
-                        <div>
-                          <p className="text-white font-semibold text-sm">{material.title}</p>
-                          <p className="text-gray-400 text-xs">25문제</p>
-                        </div>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Exam Section for other courses */}
-              {selectedCourse === course.id && course.id !== 6 && (
-                <div className="bg-slate-900/50 p-6 border-t border-amber-500/20">
-                  <h4 className="text-lg font-bold text-white mb-4">실기 시험</h4>
-                  {course.exam.map(question => (
-                    <div key={question.id} className="mb-6">
-                      <p className="text-white font-semibold mb-3">{question.id}. {question.question}</p>
-                      <div className="space-y-2">
-                        {question.options.map((option, idx) => (
-                          <label key={idx} className="flex items-center gap-3 cursor-pointer">
-                            <input
-                              type="radio"
-                              name={`q${question.id}`}
-                              value={idx}
-                              checked={userAnswers[question.id] === String(idx)}
-                              onChange={(e) => setUserAnswers({ ...userAnswers, [question.id]: e.target.value })}
-                              className="w-4 h-4"
-                            />
-                            <span className="text-gray-300">{option}</span>
-                          </label>
-                        ))}
-                      </div>
+              return (
+                <div key={course.id} className="bg-slate-800/70 p-6 rounded-lg border border-amber-500/20 hover:border-amber-500 transition">
+                  <div className="flex items-start gap-3 mb-4">
+                    {isCompleted ? (
+                      <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0 mt-1" />
+                    ) : (
+                      <Clock className="w-6 h-6 text-amber-400 flex-shrink-0 mt-1" />
+                    )}
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-white mb-1">{course.title}</h3>
+                      <p className="text-sm text-gray-400">{course.description}</p>
                     </div>
-                  ))}
-                  <Button
-                    className="w-full bg-green-600 hover:bg-green-700 text-white"
-                    onClick={handleSubmitTest}
-                  >
-                    시험 제출
-                  </Button>
-                  {testSubmitted && score !== null && (
-                    <div className="mt-4 p-4 bg-slate-800 rounded-lg">
-                      <p className="text-white font-bold mb-2">시험 결과: {score}점</p>
-                      {score >= course.passingScore ? (
-                        <p className="text-green-400">✓ 합격! 수료증을 다운로드할 수 있습니다.</p>
-                      ) : (
-                        <p className="text-red-400">✗ 불합격. 다시 시도해주세요. (합격선: {course.passingScore}점)</p>
-                      )}
+                  </div>
+
+                  <div className="mb-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm text-gray-300">진도율</span>
+                      <span className="text-sm font-bold text-amber-400">{progress}%</span>
                     </div>
-                  )}
+                    <div className="w-full bg-slate-700 rounded-full h-2">
+                      <div
+                        className="bg-gradient-to-r from-amber-500 to-amber-400 h-2 rounded-full transition-all"
+                        style={{ width: `${progress}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setSelectedCourse(course.id);
+                      setTestSubmitted(false);
+                      setScore(null);
+                      setUserAnswers({});
+                    }}
+                    className="w-full px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition font-semibold"
+                  >
+                    {isCompleted ? '✓ 수료 완료' : '시험 응시'}
+                  </button>
                 </div>
-              )}
-            </div>
-          ))}
+              );
+            })}
+          </div>
         </div>
+
+        {/* 시험 영역 */}
+        {selectedCourse && (
+          <div className="mb-16 bg-slate-800/50 p-8 rounded-lg border border-amber-500/30">
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-2xl font-bold text-white">
+                {courses.find(c => c.id === selectedCourse)?.title} - 시험
+              </h2>
+              <button
+                onClick={() => setSelectedCourse(null)}
+                className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition"
+              >
+                닫기
+              </button>
+            </div>
+
+            {!testSubmitted ? (
+              <div className="space-y-6">
+                {courses.find(c => c.id === selectedCourse)?.exam.map((question, idx) => (
+                  <div key={question.id} className="bg-slate-700/50 p-6 rounded-lg border border-amber-500/20">
+                    <h3 className="text-lg font-bold text-white mb-4">
+                      {idx + 1}. {question.question}
+                    </h3>
+                    <div className="space-y-3">
+                      {question.options.map((option, optIdx) => (
+                        <label key={optIdx} className="flex items-center gap-3 cursor-pointer p-3 rounded-lg hover:bg-slate-600/50 transition">
+                          <input
+                            type="radio"
+                            name={`question-${question.id}`}
+                            value={String(optIdx)}
+                            checked={userAnswers[question.id] === String(optIdx)}
+                            onChange={(e) => handleAnswerChange(question.id, e.target.value)}
+                            className="w-5 h-5 text-amber-500 cursor-pointer"
+                          />
+                          <span className="text-lg text-gray-200 flex-1">{optIdx + 1}. {option}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+
+                <button
+                  onClick={handleSubmitTest}
+                  className="w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-lg transition font-bold text-lg"
+                >
+                  시험 제출
+                </button>
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <div className="mb-6">
+                  <div className="text-6xl font-bold text-amber-400 mb-4">{score}점</div>
+                  <p className="text-xl text-gray-300">
+                    {score! >= (courses.find(c => c.id === selectedCourse)?.passingScore || 60)
+                      ? '✓ 합격하셨습니다!'
+                      : '✗ 불합격입니다. 다시 시도해주세요.'}
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setSelectedCourse(null);
+                    setTestSubmitted(false);
+                    setScore(null);
+                    setUserAnswers({});
+                  }}
+                  className="px-6 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition font-semibold"
+                >
+                  완료
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
+
+      {/* HTML 교재 뷰어 모달 */}
+      {showTextbookViewer && selectedTextbook && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] flex flex-col">
+            <div className="flex justify-between items-center p-4 border-b bg-gradient-to-r from-amber-500 to-amber-600">
+              <h3 className="text-xl font-bold text-white">{selectedTextbook.title}</h3>
+              <button
+                onClick={() => setShowTextbookViewer(false)}
+                className="text-white hover:bg-amber-700 p-2 rounded-lg transition"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex-1 overflow-auto">
+              <iframe
+                src={`data:text/html;charset=utf-8,${encodeURIComponent(`
+                  <!DOCTYPE html>
+                  <html lang="ko">
+                  <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>${selectedTextbook.title}</title>
+                    <style>
+                      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f9f9f9; margin: 0; padding: 20px; }
+                      .content { background: white; padding: 30px; border-radius: 8px; line-height: 1.8; max-width: 900px; margin: 0 auto; }
+                      h2 { color: #d4af37; margin-top: 30px; margin-bottom: 15px; font-size: 24px; }
+                      h3 { color: #1a1a2e; margin-top: 20px; margin-bottom: 10px; font-size: 18px; }
+                      p { color: #333; margin-bottom: 12px; }
+                      table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+                      table td { border: 1px solid #ddd; padding: 10px; }
+                      table tr:first-child td { background: #d4af37; color: white; font-weight: bold; }
+                    </style>
+                  </head>
+                  <body>
+                    <div class="content">
+                      <h2>📘 ${selectedTextbook.title}</h2>
+                      <p><strong>${selectedTextbook.description}</strong></p>
+                      <p>이 교재는 ${selectedTextbook.grade} 수준의 전문 양자요법 관리사 교육 자료입니다.</p>
+                      <h3>주요 내용</h3>
+                      <p>• 양자에너지의 기본 원리</p>
+                      <p>• 에너지 진단 및 치료 기법</p>
+                      <p>• 실무 적용 사례</p>
+                      <p>• 전문가 윤리 및 책임</p>
+                      <p style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #ddd; color: #999; font-size: 12px;">
+                        PDF 다운로드 버튼을 클릭하여 전체 교재를 다운로드할 수 있습니다.
+                      </p>
+                    </div>
+                  </body>
+                  </html>
+                `)}`}
+                className="w-full h-full border-0"
+                title="교재 뷰어"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

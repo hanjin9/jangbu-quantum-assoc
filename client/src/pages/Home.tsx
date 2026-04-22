@@ -29,18 +29,26 @@ export default function Home() {
           <p className="text-base md:text-xl text-gray-200 mb-6 md:mb-8">
             전문 양자요법 관리사와 함께 신체의 에너지 밸런스를 회복하고 건강한 삶을 시작하세요
           </p>
-          <div className="flex gap-2 md:gap-4 justify-center flex-wrap text-sm md:text-base">
+          <div className="flex gap-2 md:gap-4 justify-center flex-wrap text-sm md:text-base flex-col md:flex-row">
             <Button
               size="lg"
-              className="bg-amber-500 hover:bg-amber-600 text-white px-8"
-              onClick={() => navigate('/checkout')}
+              className="bg-amber-500 hover:bg-amber-600 text-white px-8 md:px-12 min-w-max"
+              onClick={() => navigate('/sms-login')}
             >
-              회원 가입하기
+              🔐 로그인
               <ChevronRight className="w-5 h-5 ml-2" />
             </Button>
             <Button
               size="lg"
-              className="bg-amber-500/20 border-2 border-amber-500 text-amber-400 hover:bg-amber-500/40 hover:border-amber-400 transition-all duration-300 font-semibold"
+              className="bg-amber-600 hover:bg-amber-700 text-white px-8 md:px-12 min-w-max"
+              onClick={() => navigate('/checkout')}
+            >
+              📝 회원 가입
+              <ChevronRight className="w-5 h-5 ml-2" />
+            </Button>
+            <Button
+              size="lg"
+              className="bg-amber-500/20 border-2 border-amber-500 text-amber-400 hover:bg-amber-500/40 hover:border-amber-400 transition-all duration-300 font-semibold md:ml-4"
               onClick={() => navigate('/appointments')}
             >
               <Calendar className="w-5 h-5 mr-2" />
