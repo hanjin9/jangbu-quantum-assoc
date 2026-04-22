@@ -54,7 +54,7 @@ export function GlobalHeader() {
     }
   };
 
-  const navItems = [
+  const baseNavItems = [
     {
       label: '소개',
       path: '/about',
@@ -104,6 +104,19 @@ export function GlobalHeader() {
       ],
     },
   ];
+
+  // 권한 기반 메뉴 필터링
+  const navItems = baseNavItems.filter(item => {
+    // 모든 사용자에게 기본 메뉴 표시
+    if (['소개', '학습', '커뮤니티', '회원', '소식'].includes(item.label)) {
+      return true;
+    }
+    // 쇼핑몰은 Admin 이상만 표시
+    if (item.label === '쇼핑몰' && user && (user.role === 'admin' || user.role === 'owner')) {
+      return true;
+    }
+    return false;
+  });
 
   const getMenuIcon = (label: string, isMobile = false) => {
     const size = isMobile ? 'w-7 h-7' : 'w-5 h-5';
@@ -287,6 +300,31 @@ export function GlobalHeader() {
                         <Settings className="w-4 h-4" />
                         설정
                       </button>
+                      {/* 권한 기반 메뉴 */}
+                      {user?.role === 'owner' && (
+                        <>
+                          <hr className="my-1" />
+                          <button
+                            onClick={() => navigate('/admin/dashboard')}
+                            className="w-full text-left px-4 py-2 text-sm text-amber-600 hover:text-amber-700 hover:bg-amber-50 transition-colors flex items-center gap-2 font-semibold"
+                          >
+                            <Settings className="w-4 h-4" />
+                            관리자 (Owner)
+                          </button>
+                        </>
+                      )}
+                      {user?.role === 'admin' && (
+                        <>
+                          <hr className="my-1" />
+                          <button
+                            onClick={() => navigate('/admin/members')}
+                            className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-colors flex items-center gap-2 font-semibold"
+                          >
+                            <Users className="w-4 h-4" />
+                            학생 관리 (Admin)
+                          </button>
+                        </>
+                      )}
                       <hr className="my-1" />
                       <button
                         onClick={() => {
