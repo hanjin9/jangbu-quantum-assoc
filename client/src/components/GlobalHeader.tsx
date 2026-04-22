@@ -202,12 +202,12 @@ export function GlobalHeader() {
                 return (
                   <div key={item.label} className="relative group">
                     <button
-                      onClick={() => handleNavClick(item.path)}
-                      className={`text-sm transition-colors whitespace-nowrap px-3 py-2 rounded-lg flex items-center gap-1 ${
+                      onClick={() => !hasSubmenu && handleNavClick(item.path)}
+                      className={`text-sm transition-colors whitespace-nowrap px-3 py-2 rounded-lg flex items-center gap-1 cursor-pointer ${
                         isActive
                           ? 'text-[#d4af37] font-semibold bg-[#d4af37]/10'
-                          : 'hover:text-[#d4af37] hover:bg-[#d4af37]/5'
-                      } ${hasSubmenu ? 'cursor-default' : ''}`}
+                          : 'text-slate-700 hover:text-[#d4af37] hover:bg-[#d4af37]/5'
+                      }`}
                     >
                       {item.label}
                       {hasSubmenu && <ChevronDown className="w-3 h-3" />}
@@ -344,14 +344,7 @@ export function GlobalHeader() {
                     </div>
                   )}
                 </div>
-              ) : (
-                <button
-                  onClick={() => window.location.href = getLoginUrl()}
-                  className="text-sm font-semibold text-[#d4af37] hover:text-white transition px-3 py-2 rounded-lg hover:bg-[#d4af37]/10"
-                >
-                  로그인
-                </button>
-              )}
+              ) : null}
 
               {/* 모바일 메뉴 버튼 - X 크기/굵기 50% 축소 */}
               <button
