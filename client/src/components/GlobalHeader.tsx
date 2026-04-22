@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { Menu, X, Settings, ChevronDown, Info, BookOpen, Users, User, Newspaper, ArrowLeft, ArrowUp, Globe } from 'lucide-react';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { useAuth } from '@/_core/hooks/useAuth';
+import { getLoginUrl } from '@/const';
 
 export function GlobalHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -12,6 +14,7 @@ export function GlobalHeader() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [location] = useLocation();
   const [, navigate] = useLocation();
+  const { user } = useAuth();
   const t = (key: string) => key; // 간단한 번역 함수
 
   useEffect(() => {
@@ -175,9 +178,9 @@ export function GlobalHeader() {
                     {item.label}
                     {hasSubmenu && <ChevronDown className="w-3 h-3" />}
                   </button>
-                  {/* Desktop Submenu */}
+                  {/* Desktop Submenu - 호버 시 자동 펼쳐지는 애니메이션 */}
                   {hasSubmenu && item.submenu && (
-                    <div className="absolute left-0 mt-0 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2">
+                    <div className="absolute left-0 mt-0 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 py-2 z-50 transform scale-95 group-hover:scale-100">
                       {item.submenu.map((subitem) => (
                         <button
                           key={subitem.label}
@@ -239,6 +242,24 @@ export function GlobalHeader() {
             >
               <Settings className="h-8 w-8 text-[#d4af37]" />
             </button>
+
+            {/* 로그인 상태 표시 - 사용자 프로필 */}
+            {user && (
+              <div className="flex items-center gap-3 pl-3 border-l border-slate-600">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#d4af37] to-[#1a4d7a] flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">{user.name?.charAt(0) || '👤'}</span>
+                </div>
+                <span className="text-sm font-semibold text-[#d4af37] hidden md:inline">{user.name || '사용자'}</span>
+              </div>
+            )}
+            {!user && (
+              <button
+                onClick={() => window.location.href = getLoginUrl()}
+                className="text-sm font-semibold text-[#d4af37] hover:text-white transition px-3 py-2 rounded-lg hover:bg-[#d4af37]/10"
+              >
+                로그인
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -267,7 +288,7 @@ export function GlobalHeader() {
                       setOpenSubmenu(null);
                     }
                   }}
-                  className={`w-full text-left text-xl font-bold transition-colors py-3 px-3 rounded-lg flex items-center justify-between gap-2 ${
+                  className={`w-full text-left text-xl font-bold transition-colors py-4 px-4 rounded-lg flex items-center justify-between gap-2 active:scale-95 ${
                     isActive
                       ? 'text-[#d4af37] font-bold bg-[#d4af37]/10'
                       : 'text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/5'
@@ -285,14 +306,14 @@ export function GlobalHeader() {
                     />
                   )}
                 </button>
-                {/* Mobile Submenu */}
+                {/* Mobile Submenu - 호버 시 자동 펼쳐지는 애니메이션 */}
                 {hasSubmenu && openSubmenu === item.label && item.submenu && (
-                  <div className="pl-4 space-y-1 mt-1">
+                  <div className="pl-4 space-y-1 mt-1 animate-in slide-in-from-top-2 duration-300">
                     {item.submenu.map((subitem) => (
                       <button
                         key={subitem.label}
                         onClick={() => handleNavClick(subitem.path)}
-                        className="w-full text-left text-base text-slate-800 hover:text-[#d4af37] py-2 px-3 rounded-lg hover:bg-[#d4af37]/10 transition-colors"
+                        className="w-full text-left text-base font-semibold text-slate-800 hover:text-[#d4af37] py-3 px-4 rounded-lg hover:bg-[#d4af37]/10 transition-all duration-200 transform hover:translate-x-1"
                       >
                         {subitem.label}
                       </button>
