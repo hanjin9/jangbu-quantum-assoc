@@ -302,14 +302,22 @@ export default function PracticalExam() {
 
             {question.type === 'multiple_choice' && (
               <RadioGroup value={answers[currentQuestion] || ''} onValueChange={handleAnswerChange}>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {question.options.map((option, idx) => (
-                    <div key={idx} className="flex items-center space-x-3 p-4 rounded-lg bg-slate-700/50 hover:bg-slate-700 transition cursor-pointer">
-                      <RadioGroupItem value={option} id={`option-${idx}`} />
-                      <Label htmlFor={`option-${idx}`} className="text-white cursor-pointer flex-1">
-                        {option}
+                    <button
+                      key={idx}
+                      onClick={() => handleAnswerChange(option)}
+                      className={`w-full flex items-center space-x-4 p-3 rounded-lg transition cursor-pointer border-2 ${
+                        answers[currentQuestion] === option
+                          ? 'bg-amber-500/20 border-amber-400'
+                          : 'bg-slate-700/50 border-transparent hover:bg-slate-700 hover:border-amber-400'
+                      }`}
+                    >
+                      <RadioGroupItem value={option} id={`option-${idx}`} className="flex-shrink-0 w-6 h-6" />
+                      <Label htmlFor={`option-${idx}`} className="text-white cursor-pointer flex-1 text-2xl font-semibold m-0">
+                        {idx + 1}. {option}
                       </Label>
-                    </div>
+                    </button>
                   ))}
                 </div>
               </RadioGroup>

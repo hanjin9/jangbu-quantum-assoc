@@ -120,7 +120,7 @@ export function GlobalHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-gradient-to-r from-background via-background to-[#d4af37]/5 backdrop-blur border-b border-border safe-top">
+    <header className="sticky top-0 z-50 bg-white border-b border-border safe-top">
       <div className="w-full px-0 py-2 md:py-4">
         <div className="flex justify-between items-center px-1 md:px-6 gap-0.5 md:gap-8 h-14 md:h-auto">
           {/* Logo + Language Switcher - 좌측 */}
