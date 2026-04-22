@@ -306,10 +306,10 @@ export function GlobalHeader() {
                     <span className="text-sm font-semibold text-[#d4af37] hidden md:inline">{user.name || '사용자'}</span>
                   </button>
                   {hoverProfile && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200 group-hover:block">
+                    <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200" onMouseEnter={() => setHoverProfile(true)} onMouseLeave={() => setHoverProfile(false)}>
                       <button
                         onMouseEnter={() => setHoverProfile(true)}
-                        onClick={() => navigate('/profile')}
+                        onClick={() => navigate('/my-page')}
                         className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors flex items-center gap-2"
                       >
                         <User className="w-4 h-4" />
@@ -317,7 +317,7 @@ export function GlobalHeader() {
                       </button>
                       <button
                         onMouseEnter={() => setHoverProfile(true)}
-                        onClick={() => navigate('/dashboard')}
+                        onClick={() => navigate('/settings')}
                         className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors flex items-center gap-2"
                       >
                         <Settings className="w-4 h-4" />
