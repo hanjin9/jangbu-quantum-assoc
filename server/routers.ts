@@ -8,6 +8,7 @@ import { signupRouter } from "./routers-signup";
 import { paymentRouter } from "./routers-payment";
 import { transcribeRouter } from "./transcribe.router";
 import { consultationRouter } from "./consultation.router";
+import { passwordResetRouter } from "./routers-password-reset";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -17,6 +18,7 @@ export const appRouter = router({
   payment: paymentRouter,
   transcribe: transcribeRouter,
   consultation: consultationRouter,
+  passwordReset: passwordResetRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {

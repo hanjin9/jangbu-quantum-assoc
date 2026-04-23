@@ -55,6 +55,8 @@ import ConsultationBooking from "./pages/ConsultationBooking";
 import SearchResults from "./pages/SearchResults";
 import AdminMembers from "./pages/AdminMembers";
 import { MyPage } from "./pages/MyPage";
+import WelcomePage from "./pages/WelcomePage";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function Router() {
   return (
@@ -106,6 +108,8 @@ function Router() {
       <Route path="/search" component={SearchResults} />
       <Route path="/admin-members" component={AdminMembers} />
       <Route path="/my-page" component={MyPage} />
+      <Route path="/welcome" component={WelcomePage} />
+      <Route path="/forgot-password" component={ForgotPassword} />
       <Route path="*" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
