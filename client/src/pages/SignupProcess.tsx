@@ -2,24 +2,24 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Phone, Mail, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
+import { Mail, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
 
-type SignupStep = 'auth-method' | 'phone-auth' | 'email-auth' | 'profile' | 'complete';
+type SignupStep = 'form' | 'complete';
 
 export default function SignupProcess() {
   const [, navigate] = useLocation();
-  const [currentStep, setCurrentStep] = useState<SignupStep>('auth-method');
-  const [authMethod, setAuthMethod] = useState<'phone' | 'email' | null>(null);
+  const [currentStep, setCurrentStep] = useState<SignupStep>('form');
   
   // 인증 관련
-  const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [sessionToken, setSessionToken] = useState('');
   const [timeLeft, setTimeLeft] = useState(0);
+  const [otpSent, setOtpSent] = useState(false);
+  const [verified, setVerified] = useState(false);
   
   // 프로필 정보
   const [name, setName] = useState('');
@@ -32,8 +32,6 @@ export default function SignupProcess() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
-  const sendOTPMutation = trpc.smsAuth.sendOTP.useMutation();
-  const verifyOTPMutation = trpc.smsAuth.verifyOTP.useMutation();
   const completeSignupMutation = trpc.signup.completeSignup.useMutation();
 
   // 타이머
@@ -63,56 +61,7 @@ export default function SignupProcess() {
     return `+${cleaned}`;
   };
 
-  // 휴대폰 인증 코드 발송
-  const handleSendPhoneOTP = async () => {
-    setError('');
-    if (!phoneNumber || phoneNumber.replace(/\D/g, '').length < 10) {
-      setError('올바른 휴대폰 번호를 입력해주세요.');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const internationalPhone = toInternationalFormat(phoneNumber);
-      await sendOTPMutation.mutateAsync({ phoneNumber: internationalPhone });
-      setCurrentStep('phone-auth');
-      setTimeLeft(300);
-      toast.success('인증 코드가 발송되었습니다.');
-    } catch (err) {
-      setError('인증 코드 발송에 실패했습니다.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 휴대폰 인증 코드 검증
-  const handleVerifyPhoneOTP = async () => {
-    setError('');
-    if (!verificationCode || verificationCode.length !== 6) {
-      setError('6자리 인증 코드를 입력해주세요.');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const internationalPhone = toInternationalFormat(phoneNumber);
-      const result = await verifyOTPMutation.mutateAsync({
-        phoneNumber: internationalPhone,
-        otpCode: verificationCode,
-      });
-      setSessionToken(result.sessionToken);
-      setCurrentStep('profile');
-      toast.success('인증이 완료되었습니다.');
-    } catch (err) {
-      setError('인증 코드가 올바르지 않습니다.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 이메일 인증 (간단히 구현)
+  // 이메일 인증 코드 발송
   const handleSendEmailOTP = async () => {
     setError('');
     if (!email || !email.includes('@')) {
@@ -123,11 +72,13 @@ export default function SignupProcess() {
     setLoading(true);
     try {
       // 실제로는 백엔드에서 이메일 인증 코드 발송
-      setCurrentStep('email-auth');
+      // 현재는 테스트용으로 즉시 진행
+      setOtpSent(true);
       setTimeLeft(300);
       toast.success('인증 코드가 이메일로 발송되었습니다.');
     } catch (err) {
       setError('이메일 발송에 실패했습니다.');
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -144,29 +95,35 @@ export default function SignupProcess() {
     setLoading(true);
     try {
       // 실제로는 백엔드에서 검증
-      setCurrentStep('profile');
+      // 현재는 테스트용으로 즉시 완료
+      setSessionToken(`email-${email}-${Date.now()}`);
+      setVerified(true);
       toast.success('인증이 완료되었습니다.');
     } catch (err) {
       setError('인증 코드가 올바르지 않습니다.');
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  // 프로필 정보 저장
-  const handleProfileSubmit = async () => {
+  // 회원가입 완료
+  const handleSignupComplete = async () => {
     setError('');
     if (!name || !age || !contact) {
       setError('필수 항목을 모두 입력해주세요.');
       return;
     }
 
+    if (!verified) {
+      setError('이메일 인증을 완료해주세요.');
+      return;
+    }
+
     setLoading(true);
     try {
-      // 국제 형식으로 변환
       const internationalPhone = toInternationalFormat(contact);
       
-      // 백엔드에서 저장
       await completeSignupMutation.mutateAsync({
         sessionToken,
         name,
@@ -190,306 +147,176 @@ export default function SignupProcess() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 pt-20 pb-20">
-      <div className="max-w-md mx-auto px-4">
+      <div className="max-w-2xl mx-auto px-4">
         <Card className="bg-slate-800 border-slate-700 shadow-2xl">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold text-white">회원가입</CardTitle>
             <CardDescription className="text-gray-400">
-              {currentStep === 'auth-method' && '인증 방법을 선택해주세요'}
-              {currentStep === 'phone-auth' && '휴대폰 인증'}
-              {currentStep === 'email-auth' && '이메일 인증'}
-              {currentStep === 'profile' && '기본 정보 입력'}
+              {currentStep === 'form' && '기본 정보를 입력해주세요'}
               {currentStep === 'complete' && '가입 완료'}
             </CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-4">
-            {/* 1단계: 인증 방법 선택 */}
-            {currentStep === 'auth-method' && (
-              <div className="space-y-3">
+            {/* 회원가입 폼 */}
+            {currentStep === 'form' && (
+              <div className="space-y-4">
+                {/* 이메일 인증 섹션 */}
+                <div className="border border-blue-500/30 rounded-lg p-4 bg-slate-700/50">
+                  <h3 className="text-sm font-semibold text-blue-400 mb-3">📧 이메일 인증</h3>
+                  
+                  <div className="space-y-3">
+                    {/* 이메일 주소 입력 */}
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-300 mb-1">
+                        이메일 주소 *
+                      </label>
+                      <div className="flex gap-2">
+                        <Input
+                          type="email"
+                          placeholder="example@email.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="bg-slate-700 border-blue-500/30 text-white text-sm flex-1"
+                          disabled={loading || verified}
+                        />
+                        <Button
+                          onClick={handleSendEmailOTP}
+                          disabled={loading || !email || verified}
+                          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold whitespace-nowrap"
+                        >
+                          {loading ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            '발송'
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* 인증 코드 입력 */}
+                    {otpSent && (
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-300 mb-1">
+                          인증 코드 (6자리) *
+                        </label>
+                        <div className="flex gap-2 items-end">
+                          <div className="flex-1">
+                            <Input
+                              type="text"
+                              placeholder="000000"
+                              value={verificationCode}
+                              onChange={(e) => setVerificationCode(e.target.value.slice(0, 6))}
+                              className="bg-slate-700 border-blue-500/30 text-white text-center text-lg tracking-widest"
+                              disabled={loading || verified}
+                            />
+                            {timeLeft > 0 && (
+                              <p className="text-xs text-gray-400 mt-1">
+                                남은 시간: {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+                              </p>
+                            )}
+                          </div>
+                          <Button
+                            onClick={handleVerifyEmailOTP}
+                            disabled={loading || verificationCode.length !== 6 || verified}
+                            className="bg-green-500 hover:bg-green-600 text-white font-semibold whitespace-nowrap"
+                          >
+                            {loading ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : verified ? (
+                              '✓ 완료'
+                            ) : (
+                              '확인'
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+
+                    {verified && (
+                      <div className="flex items-center gap-2 p-2 bg-green-500/10 border border-green-500/30 rounded-lg">
+                        <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0" />
+                        <p className="text-sm text-green-300">이메일 인증이 완료되었습니다.</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* 기본 정보 섹션 */}
+                <div className="border border-slate-600 rounded-lg p-4 bg-slate-700/30">
+                  <h3 className="text-sm font-semibold text-gray-300 mb-3">👤 기본 정보</h3>
+                  
+                  <div className="space-y-2">
+                    {/* 필수 항목 */}
+                    <div>
+                      <label className="block text-xs font-semibold text-amber-400 mb-1">필수 입력</label>
+                      <div className="space-y-2">
+                        <Input
+                          type="text"
+                          placeholder="이름"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          className="bg-slate-700 border-amber-500/30 text-white text-sm"
+                        />
+                        <Input
+                          type="number"
+                          placeholder="나이"
+                          value={age}
+                          onChange={(e) => setAge(e.target.value)}
+                          className="bg-slate-700 border-amber-500/30 text-white text-sm"
+                        />
+                        <Input
+                          type="tel"
+                          placeholder="연락처 (010-1234-5678)"
+                          value={contact}
+                          onChange={(e) => setContact(formatPhoneNumber(e.target.value))}
+                          className="bg-slate-700 border-amber-500/30 text-white text-sm"
+                        />
+                      </div>
+                    </div>
+
+                    {/* 선택 항목 */}
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-400 mb-1">선택 입력</label>
+                      <div className="space-y-2">
+                        <Input
+                          type="text"
+                          placeholder="거주지역 (예: 서울시 강남구)"
+                          value={region}
+                          onChange={(e) => setRegion(e.target.value)}
+                          className="bg-slate-700 border-slate-600 text-white text-sm"
+                        />
+                        <Input
+                          type="text"
+                          placeholder="직업"
+                          value={job}
+                          onChange={(e) => setJob(e.target.value)}
+                          className="bg-slate-700 border-slate-600 text-white text-sm"
+                        />
+                        <textarea
+                          placeholder="가입하게 된 동기"
+                          value={motivation}
+                          onChange={(e) => setMotivation(e.target.value)}
+                          className="w-full bg-slate-700 border border-slate-600 text-white text-sm p-2 rounded-md resize-none h-16"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 에러 메시지 */}
+                {error && (
+                  <div className="flex gap-2 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                    <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+                    <p className="text-sm text-red-300">{error}</p>
+                  </div>
+                )}
+
+                {/* 회원가입 버튼 */}
                 <Button
-                  onClick={() => {
-                    setAuthMethod('phone');
-                    setCurrentStep('phone-auth');
-                  }}
+                  onClick={handleSignupComplete}
+                  disabled={loading || !name || !age || !contact || !verified}
                   className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold py-6"
-                >
-                  <Phone className="w-5 h-5 mr-2" />
-                  휴대폰으로 인증
-                </Button>
-                <Button
-                  onClick={() => {
-                    setAuthMethod('email');
-                    setCurrentStep('email-auth');
-                  }}
-                  variant="outline"
-                  className="w-full border-amber-500/50 text-amber-400 hover:bg-amber-500/10 font-semibold py-6"
-                >
-                  <Mail className="w-5 h-5 mr-2" />
-                  이메일로 인증
-                </Button>
-              </div>
-            )}
-
-            {/* 2단계: 휴대폰 인증 */}
-            {currentStep === 'phone-auth' && !sessionToken && (
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-300 mb-2">
-                    휴대폰 번호
-                  </label>
-                  <Input
-                    type="tel"
-                    placeholder="010-1234-5678"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(formatPhoneNumber(e.target.value))}
-                    className="bg-slate-700 border-amber-500/30 text-white"
-                    disabled={loading}
-                  />
-                </div>
-
-                {error && (
-                  <div className="flex gap-2 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
-                    <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
-                    <p className="text-sm text-red-300">{error}</p>
-                  </div>
-                )}
-
-                <Button
-                  onClick={handleSendPhoneOTP}
-                  disabled={loading || !phoneNumber}
-                  className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      발송 중...
-                    </>
-                  ) : (
-                    '인증 코드 발송'
-                  )}
-                </Button>
-
-                <button
-                  onClick={() => setCurrentStep('auth-method')}
-                  className="w-full text-amber-400 hover:text-amber-300 text-sm font-semibold"
-                >
-                  다른 방법으로 인증
-                </button>
-              </div>
-            )}
-
-            {/* 2단계: 휴대폰 OTP 입력 */}
-            {currentStep === 'phone-auth' && phoneNumber && !sessionToken && (
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-300 mb-2">
-                    인증 코드 (6자리)
-                  </label>
-                  <Input
-                    type="text"
-                    placeholder="000000"
-                    value={verificationCode}
-                    onChange={(e) => setVerificationCode(e.target.value.slice(0, 6))}
-                    className="bg-slate-700 border-amber-500/30 text-white text-center text-2xl tracking-widest"
-                    disabled={loading}
-                  />
-                  {timeLeft > 0 && (
-                    <p className="text-xs text-gray-400 mt-2">
-                      남은 시간: {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
-                    </p>
-                  )}
-                </div>
-
-                {error && (
-                  <div className="flex gap-2 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
-                    <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
-                    <p className="text-sm text-red-300">{error}</p>
-                  </div>
-                )}
-
-                <Button
-                  onClick={handleVerifyPhoneOTP}
-                  disabled={loading || verificationCode.length !== 6}
-                  className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      검증 중...
-                    </>
-                  ) : (
-                    '인증 완료'
-                  )}
-                </Button>
-              </div>
-            )}
-
-            {/* 2단계: 이메일 인증 */}
-            {currentStep === 'email-auth' && !sessionToken && (
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-300 mb-2">
-                    이메일 주소
-                  </label>
-                  <Input
-                    type="email"
-                    placeholder="example@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="bg-slate-700 border-amber-500/30 text-white"
-                    disabled={loading}
-                  />
-                </div>
-
-                {error && (
-                  <div className="flex gap-2 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
-                    <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
-                    <p className="text-sm text-red-300">{error}</p>
-                  </div>
-                )}
-
-                <Button
-                  onClick={handleSendEmailOTP}
-                  disabled={loading || !email}
-                  className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      발송 중...
-                    </>
-                  ) : (
-                    '인증 코드 발송'
-                  )}
-                </Button>
-
-                <button
-                  onClick={() => setCurrentStep('auth-method')}
-                  className="w-full text-amber-400 hover:text-amber-300 text-sm font-semibold"
-                >
-                  다른 방법으로 인증
-                </button>
-              </div>
-            )}
-
-            {/* 2단계: 이메일 OTP 입력 */}
-            {currentStep === 'email-auth' && email && !sessionToken && (
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-300 mb-2">
-                    인증 코드 (6자리)
-                  </label>
-                  <Input
-                    type="text"
-                    placeholder="000000"
-                    value={verificationCode}
-                    onChange={(e) => setVerificationCode(e.target.value.slice(0, 6))}
-                    className="bg-slate-700 border-amber-500/30 text-white text-center text-2xl tracking-widest"
-                    disabled={loading}
-                  />
-                  {timeLeft > 0 && (
-                    <p className="text-xs text-gray-400 mt-2">
-                      남은 시간: {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
-                    </p>
-                  )}
-                </div>
-
-                {error && (
-                  <div className="flex gap-2 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
-                    <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
-                    <p className="text-sm text-red-300">{error}</p>
-                  </div>
-                )}
-
-                <Button
-                  onClick={handleVerifyEmailOTP}
-                  disabled={loading || verificationCode.length !== 6}
-                  className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      검증 중...
-                    </>
-                  ) : (
-                    '인증 완료'
-                  )}
-                </Button>
-              </div>
-            )}
-
-            {/* 3단계: 프로필 정보 입력 */}
-            {currentStep === 'profile' && (
-              <div className="space-y-3">
-                {/* 필수 항목 */}
-                <div className="border-b border-slate-600 pb-3">
-                  <p className="text-xs font-semibold text-amber-400 mb-3">필수 입력</p>
-                  
-                  <div className="space-y-2">
-                    <Input
-                      type="text"
-                      placeholder="이름"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="bg-slate-700 border-amber-500/30 text-white text-sm"
-                    />
-                    <Input
-                      type="number"
-                      placeholder="나이"
-                      value={age}
-                      onChange={(e) => setAge(e.target.value)}
-                      className="bg-slate-700 border-amber-500/30 text-white text-sm"
-                    />
-                    <Input
-                      type="tel"
-                      placeholder="연락처 (010-1234-5678)"
-                      value={contact}
-                      onChange={(e) => setContact(formatPhoneNumber(e.target.value))}
-                      className="bg-slate-700 border-amber-500/30 text-white text-sm"
-                    />
-                  </div>
-                </div>
-
-                {/* 선택 항목 */}
-                <div>
-                  <p className="text-xs font-semibold text-gray-400 mb-3">선택 입력</p>
-                  
-                  <div className="space-y-2">
-                    <Input
-                      type="text"
-                      placeholder="거주지역 (예: 서울시 강남구)"
-                      value={region}
-                      onChange={(e) => setRegion(e.target.value)}
-                      className="bg-slate-700 border-slate-600 text-white text-sm"
-                    />
-                    <Input
-                      type="text"
-                      placeholder="직업"
-                      value={job}
-                      onChange={(e) => setJob(e.target.value)}
-                      className="bg-slate-700 border-slate-600 text-white text-sm"
-                    />
-                    <textarea
-                      placeholder="가입하게 된 동기"
-                      value={motivation}
-                      onChange={(e) => setMotivation(e.target.value)}
-                      className="w-full bg-slate-700 border border-slate-600 text-white text-sm p-2 rounded-md resize-none h-20"
-                    />
-                  </div>
-                </div>
-
-                {error && (
-                  <div className="flex gap-2 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
-                    <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
-                    <p className="text-sm text-red-300">{error}</p>
-                  </div>
-                )}
-
-                <Button
-                  onClick={handleProfileSubmit}
-                  disabled={loading || !name || !age || !contact}
-                  className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold"
                 >
                   {loading ? (
                     <>
@@ -500,10 +327,21 @@ export default function SignupProcess() {
                     '회원가입 완료'
                   )}
                 </Button>
+
+                {/* 로그인 링크 */}
+                <p className="text-center text-gray-400 text-sm">
+                  이미 계정이 있으신가요?{' '}
+                  <button
+                    onClick={() => navigate('/sms-login')}
+                    className="text-amber-400 hover:text-amber-300 font-semibold"
+                  >
+                    로그인
+                  </button>
+                </p>
               </div>
             )}
 
-            {/* 4단계: 완료 */}
+            {/* 완료 화면 */}
             {currentStep === 'complete' && (
               <div className="text-center space-y-4 py-6">
                 <CheckCircle2 className="w-16 h-16 text-green-400 mx-auto" />
@@ -515,19 +353,6 @@ export default function SignupProcess() {
             )}
           </CardContent>
         </Card>
-
-        {/* 로그인 링크 */}
-        {currentStep === 'auth-method' && (
-          <p className="text-center text-gray-400 text-sm mt-4">
-            이미 계정이 있으신가요?{' '}
-            <button
-              onClick={() => navigate('/sms-login')}
-              className="text-amber-400 hover:text-amber-300 font-semibold"
-            >
-              로그인
-            </button>
-          </p>
-        )}
       </div>
     </div>
   );
