@@ -421,3 +421,11 @@
 - [x] HTML5 표준 비디오 플레이어 (controls 포함)
 - [x] 플레이 버튼 클릭 시만 재생
 - [x] 모바일/PC 반응형 최적화
+
+## 44차 단계 (Intersection Observer 기반 자동 재생)
+- [x] 새 영상 파일 업로드 (jangbu_intro_video_final_af147b37.mp4)
+- [x] Intersection Observer 구현 (화면 중간에 올 때 자동 재생)
+- [x] 영상이 화면에서 벗어날 때 자동 정지
+- [x] 스트리밍 버퍼링 (HTML5 표준 플레이어)
+- [x] 모바일 최적화 (playsInline, muted)
+- [x] 플레이 버튼 제거 (자동 재생만 사용)

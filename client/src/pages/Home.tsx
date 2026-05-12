@@ -1,11 +1,49 @@
 import { Button } from '@/components/ui/button';
 import { useLocation } from 'wouter';
-import { ChevronRight, Calendar, Play } from 'lucide-react';
-import { useState } from 'react';
+import { ChevronRight, Calendar } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function Home() {
   const [, navigate] = useLocation();
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Intersection Observer - 영상이 화면 중간에 올 때 자동 재생
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          // 영상이 화면에 보일 때 재생
+          video.play().catch(() => {
+            console.log('Autoplay failed');
+          });
+        } else {
+          // 영상이 화면에서 벗어날 때 정지
+          video.pause();
+        }
+      },
+      {
+        threshold: 0.5, // 50% 이상 보일 때 트리거
+      }
+    );
+
+    observer.observe(video);
+
+    return () => {
+      observer.unobserve(video);
+    };
+  }, []);
 
   // 홈 화면
   return (
@@ -64,7 +102,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 협회 소개 영상 섹션 */}
+      {/* 협회 소개 영상 섹션 - Intersection Observer 자동 재생 */}
       <section className="py-16 md:py-24 bg-slate-800/50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-amber-400">
@@ -74,11 +112,16 @@ export default function Home() {
           <div className="max-w-4xl mx-auto bg-black rounded-lg overflow-hidden shadow-2xl">
             <div className="relative w-full bg-black" style={{ paddingBottom: '56.25%' }}>
               <video
+                ref={videoRef}
                 className="absolute inset-0 w-full h-full"
-                controls
-                poster="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/hero-quantum-mobile-optimized-PwNNHSQ4X3DxpKS4qv3TLP.webp"
+                style={{
+                  objectFit: 'contain',
+                  backgroundColor: '#000'
+                }}
+                muted
+                playsInline
               >
-                <source src="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/jangbu_intro_video_final_af147b37_af52be6d.mp4" type="video/mp4" />
+                <source src="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/jangbu_intro_video_final_af147b37_d01c7a89.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             </div>
