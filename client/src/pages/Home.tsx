@@ -54,7 +54,7 @@ export default function Home() {
           muted
           playsInline
         >
-          <source src="/manus-storage/장부9_16_fc673178.mp4" type="video/mp4" />
+          <source src="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/jangbu_intro_video_final_af147b37_af52be6d.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         
