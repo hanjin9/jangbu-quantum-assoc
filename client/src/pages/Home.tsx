@@ -1,73 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { useLocation } from 'wouter';
-import { ChevronRight, Calendar } from 'lucide-react';
-import { useEffect, useState, useRef } from 'react';
+import { ChevronRight, Calendar, Play } from 'lucide-react';
+import { useState } from 'react';
 
 export default function Home() {
   const [, navigate] = useLocation();
-  const [showIntro, setShowIntro] = useState(true);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // 영상 재생 끝 후 홈 화면으로 전환
-  useEffect(() => {
-    if (showIntro && videoRef.current) {
-      const handleVideoEnd = () => {
-        setShowIntro(false);
-      };
-      
-      const video = videoRef.current;
-      video.addEventListener('ended', handleVideoEnd);
-      
-      // 자동 재생 시작
-      video.play().catch(() => {
-        // 자동 재생 실패 시 사용자 상호작용 필요
-        console.log('Autoplay failed, waiting for user interaction');
-      });
-
-      return () => {
-        video.removeEventListener('ended', handleVideoEnd);
-      };
-    }
-  }, [showIntro]);
-
-  // 영상 스킵 함수
-  const skipIntro = () => {
-    setShowIntro(false);
-  };
-
-  // 영상 화면
-  if (showIntro) {
-    return (
-      <div className="w-screen h-screen bg-black flex items-center justify-center relative overflow-hidden">
-        <video
-          ref={videoRef}
-          className="w-full h-full object-cover"
-          muted
-          playsInline
-        >
-          <source src="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/jangbu_intro_video_final_af147b37_af52be6d.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        
-        {/* 스킵 버튼 */}
-        <button
-          onClick={skipIntro}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg transition-all duration-300 z-10"
-        >
-          스킵 (Skip)
-        </button>
-      </div>
-    );
-  }
 
   // 홈 화면
   return (
@@ -122,6 +60,34 @@ export default function Home() {
               <Calendar className="w-5 h-5 mr-2" />
               상담 예약하기
             </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* 협회 소개 영상 섹션 */}
+      <section className="py-16 md:py-24 bg-slate-800/50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-amber-400">
+            양자요법 협회 소개
+          </h2>
+          
+          <div className="max-w-4xl mx-auto bg-black rounded-lg overflow-hidden shadow-2xl">
+            <div className="relative w-full bg-black" style={{ paddingBottom: '56.25%' }}>
+              <video
+                className="absolute inset-0 w-full h-full"
+                controls
+                poster="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/hero-quantum-mobile-optimized-PwNNHSQ4X3DxpKS4qv3TLP.webp"
+              >
+                <source src="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/jangbu_intro_video_final_af147b37_af52be6d.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+
+          <div className="mt-8 text-center">
+            <p className="text-gray-300 text-lg">
+              저희 협회는 양자 에너지를 통해 건강한 삶을 추구하는 전문가들의 커뮤니티입니다.
+            </p>
           </div>
         </div>
       </section>
