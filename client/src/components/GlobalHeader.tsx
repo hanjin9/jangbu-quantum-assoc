@@ -23,6 +23,7 @@ export function GlobalHeader() {
   const [hoverLanguage, setHoverLanguage] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('한국어');
   const [hoveredLanguage, setHoveredLanguage] = useState<string | null>(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const languages = [
     { name: '한국어', flag: '🇰🇷' },
@@ -310,14 +311,44 @@ export function GlobalHeader() {
                 )}
               </div>
 
-              {/* 설정 아이콘 200% 확대 */}
+              {/* 설정 토글 버튼 */}
               <button
-                onClick={() => navigate('/dashboard')}
-                className="p-1.5 hover:bg-accent rounded-lg transition flex-shrink-0"
+                onClick={() => setSettingsOpen(!settingsOpen)}
+                className={`p-1.5 rounded-lg transition flex-shrink-0 ${
+                  settingsOpen
+                    ? 'bg-[#d4af37]/20 text-[#d4af37]'
+                    : 'hover:bg-accent text-[#d4af37]'
+                }`}
                 title="설정"
               >
-                <Settings className="h-8 w-8 text-[#d4af37]" />
+                <Settings className="h-8 w-8" />
               </button>
+              
+              {/* 설정 패널 */}
+              {settingsOpen && (
+                <div className="absolute right-0 top-16 w-64 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200">
+                  <button
+                    onClick={() => {
+                      navigate('/settings');
+                      setSettingsOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors flex items-center gap-2"
+                  >
+                    <Settings className="w-4 h-4" />
+                    설정
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigate('/dashboard');
+                      setSettingsOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors flex items-center gap-2"
+                  >
+                    <User className="w-4 h-4" />
+                    대시보드
+                  </button>
+                </div>
+              )}
 
               {/* 사용자 프로필 드롭다운 - 호버 모드 */}
               {user ? (
