@@ -4,6 +4,11 @@ import { cn } from '@/lib/utils';
 
 export function BottomNavBar() {
   const [location, navigate] = useLocation();
+  
+  // 모바일 메뉴를 닫기 위해 이벤트 발생
+  const closeMobileMenu = () => {
+    window.dispatchEvent(new CustomEvent('closeMobileMenu'));
+  };
 
   const navItems = [
     { icon: BookOpen, label: '교육', path: '/academy', id: 'academy' },
@@ -19,6 +24,7 @@ export function BottomNavBar() {
   };
 
   const handleNavClick = (path: string) => {
+    closeMobileMenu();
     navigate(path);
     setTimeout(() => {
       window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
