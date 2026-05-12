@@ -102,7 +102,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 협회 소개 영상 섹션 - Intersection Observer 자동 재생 */}
+      {/* 협회 소개 영상 섹션 - 반응형 (모바일/데스크톱) + Intersection Observer 자동 재생 */}
       <section className="py-16 md:py-24 bg-slate-800/50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-amber-400">
@@ -110,7 +110,8 @@ export default function Home() {
           </h2>
           
           <div className="max-w-4xl mx-auto bg-black rounded-lg overflow-hidden shadow-2xl">
-            <div className="relative w-full bg-black" style={{ paddingBottom: '56.25%' }}>
+            {/* 모바일: 9:16 세로 영상 */}
+            <div className="md:hidden relative w-full bg-black" style={{ paddingBottom: '177.78%' }}>
               <video
                 ref={videoRef}
                 className="absolute inset-0 w-full h-full"
@@ -121,7 +122,24 @@ export default function Home() {
                 muted
                 playsInline
               >
-                <source src="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/jangbu_intro_video_final_af147b37_d01c7a89.mp4" type="video/mp4" />
+                <source src="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/장부9_16_6716631c.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+
+            {/* 데스크톱: 16:9 가로 영상 */}
+            <div className="hidden md:block relative w-full bg-black" style={{ paddingBottom: '56.25%' }}>
+              <video
+                ref={videoRef}
+                className="absolute inset-0 w-full h-full"
+                style={{
+                  objectFit: 'contain',
+                  backgroundColor: '#000'
+                }}
+                muted
+                playsInline
+              >
+                <source src="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/jangbu_intro_video_final_af147b37_7d4d8f22.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             </div>
