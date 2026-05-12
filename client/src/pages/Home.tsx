@@ -1,22 +1,90 @@
-import { useTranslation } from '@/hooks/useTranslation';
 import { Button } from '@/components/ui/button';
 import { useLocation } from 'wouter';
 import { ChevronRight, Calendar } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
 
 export default function Home() {
-  const { t } = useTranslation();
   const [, navigate] = useLocation();
+  const [showIntro, setShowIntro] = useState(true);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // 영상 재생 끝 후 홈 화면으로 전환
+  useEffect(() => {
+    if (showIntro && videoRef.current) {
+      const handleVideoEnd = () => {
+        setShowIntro(false);
+      };
+      
+      const video = videoRef.current;
+      video.addEventListener('ended', handleVideoEnd);
+      
+      // 자동 재생 시작
+      video.play().catch(() => {
+        // 자동 재생 실패 시 사용자 상호작용 필요
+        console.log('Autoplay failed, waiting for user interaction');
+      });
+
+      return () => {
+        video.removeEventListener('ended', handleVideoEnd);
+      };
+    }
+  }, [showIntro]);
+
+  // 영상 스킵 함수
+  const skipIntro = () => {
+    setShowIntro(false);
+  };
+
+  // 영상 화면
+  if (showIntro) {
+    return (
+      <div className="w-screen h-screen bg-black flex items-center justify-center relative overflow-hidden">
+        <video
+          ref={videoRef}
+          className="w-full h-full object-cover"
+          muted
+          playsInline
+        >
+          <source src="/manus-storage/장부9_16_fc673178.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        
+        {/* 스킵 버튼 */}
+        <button
+          onClick={skipIntro}
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg transition-all duration-300 z-10"
+        >
+          스킵 (Skip)
+        </button>
+      </div>
+    );
+  }
+
+  // 홈 화면
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
-      {/* Hero Section with FIXED Image */}
+      {/* Hero Section with RESPONSIVE Image */}
       <section className="relative h-screen md:h-screen flex items-center justify-center overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url(https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/hero-quantum-main-6jjXaiPbmoCJLUoUaD8J3L.webp)`,
+            backgroundImage: `url(${
+              isMobile
+                ? 'https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/hero-quantum-mobile-optimized-PwNNHSQ4X3DxpKS4qv3TLP.webp'
+                : 'https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/hero-quantum-main-6jjXaiPbmoCJLUoUaD8J3L.webp'
+            })`,
             backgroundPosition: 'center',
-            backgroundAttachment: 'fixed'
+            backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+            backgroundSize: 'cover'
           }}
         >
           <div className="absolute inset-0 bg-black/40"></div>
@@ -29,7 +97,7 @@ export default function Home() {
           <p className="text-base md:text-xl text-gray-200 mb-6 md:mb-8">
             전문 양자요법 관리사와 함께 신체의 에너지 밸런스를 회복하고 건강한 삶을 시작하세요
           </p>
-          <div className="flex gap-3 md:gap-4 justify-center flex-wrap text-sm md:text-base flex-col md:flex-row">
+          <div className="flex gap-3 md:gap-4 justify-center flex-wrap text-sm md:text-base flex-col md:flex-row pb-12 md:pb-16">
             <Button
               size="lg"
               className="bg-amber-500 hover:bg-amber-600 text-white px-8 md:px-12 py-6 md:py-8 text-lg md:text-2xl font-bold flex items-center justify-center"
@@ -105,12 +173,12 @@ export default function Home() {
       {/* Features Section */}
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
-          <h3 className="text-3xl font-bold text-center mb-12 text-[#1a4d7a]">{t('common.services')}</h3>
+          <h3 className="text-3xl font-bold text-center mb-12 text-[#1a4d7a]">서비스</h3>
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { title: t('community.title'), icon: '👥', path: '/community' },
-              { title: t('exam.title'), icon: '📝', path: '/exam' },
-              { title: t('certification.title'), icon: '🏆', path: '/verify-certificate' },
+              { title: '커뮤니티', icon: '👥', path: '/community' },
+              { title: '시험', icon: '📝', path: '/exam' },
+              { title: '자격증 확인', icon: '🏆', path: '/verify-certificate' },
             ].map((feature, i) => (
               <button
                 key={i}
@@ -119,36 +187,12 @@ export default function Home() {
               >
                 <div className="text-4xl mb-4">{feature.icon}</div>
                 <h4 className="text-xl font-bold text-[#1a4d7a] mb-2">{feature.title}</h4>
-                <p className="text-sm text-muted-foreground">{t('about.description')}</p>
+                <p className="text-muted-foreground">전문가와 함께 성장하세요</p>
               </button>
             ))}
           </div>
         </div>
       </section>
-
-      {/* CTA Section */}
-      <section className="py-16 bg-[#1a4d7a]/10">
-        <div className="container mx-auto px-4 text-center">
-          <h3 className="text-3xl font-bold mb-4 text-[#1a4d7a]">{t('hero.cta_membership')}</h3>
-          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            {t('about.description')}
-          </p>
-          <Button 
-            size="lg" 
-            className="bg-[#d4af37] text-[#1a4d7a] hover:bg-[#c99d2e] font-bold"
-            onClick={() => navigate('/checkout')}
-          >
-            {t('hero.cta_membership')}
-          </Button>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-[#1a4d7a] text-white py-8 mt-auto">
-        <div className="container mx-auto px-4 text-center">
-          <p>&copy; 2026 {t('about.title')}. {t('common.contact')}: contact@jangbu.kr</p>
-        </div>
-      </footer>
     </div>
   );
 }
