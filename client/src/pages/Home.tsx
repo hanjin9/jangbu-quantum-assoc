@@ -339,8 +339,8 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
 
-      {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      {/* Hero Section - 모바일: 상단바 바로 붙여서 */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden md:mt-0 -mt-16">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
@@ -362,7 +362,7 @@ export default function Home() {
           <p className="text-base md:text-xl text-gray-200 mb-6 md:mb-8">
             전문 양자요법 관리사와 함께 신체의 에너지 밸런스를 회복하고 건강한 삶을 시작하세요
           </p>
-          <div className="flex gap-3 md:gap-4 justify-center flex-wrap text-sm md:text-base flex-col md:flex-row pb-12 md:pb-16">
+          <div className="flex gap-3 md:gap-4 justify-center flex-wrap text-sm md:text-base flex-col md:flex-row pb-2 md:pb-16">
             <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-white px-8 md:px-12 py-6 md:py-8 text-lg md:text-2xl font-bold flex items-center justify-center" onClick={() => navigate('/sms-login')}>
               🔐 로그인<ChevronRight className="w-5 h-5 ml-2" />
             </Button>
@@ -377,9 +377,9 @@ export default function Home() {
       </section>
 
       {/* 협회 소개 영상 섹션 */}
-      <section className="py-16 md:py-24 bg-slate-800/50">
+      <section className="py-2 md:py-24 bg-slate-800/50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-amber-400">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 md:mb-12 text-amber-400">
             양자요법 협회 소개
           </h2>
 
