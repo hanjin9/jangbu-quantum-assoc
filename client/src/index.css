@@ -15,6 +15,39 @@
 
 .page-fade-in {
   animation: fadeIn 0.5s ease-in-out;
+  will-change: opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Mobile Touch Optimization */
+@media (hover: none) and (pointer: coarse) {
+  button,
+  a,
+  [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  .page-fade-in {
+    animation: fadeIn 0.4s ease-in-out;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .page-fade-in {
+    animation: none;
+    opacity: 1;
+  }
+  
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 @theme inline {

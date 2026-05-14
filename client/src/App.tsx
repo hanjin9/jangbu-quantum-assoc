@@ -153,7 +153,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <GlobalHeader />
-          <main className="min-h-screen pb-20">
+          <main className="min-h-screen pb-20 touch-manipulation">
             <Router />
           </main>
           <BottomNavBar />
