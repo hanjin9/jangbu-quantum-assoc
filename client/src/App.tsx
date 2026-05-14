@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { GlobalHeader } from "./components/GlobalHeader";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -60,6 +60,12 @@ import WelcomePage from "./pages/WelcomePage";
 import ForgotPassword from "./pages/ForgotPassword";
 
 function Router() {
+  const [location] = useLocation();
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+  
   return (
     <Switch>
       <Route path={"/"} component={Home} />
@@ -68,9 +74,10 @@ function Router() {
       <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/appointments"} component={Appointments} />
       <Route path={"/community"} component={Community} />
-      <Route path={"/exam"} component={PracticalExam} />
-      <Route path={"/checkout"} component={Checkout} />
-      <Route path={"/payment-success"} component={PaymentSuccess} />
+         <Route path="/exam" component={PracticalExam} />
+      <Route path="/practical-exam" component={PracticalExam} />
+      <Route path="/checkout" component={Checkout} />
+      <Route path="/payment-success" component={PaymentSuccess} />
       <Route path={"/verify-certificate"} component={CertificateVerification} />
       <Route path={"/livestream"} component={LiveStream} />
       <Route path={"/chatbot"} component={ChatBot} />
