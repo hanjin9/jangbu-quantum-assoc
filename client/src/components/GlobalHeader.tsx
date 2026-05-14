@@ -188,38 +188,26 @@ export function GlobalHeader() {
     <>
       <header className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
-            {/* Left Section - Logo & Back Button */}
-            <div className="flex items-center gap-3">
-              {/* 뒤로가기 버튼 (모바일) */}
-              {canGoBack && (
-                <button
-                  onClick={() => window.history.back()}
-                  className="md:hidden p-1 hover:bg-accent rounded-lg transition flex-shrink-0"
-                  title="뒤로가기"
-                >
-                  <ArrowLeft className="h-6 w-6 text-[#d4af37]" />
-                </button>
-              )}
-
-              {/* 로고 - 모바일에서는 박스만, PC에서는 텍스트 없음 */}
+          <div className="flex items-center h-16 gap-0">
+            {/* Left Section - Logo + 다국어 (최대한 좌측으로) */}
+            <div className="flex items-center gap-0.5 flex-shrink-0 pl-0">
+              {/* 로고 */}
               <button
                 onClick={() => handleNavClick('/')}
-                className="flex items-center gap-2 hover:opacity-80 transition flex-shrink-0"
+                className="flex items-center hover:opacity-80 transition flex-shrink-0 pl-0"
               >
-                {/* 로고 130% 확대 */}
-                <div className="w-11 h-11 md:w-16 md:h-16 bg-gradient-to-br from-[#1a4d7a] to-[#d4af37] rounded-lg flex items-center justify-center flex-shrink-0">
-                  <span className="text-white font-bold text-sm md:text-lg">장•부</span>
+                <div className="w-10 h-10 md:w-16 md:h-16 bg-gradient-to-br from-[#1a4d7a] to-[#d4af37] rounded-lg flex items-center justify-center flex-shrink-0">
+                  <span className="text-white font-bold text-xs md:text-lg">장•부</span>
                 </div>
               </button>
 
-              {/* 언어 선택 - 모바일 (지구본만 표시) - 호버 모드 */}
+              {/* 언어 선택 - 모바일 (지구본만 표시) */}
               <div className="md:hidden relative" onMouseEnter={() => setHoverLanguage(true)} onMouseLeave={() => setHoverLanguage(false)}>
                 <button
-                  className="p-1 hover:bg-accent rounded-lg transition flex-shrink-0"
+                  className="p-0.5 hover:bg-accent rounded-lg transition flex-shrink-0"
                   title="언어 선택"
                 >
-                  <Globe className="h-6 w-6 text-[#d4af37]" />
+                  <Globe className="h-5 w-5 text-[#d4af37]" />
                 </button>
                 {hoverLanguage && (
                   <div className="absolute left-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200 max-h-96 overflow-y-auto">
@@ -245,6 +233,21 @@ export function GlobalHeader() {
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* Center Section - 모바일 협회명 텍스트 */}
+            <div className="md:hidden flex-1 flex items-center justify-center px-1 min-w-0">
+              <button
+                onClick={() => handleNavClick('/')}
+                className="hover:opacity-80 transition min-w-0"
+              >
+                <span
+                  className="font-black leading-tight text-[#1a4d7a] block text-center"
+                  style={{ fontSize: 'clamp(9px, 3.2vw, 15px)', letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}
+                >
+                  장.부[양자요법]관리사 협회
+                </span>
+              </button>
             </div>
 
             {/* Center Section - Desktop Navigation */}
@@ -285,8 +288,8 @@ export function GlobalHeader() {
               <LanguageSwitcher />
             </nav>
 
-            {/* Right Section - Search, Settings, Profile */}
-            <div className="flex items-center gap-2 md:gap-3">
+            {/* Right Section - Search, Settings, Profile (모바일: 최대한 우측으로 붙여서) */}
+            <div className="flex items-center gap-0.5 md:gap-3 flex-shrink-0 pr-0">
               {/* 검색 기능 */}
               <div className="relative">
                 {searchOpen ? (
@@ -442,16 +445,16 @@ export function GlobalHeader() {
                 </div>
               ) : null}
 
-              {/* 모바일 메뉴 버튼 - X 크기/굵기 50% 축소 */}
+              {/* 모바일 메뉴 버튼 - 20% 축소 */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-1.5 hover:bg-accent rounded-lg transition flex-shrink-0"
+                className="md:hidden p-1 hover:bg-accent rounded-lg transition flex-shrink-0"
                 title="메뉴"
               >
                 {mobileMenuOpen ? (
-                  <X className="h-6 w-6 stroke-[1.5]" />
+                  <X className="h-5 w-5 stroke-[1.5]" />
                 ) : (
-                  <Menu className="h-12 w-12 stroke-[2.5]" />
+                  <Menu className="h-10 w-10 stroke-[2.5]" />
                 )}
               </button>
             </div>
