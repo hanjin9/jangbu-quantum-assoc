@@ -233,30 +233,30 @@ export default function PracticalExam() {
             {exams.map((exam) => (
               <Card
                 key={exam.id}
-                className="p-6 bg-slate-800 border-slate-700 hover:border-amber-500/50 transition"
+                className="p-12 bg-slate-800 border-slate-700 hover:border-amber-500/50 transition min-h-96"
               >
-                <div className="mb-4">
-                  <span className="px-3 py-1 bg-amber-500/20 text-amber-400 text-sm rounded-full">
+                <div className="mb-8">
+                  <span className="px-6 py-2 bg-amber-500/20 text-amber-400 text-base rounded-full font-semibold">
                     {levelLabels[exam.level as keyof typeof levelLabels]}
                   </span>
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-2">
+                <h3 className="text-4xl font-bold text-white mb-4">
                   {exam.title}
                 </h3>
-                <p className="text-gray-400 mb-6">
+                <p className="text-gray-400 mb-8 text-lg">
                   {exam.description}
                 </p>
 
-                <div className="space-y-3 mb-6 text-gray-300">
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-amber-400" />
-                    <span>시간: {exam.duration}분</span>
+                <div className="space-y-6 mb-8 text-gray-300">
+                  <div className="flex items-center gap-4">
+                    <Clock className="w-8 h-8 text-amber-400" />
+                    <span className="text-lg">시간: {exam.duration}분</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span>문제: {exam.questions}개</span>
+                  <div className="flex items-center gap-4">
+                    <span className="text-lg">문제: {exam.questions}개</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span>합격선: {exam.passingScore}점</span>
+                  <div className="flex items-center gap-4">
+                    <span className="text-lg">합격선: {exam.passingScore}점</span>
                   </div>
                 </div>
 

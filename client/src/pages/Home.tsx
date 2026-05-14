@@ -414,7 +414,6 @@ export default function Home() {
                 ref={mobileVideoRef}
                 className="absolute inset-0 w-full h-full"
                 style={{ objectFit: 'cover', backgroundColor: '#000' }}
-                muted
                 playsInline
                 preload="metadata"
                 onCanPlay={() => setMobileVideoLoaded(true)}
@@ -483,7 +482,6 @@ export default function Home() {
                 ref={desktopVideoRef}
                 className="absolute inset-0 w-full h-full"
                 style={{ objectFit: 'contain', backgroundColor: '#000' }}
-                muted
                 playsInline
                 preload="metadata"
                 onCanPlay={() => setDesktopVideoLoaded(true)}
@@ -621,9 +619,9 @@ export default function Home() {
           <h3 className="text-2xl md:text-3xl font-bold text-center mb-6 text-amber-400">학습 과정</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {[
-              { icon: '📚', title: '기초 과정', desc: '양자요법의 기본 원리와 이론을 학습합니다.', path: '/learning', badge: '입문' },
-              { icon: '🔬', title: '심화 과정', desc: '실전 적용과 고급 기술을 습득합니다.', path: '/learning', badge: '전문가' },
-              { icon: '🏅', title: '자격증 취득', desc: '공인 자격증 취득으로 전문성을 인증받으세요.', path: '/exam', badge: '자격증' },
+              { icon: '📚', title: '기초 과정', desc: '양자요법의 기본 원리와 이론을 학습합니다.', path: '/exam-practice-book', badge: '입문' },
+              { icon: '🔬', title: '심화 과정', desc: '실전 적용과 고급 기술을 습득합니다.', path: '/exam-practice-book', badge: '전문가' },
+              { icon: '🏅', title: '자격증 취득', desc: '공인 자격증 취득으로 전문성을 인증받으세요.', path: '/practical-exam', badge: '자격증' },
               { icon: '🤝', title: '멘토링', desc: '현직 전문가와 1:1 멘토링을 받으세요.', path: '/community', badge: '1:1' },
             ].map((item, i) => (
               <button
