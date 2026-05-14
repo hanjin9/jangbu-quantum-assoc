@@ -21,9 +21,13 @@ export function GlobalHeader() {
   const [languageOpen, setLanguageOpen] = useState(false);
   const [hoverProfile, setHoverProfile] = useState(false);
   const [hoverLanguage, setHoverLanguage] = useState(false);
+  const [mobileLanguageOpen, setMobileLanguageOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('한국어');
   const [hoveredLanguage, setHoveredLanguage] = useState<string | null>(null);
   const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState<'settings' | 'dashboard' | null>(null);
+  const [mobileMenuTimer, setMobileMenuTimer] = useState<NodeJS.Timeout | null>(null);
+  const [languageMenuTimer, setLanguageMenuTimer] = useState<NodeJS.Timeout | null>(null);
 
 
   const languages = [
@@ -79,14 +83,54 @@ export function GlobalHeader() {
     };
   }, [searchOpen, searchQuery]);
 
+  // 다국어 메뉴 자동 닫힘 (3초)
+  useEffect(() => {
+    if (mobileLanguageOpen) {
+      startLanguageMenuTimer();
+    }
+    return () => {
+      if (languageMenuTimer) clearTimeout(languageMenuTimer);
+    };
+  }, [mobileLanguageOpen]);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  };
+
+  // 햄버거 메뉴 자동 닫힘 타이머 (3초)
+  const startMobileMenuTimer = () => {
+    if (mobileMenuTimer) clearTimeout(mobileMenuTimer);
+    const timer = setTimeout(() => {
+      setMobileMenuOpen(false);
+      setOpenSubmenu(null);
+    }, 3000);
+    setMobileMenuTimer(timer);
+  };
+
+  const clearMobileMenuTimer = () => {
+    if (mobileMenuTimer) clearTimeout(mobileMenuTimer);
+  };
+
+  // 다국어 메뉴 자동 닫힘 타이머 (3초)
+  const startLanguageMenuTimer = () => {
+    if (languageMenuTimer) clearTimeout(languageMenuTimer);
+    const timer = setTimeout(() => {
+      setMobileLanguageOpen(false);
+    }, 3000);
+    setLanguageMenuTimer(timer);
+  };
+
+  const clearLanguageMenuTimer = () => {
+    if (languageMenuTimer) clearTimeout(languageMenuTimer);
   };
 
   const handleNavClick = (path: string) => {
     navigate(path);
     setMobileMenuOpen(false);
     setOpenSubmenu(null);
+    setMobileLanguageOpen(false);
+    if (mobileMenuTimer) clearTimeout(mobileMenuTimer);
+    if (languageMenuTimer) clearTimeout(languageMenuTimer);
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -109,11 +153,11 @@ export function GlobalHeader() {
       ],
     },
     {
-      label: '학습',
+      label: '교육',
       path: '/academy',
       submenu: [
-        { label: '교육 과정', path: '/academy' },
-        { label: '시험', path: '/academy#exam' },
+        { label: '과목별 진도현황', path: '/academy' },
+        { label: '시험응시', path: '/exam' },
       ],
     },
     {
@@ -153,7 +197,7 @@ export function GlobalHeader() {
   // 권한 기반 메뉴 필터링
   const navItems = baseNavItems.filter(item => {
     // 모든 사용자에게 기본 메뉴 표시 (로그인 상태 관계없음)
-    if (['소개', '학습', '커뮤니티', '멤버십', '소식'].includes(item.label)) {
+    if (['소개', '교육', '커뮤니티', '멤버십', '소식'].includes(item.label)) {
       return true;
     }
     // 쇼핑몰은 Admin 이상만 표시
@@ -168,7 +212,7 @@ export function GlobalHeader() {
     switch (label) {
       case '소개':
         return <Info className={size} />;
-      case '학습':
+      case '교육':
         return <BookOpen className={size} />;
       case '커뮤니티':
         return <Users className={size} />;
@@ -187,63 +231,94 @@ export function GlobalHeader() {
     <>
       <header className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
-            {/* Left Section - Logo & Back Button */}
-            <div className="flex items-center gap-3">
-              {/* 뒤로가기 버튼 (모바일) */}
-              {canGoBack && (
-                <button
-                  onClick={() => window.history.back()}
-                  className="md:hidden p-1 hover:bg-accent rounded-lg transition flex-shrink-0"
-                  title="뒤로가기"
-                >
-                  <ArrowLeft className="h-6 w-6 text-[#d4af37]" />
-                </button>
-              )}
-
-              {/* 로고 - 모바일에서는 박스만, PC에서는 텍스트 없음 */}
+          <div className="flex items-center h-16 gap-0">
+            {/* Left Section - Logo + 다국어 (최대한 좌측으로) */}
+            <div className="flex items-center gap-0.5 flex-shrink-0 pl-0">
+              {/* 로고 */}
               <button
                 onClick={() => handleNavClick('/')}
-                className="flex items-center gap-2 hover:opacity-80 transition flex-shrink-0"
+                className="flex items-center hover:opacity-80 transition flex-shrink-0 pl-0"
               >
-                {/* 로고 130% 확대 */}
-                <div className="w-11 h-11 md:w-16 md:h-16 bg-gradient-to-br from-[#1a4d7a] to-[#d4af37] rounded-lg flex items-center justify-center flex-shrink-0">
-                  <span className="text-white font-bold text-sm md:text-lg">장•부</span>
+                <div className="w-10 h-10 md:w-16 md:h-16 bg-gradient-to-br from-[#1a4d7a] to-[#d4af37] rounded-lg flex items-center justify-center flex-shrink-0">
+                  <span className="text-white font-bold text-xs md:text-lg">장•부</span>
                 </div>
               </button>
 
-              {/* 언어 선택 - 모바일 (지구본만 표시) - 호버 모드 */}
-              <div className="md:hidden relative" onMouseEnter={() => setHoverLanguage(true)} onMouseLeave={() => setHoverLanguage(false)}>
+              {/* 언어 선택 - 모바일 (지구본만 표시) */}
+              <div 
+                className="md:hidden relative"
+                onMouseEnter={() => clearLanguageMenuTimer()}
+                onMouseLeave={() => {
+                  if (mobileLanguageOpen) startLanguageMenuTimer();
+                }}
+              >
                 <button
-                  className="p-1 hover:bg-accent rounded-lg transition flex-shrink-0"
+                  className="p-0.5 hover:bg-accent rounded-lg transition flex-shrink-0"
                   title="언어 선택"
+                  onClick={() => {
+                    setMobileLanguageOpen(!mobileLanguageOpen);
+                    if (!mobileLanguageOpen) {
+                      startLanguageMenuTimer();
+                    } else {
+                      clearLanguageMenuTimer();
+                    }
+                  }}
                 >
-                  <Globe className="h-6 w-6 text-[#d4af37]" />
+                  <Globe className="h-5 w-5 text-[#d4af37]" />
                 </button>
-                {hoverLanguage && (
-                  <div className="absolute left-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200 max-h-96 overflow-y-auto">
-                    {languages.map((lang) => (
-                      <button
-                        key={lang.name}
-                        onMouseEnter={() => setHoveredLanguage(lang.name)}
-                        onMouseLeave={() => setHoveredLanguage(null)}
-                        onClick={() => setSelectedLanguage(lang.name)}
-                        className={`w-full text-left px-4 py-2 text-sm transition-colors flex items-center gap-2 ${
-                          selectedLanguage === lang.name
-                            ? 'text-slate-900 bg-[#d4af37]/20 font-semibold'
-                            : hoveredLanguage === lang.name
-                            ? 'text-slate-900 bg-[#d4af37]/10'
-                            : 'text-slate-700 hover:bg-[#d4af37]/5'
-                        }`}
-                      >
-                        <span className="text-lg">{lang.flag}</span>
-                        <span>{lang.name}</span>
-                        {selectedLanguage === lang.name && <span className="ml-auto text-[#d4af37] font-bold">✓</span>}
-                      </button>
-                    ))}
-                  </div>
+                {mobileLanguageOpen && (
+                  <>
+                    {/* 배경 오버레이 - 터치 시 닫힘 */}
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => {
+                        setMobileLanguageOpen(false);
+                        clearLanguageMenuTimer();
+                      }}
+                    />
+                    <div 
+                      className="absolute left-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200 max-h-96 overflow-y-auto"
+                      onMouseEnter={() => clearLanguageMenuTimer()}
+                      onMouseLeave={() => startLanguageMenuTimer()}
+                    >
+                      {languages.map((lang) => (
+                        <button
+                          key={lang.name}
+                          onClick={() => {
+                            setSelectedLanguage(lang.name);
+                            setMobileLanguageOpen(false);
+                            clearLanguageMenuTimer();
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm transition-colors flex items-center gap-2 ${
+                            selectedLanguage === lang.name
+                              ? 'text-slate-900 bg-[#d4af37]/20 font-semibold'
+                              : 'text-slate-700 hover:bg-[#d4af37]/5'
+                          }`}
+                        >
+                          <span className="text-lg">{lang.flag}</span>
+                          <span>{lang.name}</span>
+                          {selectedLanguage === lang.name && <span className="ml-auto text-[#d4af37] font-bold">✓</span>}
+                        </button>
+                      ))}
+                    </div>
+                  </>
                 )}
               </div>
+            </div>
+
+            {/* Center Section - 모바일 협회명 텍스트 */}
+            <div className="md:hidden flex-1 flex items-center justify-center px-1 min-w-0">
+              <button
+                onClick={() => handleNavClick('/')}
+                className="hover:opacity-80 transition min-w-0"
+              >
+                <span
+                  className="font-black leading-tight text-[#1a4d7a] block text-center"
+                  style={{ fontSize: 'clamp(9px, 3.2vw, 15px)', letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}
+                >
+                  장.부[양자요법]관리사 협회
+                </span>
+              </button>
             </div>
 
             {/* Center Section - Desktop Navigation */}
@@ -284,8 +359,8 @@ export function GlobalHeader() {
               <LanguageSwitcher />
             </nav>
 
-            {/* Right Section - Search, Settings, Profile */}
-            <div className="flex items-center gap-2 md:gap-3">
+            {/* Right Section - Search, Settings, Profile (모바일: 최대한 우측으로 붙여서) */}
+            <div className="flex items-center gap-0.5 md:gap-3 flex-shrink-0 pr-0">
               {/* 검색 기능 */}
               <div className="relative">
                 {searchOpen ? (
@@ -321,9 +396,18 @@ export function GlobalHeader() {
 
               {/* 설정 버튼 - 토글 방식 */}
               <button
-                onClick={() => setSettingsMenuOpen(!settingsMenuOpen)}
+                onClick={() => {
+                  if (settingsMenuOpen) {
+                    // 메뉴 열려있으면 모든 창 닫기
+                    setSettingsMenuOpen(false);
+                    setSelectedMenu(null);
+                  } else {
+                    // 메뉴 닫혀있으면 메뉴 열기
+                    setSettingsMenuOpen(true);
+                  }
+                }}
                 className={`p-1.5 rounded-lg transition flex-shrink-0 ${
-                  settingsMenuOpen
+                  settingsMenuOpen || selectedMenu
                     ? 'bg-[#d4af37]/20 text-[#d4af37]'
                     : 'hover:bg-accent text-[#d4af37]'
                 }`}
@@ -337,8 +421,9 @@ export function GlobalHeader() {
                 <div className="absolute right-0 top-16 w-64 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200">
                   <button
                     onClick={() => {
-                      navigate('/settings');
                       setSettingsMenuOpen(false);
+                      setSelectedMenu('settings');
+                      navigate('/settings');
                     }}
                     className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors flex items-center gap-2"
                   >
@@ -347,13 +432,14 @@ export function GlobalHeader() {
                   </button>
                   <button
                     onClick={() => {
-                      navigate('/dashboard');
                       setSettingsMenuOpen(false);
+                      setSelectedMenu('dashboard');
+                      navigate('/my-page');
                     }}
                     className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors flex items-center gap-2"
                   >
                     <User className="w-4 h-4" />
-                    대시보드
+                    마이페이지
                   </button>
                 </div>
               )}
@@ -430,16 +516,25 @@ export function GlobalHeader() {
                 </div>
               ) : null}
 
-              {/* 모바일 메뉴 버튼 - X 크기/굵기 50% 축소 */}
+              {/* 모바일 메뉴 버튼 - 20% 축소 */}
               <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-1.5 hover:bg-accent rounded-lg transition flex-shrink-0"
+                onClick={() => {
+                  const newState = !mobileMenuOpen;
+                  setMobileMenuOpen(newState);
+                  if (newState) {
+                    startMobileMenuTimer();
+                  } else {
+                    clearMobileMenuTimer();
+                    setOpenSubmenu(null);
+                  }
+                }}
+                className="md:hidden p-1 hover:bg-accent rounded-lg transition flex-shrink-0"
                 title="메뉴"
               >
                 {mobileMenuOpen ? (
-                  <X className="h-6 w-6 stroke-[1.5]" />
+                  <X className="h-5 w-5 stroke-[1.5]" />
                 ) : (
-                  <Menu className="h-12 w-12 stroke-[2.5]" />
+                  <Menu className="h-10 w-10 stroke-[2.5]" />
                 )}
               </button>
             </div>
@@ -449,7 +544,13 @@ export function GlobalHeader() {
 
       {/* Mobile Navigation - 애니메이션 추가 */}
       {mobileMenuOpen && (
-        <nav className="md:hidden bg-white border-b border-slate-200 animate-in slide-in-from-top-2 duration-300">
+        <nav
+          className="md:hidden bg-white border-b border-slate-200 animate-in slide-in-from-top-2 duration-300"
+          onTouchStart={clearMobileMenuTimer}
+          onTouchEnd={startMobileMenuTimer}
+          onMouseEnter={clearMobileMenuTimer}
+          onMouseLeave={startMobileMenuTimer}
+        >
           <div className="max-w-7xl mx-auto px-4 py-4 space-y-2">
             {navItems.map((item) => {
               const isActive = location === item.path;
