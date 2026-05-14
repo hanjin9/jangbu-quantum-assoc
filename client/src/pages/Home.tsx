@@ -1,52 +1,37 @@
-import { Button } from '@/components/ui/button';
-import { useLocation } from 'wouter';
-import { ChevronRight, Calendar, Volume2, VolumeX } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { useAuth } from '@/_core/hooks/useAuth';
+import { Play, Pause } from 'lucide-react';
 
-// 모바일 영상 URL (9:16 세로, 1080x1920)
-const MOBILE_VIDEO_URL = "https://8888-ib5azwpfjv7fwu3zin6t1-bec5f8f5.sg1.manus.computer/upload/copy_de44592c2c9a60fc0a99a288a573000b.mp4";
-// 데스크톱 영상 URL (16:9 가로, 1920x1080)
-const DESKTOP_VIDEO_URL = "https://8888-ib5azwpfjv7fwu3zin6t1-bec5f8f5.sg1.manus.computer/upload/jangbu_intro_desktop.mp4";
+const MOBILE_VIDEO_URL = '/manus-storage/copy_de44592c2c9a60fc0a99a288a573000b_3c1c8906.mp4';
+const DESKTOP_VIDEO_URL = '/manus-storage/jangbu_intro_desktop_2e7dadec.mp4';
 
 export default function Home() {
-  const [, navigate] = useLocation();
-  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
-  const [isMuted, setIsMuted] = useState(true); // 브라우저 정책상 처음엔 muted로 시작 (상호작용 후 자동 해제)
-  const [userUnlocked, setUserUnlocked] = useState(false); // 사용자 상호작용 여부
+  const { user, isAuthenticated } = useAuth();
+  const [isMobile, setIsMobile] = useState(false);
+  const [userUnlocked, setUserUnlocked] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false); // 초기값 false (재생 전)
+  const [showIcon, setShowIcon] = useState(false); // 터치 시 아이콘 잠깐 표시
   const mobileVideoRef = useRef<HTMLVideoElement>(null);
   const desktopVideoRef = useRef<HTMLVideoElement>(null);
+  const iconTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // 화면 크기 감지
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // 사용자 첫 상호작용 시 소리 자동 ON
+  // 사용자 첫 상호작용 시 소리 unlock
   useEffect(() => {
     const unlockAudio = () => {
       if (!userUnlocked) {
         setUserUnlocked(true);
-        setIsMuted(false); // 소리 ON으로 전환
-        if (mobileVideoRef.current) {
-          mobileVideoRef.current.muted = false;
-          mobileVideoRef.current.play().catch(() => {
-            mobileVideoRef.current!.muted = true;
-            setIsMuted(true);
-          });
-        }
-        if (desktopVideoRef.current) {
-          desktopVideoRef.current.muted = false;
-          desktopVideoRef.current.play().catch(() => {
-            desktopVideoRef.current!.muted = true;
-            setIsMuted(true);
-          });
-        }
       }
     };
-    // 스크롤, 터치, 클릭 중 하나라도 감지되면 소리 ON
     window.addEventListener('scroll', unlockAudio, { once: true });
     window.addEventListener('touchstart', unlockAudio, { once: true });
     window.addEventListener('click', unlockAudio, { once: true });
@@ -57,15 +42,37 @@ export default function Home() {
     };
   }, [userUnlocked]);
 
-  // 소리 토글 함수 (끄기/켜기)
-  const toggleMute = () => {
-    const newMuted = !isMuted;
-    setIsMuted(newMuted);
-    if (mobileVideoRef.current) mobileVideoRef.current.muted = newMuted;
-    if (desktopVideoRef.current) desktopVideoRef.current.muted = newMuted;
+  // 현재 활성 영상 ref 반환
+  const getActiveVideoRef = () => {
+    return isMobile ? mobileVideoRef : desktopVideoRef;
   };
 
-  // Intersection Observer - 화면 중앙에 올 때 자동 재생, 벗어날 때 정지
+  // 재생/정지 토글 (YouTube 스타일 - 화면 터치 or 하단 버튼 공통 사용)
+  const togglePlayPause = (e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation(); // 이벤트 버블링 차단
+    const videoRef = getActiveVideoRef();
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isPlaying) {
+      video.pause();
+      setIsPlaying(false);
+    } else {
+      video.muted = false;
+      video.play().catch(() => {
+        video.muted = true;
+        video.play().catch(() => console.log('Video play failed'));
+      });
+      setIsPlaying(true);
+    }
+
+    // 아이콘 잠깐 표시 (YouTube 스타일)
+    setShowIcon(true);
+    if (iconTimerRef.current) clearTimeout(iconTimerRef.current);
+    iconTimerRef.current = setTimeout(() => setShowIcon(false), 800);
+  };
+
+  // Intersection Observer - 화면 중앙에 올 때 자동 재생
   useEffect(() => {
     const setupObserver = (videoEl: HTMLVideoElement | null) => {
       if (!videoEl) return null;
@@ -73,21 +80,18 @@ export default function Home() {
       const observer = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
-            // 사용자가 한 번이라도 상호작용했으면 소리 ON으로 재생
-            if (userUnlocked) {
-              videoEl.muted = false; // 소리 ON
-              setIsMuted(false);
-            } else {
-              videoEl.muted = true; // 아직 상호작용 없으면 무음
-            }
-            videoEl.play().catch(() => {
-              // autoplay 실패 시 무음으로 재시도
+            videoEl.muted = false;
+            videoEl.play().then(() => {
+              setIsPlaying(true);
+            }).catch(() => {
               videoEl.muted = true;
-              setIsMuted(true);
-              videoEl.play().catch(() => console.log('Video autoplay failed'));
+              videoEl.play().then(() => {
+                setIsPlaying(true);
+              }).catch(() => console.log('Video autoplay failed'));
             });
           } else {
             videoEl.pause();
+            setIsPlaying(false);
           }
         },
         { threshold: 0.4 }
@@ -104,7 +108,68 @@ export default function Home() {
       if (mobileObserver && mobileVideoRef.current) mobileObserver.unobserve(mobileVideoRef.current);
       if (desktopObserver && desktopVideoRef.current) desktopObserver.unobserve(desktopVideoRef.current);
     };
-  }, [isMuted, userUnlocked]);
+  }, [userUnlocked]);
+
+  // 영상 섹션 공통 렌더링 컴포넌트
+  const VideoPlayer = ({
+    videoRef,
+    src,
+    aspectClass,
+    objectFit,
+  }: {
+    videoRef: React.RefObject<HTMLVideoElement | null>;
+    src: string;
+    aspectClass: string;
+    objectFit: 'cover' | 'contain';
+  }) => (
+    <div
+      className="relative w-full cursor-pointer select-none"
+      style={{ paddingBottom: aspectClass }}
+      onClick={togglePlayPause}
+      onTouchEnd={togglePlayPause}
+    >
+      {/* 영상 */}
+      <video
+        ref={videoRef}
+        className="absolute inset-0 w-full h-full"
+        style={{ objectFit, backgroundColor: '#000' }}
+        playsInline
+        loop
+        preload="metadata"
+      >
+        <source src={src} type="video/mp4" />
+      </video>
+
+      {/* YouTube 스타일 터치 아이콘 (중앙, 잠깐 표시) - pointer-events-none으로 클릭 통과 */}
+      <div
+        className={`absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300 ${
+          showIcon ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
+        <div className="bg-black/60 rounded-full p-5">
+          {isPlaying ? (
+            <Pause className="w-10 h-10 text-white" />
+          ) : (
+            <Play className="w-10 h-10 text-white" />
+          )}
+        </div>
+      </div>
+
+      {/* 하단 재생/정지 버튼 (항상 표시) - pointer-events-auto로 클릭 가능 */}
+      <button
+        onClick={togglePlayPause}
+        onTouchEnd={togglePlayPause}
+        className="absolute bottom-4 right-4 z-20 bg-black/60 hover:bg-black/90 active:bg-black text-white rounded-full p-3 transition-all duration-200 border border-white/30 pointer-events-auto"
+        aria-label={isPlaying ? '일시정지' : '재생'}
+      >
+        {isPlaying ? (
+          <Pause className="w-6 h-6" />
+        ) : (
+          <Play className="w-6 h-6" />
+        )}
+      </button>
+    </div>
+  );
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
@@ -118,113 +183,53 @@ export default function Home() {
                 ? 'https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/hero-quantum-mobile-optimized-PwNNHSQ4X3DxpKS4qv3TLP.webp'
                 : 'https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/hero-quantum-main-6jjXaiPbmoCJLUoUaD8J3L.webp'
             })`,
-            backgroundPosition: 'center',
-            backgroundAttachment: isMobile ? 'scroll' : 'fixed',
-            backgroundSize: 'cover'
           }}
-        >
-          <div className="absolute inset-0 bg-black/40"></div>
-        </div>
-
-        <div className="relative z-10 text-center px-4 max-w-2xl">
-          <h1 className="text-3xl md:text-7xl font-bold text-white mb-4 md:mb-6">
-            양자 에너지로 <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">건강을 회복하세요</span>
-          </h1>
-          <p className="text-base md:text-xl text-gray-200 mb-6 md:mb-8">
-            전문 양자요법 관리사와 함께 신체의 에너지 밸런스를 회복하고 건강한 삶을 시작하세요
+        />
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="relative z-10 text-center text-white max-w-2xl mx-auto px-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">양자 에너지로 건강을 회복하세요</h1>
+          <p className="text-lg md:text-xl text-gray-200 mb-8">
+            전문 양자요법 관리사와 함께 시작하는 에너지 발란스 &amp; 건강한 삶
           </p>
-          <div className="flex gap-3 md:gap-4 justify-center flex-wrap text-sm md:text-base flex-col md:flex-row pb-12 md:pb-16">
-            <Button
-              size="lg"
-              className="bg-amber-500 hover:bg-amber-600 text-white px-8 md:px-12 py-6 md:py-8 text-lg md:text-2xl font-bold flex items-center justify-center"
-              onClick={() => navigate('/sms-login')}
-            >
-              🔐 로그인
-              <ChevronRight className="w-5 h-5 ml-2" />
-            </Button>
-            <Button
-              size="lg"
-              className="bg-amber-600 hover:bg-amber-700 text-white px-8 md:px-12 py-6 md:py-8 text-lg md:text-2xl font-bold flex items-center justify-center"
-              onClick={() => navigate('/checkout')}
-            >
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button className="bg-[#d4af37] text-black px-8 py-3 rounded-lg font-bold hover:bg-[#e6c547] transition">
+              🔑 로그인
+            </button>
+            <button className="border-2 border-[#d4af37] text-[#d4af37] px-8 py-3 rounded-lg font-bold hover:bg-[#d4af37]/10 transition">
               📝 회원 가입
-              <ChevronRight className="w-5 h-5 ml-2" />
-            </Button>
-            <Button
-              size="lg"
-              className="bg-amber-500/20 border-2 border-amber-500 text-amber-400 hover:bg-amber-500/40 hover:border-amber-400 transition-all duration-300 font-bold px-8 md:px-12 py-6 md:py-8 text-lg md:text-2xl flex items-center justify-center"
-              onClick={() => navigate('/consultation-booking')}
-            >
-              <Calendar className="w-5 h-5 mr-2" />
-              상담 예약하기
-            </Button>
+            </button>
+            <button className="border-2 border-[#d4af37] text-[#d4af37] px-8 py-3 rounded-lg font-bold hover:bg-[#d4af37]/10 transition">
+              📅 상담 예약하기
+            </button>
           </div>
         </div>
       </section>
 
-      {/* 협회 소개 영상 섹션 */}
-      <section className="py-16 md:py-24 bg-slate-800/50">
+      {/* Introduction Video Section */}
+      <section className="py-16 bg-slate-800">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-amber-400">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-white">
             양자요법 협회 소개
           </h2>
 
-          {/* 모바일: 9:16 세로 영상 (화면 가득) */}
-          <div className="md:hidden w-full max-w-sm mx-auto rounded-lg overflow-hidden shadow-2xl bg-black relative">
-            <div className="relative w-full" style={{ paddingBottom: '177.78%' }}>
-              <video
-                ref={mobileVideoRef}
-                className="absolute inset-0 w-full h-full"
-                style={{ objectFit: 'cover', backgroundColor: '#000' }}
-                muted
-                playsInline
-                loop
-                preload="metadata"
-              >
-                <source src={MOBILE_VIDEO_URL} type="video/mp4" />
-              </video>
-              {/* 소리 토글 버튼 */}
-              <button
-                onClick={toggleMute}
-                className="absolute bottom-4 right-4 z-10 bg-black/60 hover:bg-black/80 text-white rounded-full p-3 transition-all duration-200 border border-white/30"
-                aria-label={isMuted ? '소리 켜기' : '소리 끄기'}
-              >
-                {isMuted ? (
-                  <VolumeX className="w-6 h-6" />
-                ) : (
-                  <Volume2 className="w-6 h-6" />
-                )}
-              </button>
-            </div>
+          {/* 모바일: 9:16 세로 영상 */}
+          <div className="md:hidden w-full max-w-sm mx-auto rounded-lg overflow-hidden shadow-2xl bg-black">
+            <VideoPlayer
+              videoRef={mobileVideoRef}
+              src={MOBILE_VIDEO_URL}
+              aspectClass="177.78%"
+              objectFit="cover"
+            />
           </div>
 
           {/* 데스크톱: 16:9 가로 영상 */}
-          <div className="hidden md:block max-w-4xl mx-auto rounded-lg overflow-hidden shadow-2xl bg-black relative">
-            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-              <video
-                ref={desktopVideoRef}
-                className="absolute inset-0 w-full h-full"
-                style={{ objectFit: 'contain', backgroundColor: '#000' }}
-                muted
-                playsInline
-                loop
-                preload="metadata"
-              >
-                <source src={DESKTOP_VIDEO_URL} type="video/mp4" />
-              </video>
-              {/* 소리 토글 버튼 */}
-              <button
-                onClick={toggleMute}
-                className="absolute bottom-4 right-4 z-10 bg-black/60 hover:bg-black/80 text-white rounded-full p-3 transition-all duration-200 border border-white/30"
-                aria-label={isMuted ? '소리 켜기' : '소리 끄기'}
-              >
-                {isMuted ? (
-                  <VolumeX className="w-6 h-6" />
-                ) : (
-                  <Volume2 className="w-6 h-6" />
-                )}
-              </button>
-            </div>
+          <div className="hidden md:block max-w-4xl mx-auto rounded-lg overflow-hidden shadow-2xl bg-black">
+            <VideoPlayer
+              videoRef={desktopVideoRef}
+              src={DESKTOP_VIDEO_URL}
+              aspectClass="56.25%"
+              objectFit="contain"
+            />
           </div>
 
           <div className="mt-8 text-center">
@@ -279,27 +284,42 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16 bg-background">
+      {/* Services Section */}
+      <section className="py-16 bg-slate-800">
         <div className="container mx-auto px-4">
-          <h3 className="text-3xl font-bold text-center mb-12 text-[#1a4d7a]">서비스</h3>
-          <div className="grid md:grid-cols-3 gap-8">
+          <h3 className="text-3xl font-bold text-center mb-12 text-white">우리의 서비스</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { title: '커뮤니티', icon: '👥', path: '/community' },
-              { title: '시험', icon: '📝', path: '/exam' },
-              { title: '자격증 확인', icon: '🏆', path: '/verify-certificate' },
-            ].map((feature, i) => (
-              <button
-                key={i}
-                onClick={() => navigate(feature.path)}
-                className="p-6 rounded-lg border border-border hover:border-[#d4af37] transition bg-card hover:bg-card/80 text-left"
-              >
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h4 className="text-xl font-bold text-[#1a4d7a] mb-2">{feature.title}</h4>
-                <p className="text-muted-foreground">전문가와 함께 성장하세요</p>
-              </button>
+              {
+                title: '개인 상담',
+                description: '전문 관리사와 1:1 맞춤형 양자요법 상담'
+              },
+              {
+                title: '그룹 세션',
+                description: '함께 성장하는 커뮤니티 기반 에너지 워크숍'
+              },
+              {
+                title: '온라인 교육',
+                description: '언제 어디서나 배우는 양자요법 기초 과정'
+              }
+            ].map((service, i) => (
+              <div key={i} className="p-8 rounded-lg border border-[#d4af37]/30 bg-slate-700/50 hover:border-[#d4af37] transition">
+                <h4 className="text-xl font-bold text-[#d4af37] mb-4">{service.title}</h4>
+                <p className="text-gray-300">{service.description}</p>
+              </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 bg-gradient-to-r from-[#1a4d7a] to-[#0d2847]">
+        <div className="container mx-auto px-4 text-center">
+          <h3 className="text-3xl font-bold text-white mb-4">건강한 삶을 시작하세요</h3>
+          <p className="text-gray-200 mb-8">양자 에너지의 힘으로 당신의 삶을 변화시키세요</p>
+          <button className="bg-[#d4af37] text-black px-8 py-3 rounded-lg font-bold hover:bg-[#e6c547] transition">
+            지금 시작하기
+          </button>
         </div>
       </section>
     </div>
