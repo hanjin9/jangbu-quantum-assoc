@@ -623,32 +623,23 @@ export default function Home() {
               { icon: '🔬', title: '심화 과정', desc: '실전 적용과 고급 기술을 습득합니다.', path: '/exam-practice-book', badge: '전문가' },
               { icon: '🏅', title: '자격증 취득', desc: '공인 자격증 취득으로 전문성을 인증받으세요.', path: '/practical-exam', badge: '자격증' },
               { icon: '🤝', title: '멘토링', desc: '현직 전문가와 1:1 멘토링을 받으세요.', path: '/community', badge: '1:1' },
-            ].map((item, i) => {
-              const handleNavigation = () => {
-                setTimeout(() => {
-                  navigate(item.path);
-                }, 0);
-              };
-              
-              return (
-                <button
-                  key={i}
-                  onClick={handleNavigation}
-                  onTouchEnd={handleNavigation}
-                  className="flex gap-4 p-5 rounded-xl bg-slate-800/60 border border-slate-700/50 hover:border-amber-500/50 transition-all duration-300 text-left group w-full"
-                >
-                  <div className="text-4xl flex-shrink-0">{item.icon}</div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h4 className="text-white font-bold text-lg">{item.title}</h4>
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 font-semibold">{item.badge}</span>
-                    </div>
-                    <p className="text-gray-400 text-base">{item.desc}</p>
+            ].map((item, i) => (
+              <button
+                key={i}
+                onClick={() => navigate(item.path)}
+                className="flex gap-4 p-5 rounded-xl bg-slate-800/60 border border-slate-700/50 hover:border-amber-500/50 transition-all duration-300 text-left group w-full"
+              >
+                <div className="text-4xl flex-shrink-0">{item.icon}</div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h4 className="text-white font-bold text-lg">{item.title}</h4>
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 font-semibold">{item.badge}</span>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-amber-400/50 group-hover:text-amber-400 group-hover:translate-x-1 transition-all flex-shrink-0 self-center" />
-                </button>
-              );
-            })
+                  <p className="text-gray-400 text-base">{item.desc}</p>
+                </div>
+                <ChevronRight className="w-5 h-5 text-amber-400/50 group-hover:text-amber-400 group-hover:translate-x-1 transition-all flex-shrink-0 self-center" />
+              </button>
+            ))}
           </div>
         </div>
       </section>
