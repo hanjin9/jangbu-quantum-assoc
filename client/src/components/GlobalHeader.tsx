@@ -110,11 +110,11 @@ export function GlobalHeader() {
       ],
     },
     {
-      label: '학습',
+      label: '교육',
       path: '/academy',
       submenu: [
-        { label: '교육 과정', path: '/academy' },
-        { label: '시험', path: '/academy#exam' },
+        { label: '과목별 진도현황', path: '/academy' },
+        { label: '시험응시', path: '/exam' },
       ],
     },
     {
@@ -154,7 +154,7 @@ export function GlobalHeader() {
   // 권한 기반 메뉴 필터링
   const navItems = baseNavItems.filter(item => {
     // 모든 사용자에게 기본 메뉴 표시 (로그인 상태 관계없음)
-    if (['소개', '학습', '커뮤니티', '멤버십', '소식'].includes(item.label)) {
+    if (['소개', '교육', '커뮤니티', '멤버십', '소식'].includes(item.label)) {
       return true;
     }
     // 쇼핑몰은 Admin 이상만 표시
@@ -169,7 +169,7 @@ export function GlobalHeader() {
     switch (label) {
       case '소개':
         return <Info className={size} />;
-      case '학습':
+      case '교육':
         return <BookOpen className={size} />;
       case '커뮤니티':
         return <Users className={size} />;
