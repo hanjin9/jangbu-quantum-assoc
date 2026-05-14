@@ -24,7 +24,7 @@ export default function PracticalExam() {
       level: 'beginner',
       duration: 60,
       questions: 9,
-      passingScore: 70,
+      passingScore: 60,
       description: '양자요법의 기본 이론과 원리를 이해하는 시험'
     },
     {
@@ -33,7 +33,7 @@ export default function PracticalExam() {
       level: 'intermediate',
       duration: 90,
       questions: 9,
-      passingScore: 75,
+      passingScore: 60,
       description: '양자에너지를 활용한 실제 치료 방법'
     },
     {
@@ -42,7 +42,7 @@ export default function PracticalExam() {
       level: 'advanced',
       duration: 120,
       questions: 9,
-      passingScore: 80,
+      passingScore: 60,
       description: '양자요법 전문가 자격증 시험'
     }
   ];
@@ -397,7 +397,7 @@ export default function PracticalExam() {
               <div className="text-5xl font-bold text-amber-400 mb-2">
                 {score}점
               </div>
-              <p className="text-gray-400">합격선: 75점</p>
+              <p className="text-gray-400">합격선: 60점</p>
             </div>
 
             <div className="space-y-3 mb-8 text-gray-300">

@@ -21,6 +21,7 @@ export function GlobalHeader() {
   const [languageOpen, setLanguageOpen] = useState(false);
   const [hoverProfile, setHoverProfile] = useState(false);
   const [hoverLanguage, setHoverLanguage] = useState(false);
+  const [mobileLanguageOpen, setMobileLanguageOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('한국어');
   const [hoveredLanguage, setHoveredLanguage] = useState<string | null>(null);
   const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
@@ -202,35 +203,42 @@ export function GlobalHeader() {
               </button>
 
               {/* 언어 선택 - 모바일 (지구본만 표시) */}
-              <div className="md:hidden relative" onMouseEnter={() => setHoverLanguage(true)} onMouseLeave={() => setHoverLanguage(false)}>
+              <div className="md:hidden relative">
                 <button
                   className="p-0.5 hover:bg-accent rounded-lg transition flex-shrink-0"
                   title="언어 선택"
+                  onClick={() => setMobileLanguageOpen(!mobileLanguageOpen)}
                 >
                   <Globe className="h-5 w-5 text-[#d4af37]" />
                 </button>
-                {hoverLanguage && (
-                  <div className="absolute left-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200 max-h-96 overflow-y-auto">
-                    {languages.map((lang) => (
-                      <button
-                        key={lang.name}
-                        onMouseEnter={() => setHoveredLanguage(lang.name)}
-                        onMouseLeave={() => setHoveredLanguage(null)}
-                        onClick={() => setSelectedLanguage(lang.name)}
-                        className={`w-full text-left px-4 py-2 text-sm transition-colors flex items-center gap-2 ${
-                          selectedLanguage === lang.name
-                            ? 'text-slate-900 bg-[#d4af37]/20 font-semibold'
-                            : hoveredLanguage === lang.name
-                            ? 'text-slate-900 bg-[#d4af37]/10'
-                            : 'text-slate-700 hover:bg-[#d4af37]/5'
-                        }`}
-                      >
-                        <span className="text-lg">{lang.flag}</span>
-                        <span>{lang.name}</span>
-                        {selectedLanguage === lang.name && <span className="ml-auto text-[#d4af37] font-bold">✓</span>}
-                      </button>
-                    ))}
-                  </div>
+                {mobileLanguageOpen && (
+                  <>
+                    {/* 배경 오버레이 - 터치 시 닫힘 */}
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setMobileLanguageOpen(false)}
+                    />
+                    <div className="absolute left-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200 max-h-96 overflow-y-auto">
+                      {languages.map((lang) => (
+                        <button
+                          key={lang.name}
+                          onClick={() => {
+                            setSelectedLanguage(lang.name);
+                            setMobileLanguageOpen(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm transition-colors flex items-center gap-2 ${
+                            selectedLanguage === lang.name
+                              ? 'text-slate-900 bg-[#d4af37]/20 font-semibold'
+                              : 'text-slate-700 hover:bg-[#d4af37]/5'
+                          }`}
+                        >
+                          <span className="text-lg">{lang.flag}</span>
+                          <span>{lang.name}</span>
+                          {selectedLanguage === lang.name && <span className="ml-auto text-[#d4af37] font-bold">✓</span>}
+                        </button>
+                      ))}
+                    </div>
+                  </>
                 )}
               </div>
             </div>

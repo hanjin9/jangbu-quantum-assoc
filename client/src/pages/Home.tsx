@@ -543,7 +543,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
             {[
               {
-                title: '커뮤니티',
+                title: '관리사들의',
                 icon: '👥',
                 path: '/community',
                 desc: '전국 양자요법 관리사들과 정보를 나누고 함께 성장하세요.',
@@ -551,7 +551,7 @@ export default function Home() {
                 border: 'border-blue-500/40 hover:border-blue-400'
               },
               {
-                title: '자격 시험',
+                title: '온라인 시험 24시간(취형)',
                 icon: '📝',
                 path: '/exam',
                 desc: '공인 양자요법 관리사 자격증 취득을 위한 온라인 시험을 응시하세요.',
@@ -559,7 +559,7 @@ export default function Home() {
                 border: 'border-amber-500/40 hover:border-amber-400'
               },
               {
-                title: '자격증 확인',
+                title: '자격증(온·오프라인) 발급 확인',
                 icon: '🏆',
                 path: '/verify-certificate',
                 desc: '발급된 자격증의 진위 여부를 즉시 확인할 수 있습니다.',

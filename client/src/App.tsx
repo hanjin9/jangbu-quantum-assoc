@@ -27,6 +27,7 @@ import ChatConsultation from "./pages/ChatConsultation";
 import SuccessGallery from "./pages/SuccessGallery";
 import TeamProfile from "./pages/TeamProfile";
 import NewsletterBlog from "./pages/NewsletterBlog";
+import News from "./pages/News";
 import SignupProcess from "./pages/SignupProcess";
 import NotificationCenter from "./pages/NotificationCenter";
 import NotificationPreferences from "./pages/NotificationPreferences";
@@ -84,6 +85,7 @@ function Router() {
       <Route path={"/success-gallery"} component={SuccessGallery} />
       <Route path={"/team-profile"} component={TeamProfile} />
       <Route path={"/newsletter-blog"} component={NewsletterBlog} />
+      <Route path={"/news"} component={News} />
       <Route path={"/signup"} component={SignupProcess} />
       <Route path={"/notifications"} component={NotificationCenter} />
       <Route path={"/notification-preferences"} component={NotificationPreferences} />
