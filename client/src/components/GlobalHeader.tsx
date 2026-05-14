@@ -387,12 +387,12 @@ export function GlobalHeader() {
                     onClick={() => {
                       setSettingsMenuOpen(false);
                       setSelectedMenu('dashboard');
-                      navigate('/dashboard');
+                      navigate('/my-page');
                     }}
                     className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors flex items-center gap-2"
                   >
                     <User className="w-4 h-4" />
-                    대시보드
+                    마이페이지
                   </button>
                 </div>
               )}
