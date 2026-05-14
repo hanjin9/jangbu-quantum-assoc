@@ -163,12 +163,12 @@ export default function SignupProcess() {
               <div className="space-y-4">
                 {/* 이메일 인증 섹션 */}
                 <div className="border border-blue-500/30 rounded-lg p-4 bg-slate-700/50">
-                  <h3 className="text-base font-bold text-blue-300 mb-3">📧 이메일 인증</h3>
+                  <h3 className="text-sm font-semibold text-blue-400 mb-3">📧 이메일 인증</h3>
                   
                   <div className="space-y-3">
                     {/* 이메일 주소 입력 */}
                     <div>
-                      <label className="block text-sm font-bold text-gray-200 mb-1.5">
+                      <label className="block text-xs font-semibold text-gray-300 mb-1">
                         이메일 주소 *
                       </label>
                       <div className="flex gap-2">
@@ -177,13 +177,13 @@ export default function SignupProcess() {
                           placeholder="example@email.com"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          className="bg-slate-600 border-blue-500/50 text-white text-base flex-1 placeholder:text-gray-300"
+                          className="bg-slate-700 border-blue-500/30 text-white text-sm flex-1"
                           disabled={loading || verified}
                         />
                         <Button
                           onClick={handleSendEmailOTP}
                           disabled={loading || !email || verified}
-                          className="bg-blue-500 hover:bg-blue-600 text-white text-base font-bold whitespace-nowrap px-4"
+                          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold whitespace-nowrap"
                         >
                           {loading ? (
                             <Loader2 className="w-4 h-4 animate-spin" />
@@ -197,7 +197,7 @@ export default function SignupProcess() {
                     {/* 인증 코드 입력 */}
                     {otpSent && (
                       <div>
-                        <label className="block text-sm font-bold text-gray-200 mb-1.5">
+                        <label className="block text-xs font-semibold text-gray-300 mb-1">
                           인증 코드 (6자리) *
                         </label>
                         <div className="flex gap-2 items-end">
@@ -207,11 +207,11 @@ export default function SignupProcess() {
                               placeholder="000000"
                               value={verificationCode}
                               onChange={(e) => setVerificationCode(e.target.value.slice(0, 6))}
-                              className="bg-slate-600 border-blue-500/50 text-white text-center text-xl tracking-widest placeholder:text-gray-300"
+                              className="bg-slate-700 border-blue-500/30 text-white text-center text-lg tracking-widest"
                               disabled={loading || verified}
                             />
                             {timeLeft > 0 && (
-                              <p className="text-sm text-gray-300 mt-1">
+                              <p className="text-xs text-gray-400 mt-1">
                                 남은 시간: {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
                               </p>
                             )}
@@ -219,7 +219,7 @@ export default function SignupProcess() {
                           <Button
                             onClick={handleVerifyEmailOTP}
                             disabled={loading || verificationCode.length !== 6 || verified}
-                            className="bg-green-500 hover:bg-green-600 text-white text-base font-bold whitespace-nowrap px-4"
+                            className="bg-green-500 hover:bg-green-600 text-white font-semibold whitespace-nowrap"
                           >
                             {loading ? (
                               <Loader2 className="w-4 h-4 animate-spin" />
@@ -236,7 +236,7 @@ export default function SignupProcess() {
                     {verified && (
                       <div className="flex items-center gap-2 p-2 bg-green-500/10 border border-green-500/30 rounded-lg">
                         <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0" />
-                        <p className="text-base font-semibold text-green-300">이메일 인증이 완료되었습니다.</p>
+                        <p className="text-sm text-green-300">이메일 인증이 완료되었습니다.</p>
                       </div>
                     )}
                   </div>
@@ -244,60 +244,60 @@ export default function SignupProcess() {
 
                 {/* 기본 정보 섹션 */}
                 <div className="border border-slate-600 rounded-lg p-4 bg-slate-700/30">
-                  <h3 className="text-base font-bold text-gray-200 mb-3">👤 기본 정보</h3>
+                  <h3 className="text-sm font-semibold text-gray-300 mb-3">👤 기본 정보</h3>
                   
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {/* 필수 항목 */}
                     <div>
-                      <label className="block text-sm font-bold text-amber-300 mb-2">★ 필수 입력</label>
-                      <div className="space-y-2.5">
+                      <label className="block text-xs font-semibold text-amber-400 mb-1">필수 입력</label>
+                      <div className="space-y-2">
                         <Input
                           type="text"
                           placeholder="이름"
                           value={name}
                           onChange={(e) => setName(e.target.value)}
-                          className="bg-slate-600 border-amber-500/50 text-white text-base placeholder:text-gray-300 placeholder:text-base"
+                          className="bg-slate-700 border-amber-500/30 text-white text-sm"
                         />
                         <Input
                           type="number"
                           placeholder="나이"
                           value={age}
                           onChange={(e) => setAge(e.target.value)}
-                          className="bg-slate-600 border-amber-500/50 text-white text-base placeholder:text-gray-300 placeholder:text-base"
+                          className="bg-slate-700 border-amber-500/30 text-white text-sm"
                         />
                         <Input
                           type="tel"
-                          placeholder="연락수 (010-1234-5678)"
+                          placeholder="연락처 (010-1234-5678)"
                           value={contact}
                           onChange={(e) => setContact(formatPhoneNumber(e.target.value))}
-                          className="bg-slate-600 border-amber-500/50 text-white text-base placeholder:text-gray-300 placeholder:text-base"
+                          className="bg-slate-700 border-amber-500/30 text-white text-sm"
                         />
                       </div>
                     </div>
 
                     {/* 선택 항목 */}
                     <div>
-                      <label className="block text-sm font-bold text-gray-300 mb-2">○ 선택 입력</label>
-                      <div className="space-y-2.5">
+                      <label className="block text-xs font-semibold text-gray-400 mb-1">선택 입력</label>
+                      <div className="space-y-2">
                         <Input
                           type="text"
                           placeholder="거주지역 (예: 서울시 강남구)"
                           value={region}
                           onChange={(e) => setRegion(e.target.value)}
-                          className="bg-slate-600 border-slate-500 text-white text-base placeholder:text-gray-300 placeholder:text-base"
+                          className="bg-slate-700 border-slate-600 text-white text-sm"
                         />
                         <Input
                           type="text"
                           placeholder="직업"
                           value={job}
                           onChange={(e) => setJob(e.target.value)}
-                          className="bg-slate-600 border-slate-500 text-white text-base placeholder:text-gray-300 placeholder:text-base"
+                          className="bg-slate-700 border-slate-600 text-white text-sm"
                         />
                         <textarea
                           placeholder="가입하게 된 동기"
                           value={motivation}
                           onChange={(e) => setMotivation(e.target.value)}
-                          className="w-full bg-slate-600 border border-slate-500 text-white text-base placeholder:text-gray-300 p-3 rounded-md resize-none h-20"
+                          className="w-full bg-slate-700 border border-slate-600 text-white text-sm p-2 rounded-md resize-none h-16"
                         />
                       </div>
                     </div>
@@ -308,7 +308,7 @@ export default function SignupProcess() {
                 {error && (
                   <div className="flex gap-2 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
                     <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
-                    <p className="text-base text-red-300">{error}</p>
+                    <p className="text-sm text-red-300">{error}</p>
                   </div>
                 )}
 
@@ -316,11 +316,11 @@ export default function SignupProcess() {
                 <Button
                   onClick={handleSignupComplete}
                   disabled={loading || !name || !age || !contact || !verified}
-                  className="w-full bg-amber-500 hover:bg-amber-600 text-white text-lg font-bold py-7"
+                  className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold py-6"
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                       가입 중...
                     </>
                   ) : (
@@ -329,11 +329,11 @@ export default function SignupProcess() {
                 </Button>
 
                 {/* 로그인 링크 */}
-                <p className="text-center text-gray-300 text-base">
+                <p className="text-center text-gray-400 text-sm">
                   이미 계정이 있으신가요?{' '}
                   <button
                     onClick={() => navigate('/sms-login')}
-                    className="text-amber-400 hover:text-amber-300 text-base font-bold"
+                    className="text-amber-400 hover:text-amber-300 font-semibold"
                   >
                     로그인
                   </button>

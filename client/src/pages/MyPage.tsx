@@ -2,9 +2,9 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, CreditCard, ShoppingBag, LogOut, CheckCircle2, AlertCircle, BookOpen, Trophy, Award, Camera, Upload } from "lucide-react";
+import { User, CreditCard, ShoppingBag, LogOut, CheckCircle2, AlertCircle, BookOpen, Trophy, Award } from "lucide-react";
 import { useLocation } from "wouter";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 interface Subscription {
   id: number;
@@ -55,28 +55,6 @@ export function MyPage() {
   const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [examResults, setExamResults] = useState<ExamResult[]>([]);
   const [dashboardLoading, setDashboardLoading] = useState(true);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [certImage, setCertImage] = useState<string | null>(null);
-  const profileInputRef = useRef<HTMLInputElement>(null);
-  const certInputRef = useRef<HTMLInputElement>(null);
-
-  const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (ev) => setProfileImage(ev.target?.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleCertImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (ev) => setCertImage(ev.target?.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
 
   useEffect(() => {
     setDashboardLoading(true);
@@ -209,77 +187,6 @@ export function MyPage() {
 
           {/* Profile Tab */}
           <TabsContent value="profile" className="space-y-6">
-
-            {/* 사진 2분할 카드 - 프로필 사진(좌) + 자격증용 사진 업로드(우) */}
-            <Card className="border-[#d4af37]/20 shadow-lg overflow-hidden">
-              <CardHeader className="bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d] text-white py-3 px-4">
-                <div className="flex items-center gap-2">
-                  <Camera className="w-5 h-5 text-[#d4af37]" />
-                  <CardTitle className="text-base">사진 관리</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="grid grid-cols-2 divide-x divide-[#d4af37]/20">
-                  {/* 좌측: 프로필 사진 */}
-                  <div className="flex flex-col items-center justify-center p-4 gap-3">
-                    <p className="text-xs font-semibold text-slate-500 self-start">프로필 사진</p>
-                    <div
-                      className="w-20 h-20 rounded-full border-2 border-[#d4af37] overflow-hidden bg-gradient-to-br from-[#d4af37]/20 to-[#1a4d7a]/20 flex items-center justify-center cursor-pointer"
-                      onClick={() => profileInputRef.current?.click()}
-                    >
-                      {profileImage ? (
-                        <img src={profileImage} alt="프로필" className="w-full h-full object-cover" />
-                      ) : (
-                        <User className="w-10 h-10 text-[#d4af37]/60" />
-                      )}
-                    </div>
-                    <button
-                      onClick={() => profileInputRef.current?.click()}
-                      className="text-xs text-[#d4af37] border border-[#d4af37]/40 rounded px-3 py-1 hover:bg-[#d4af37]/10 transition"
-                    >
-                      {profileImage ? '변경' : '업로드'}
-                    </button>
-                    <input
-                      ref={profileInputRef}
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleProfileImageChange}
-                    />
-                  </div>
-
-                  {/* 우측: 자격증용 사진 업로드 */}
-                  <div className="flex flex-col items-center justify-center p-4 gap-3">
-                    <p className="text-xs font-semibold text-slate-500 self-start">자격증용 사진</p>
-                    <div
-                      className="w-20 h-24 rounded border-2 border-dashed border-[#d4af37]/60 overflow-hidden bg-slate-50 flex items-center justify-center cursor-pointer"
-                      onClick={() => certInputRef.current?.click()}
-                    >
-                      {certImage ? (
-                        <img src={certImage} alt="자격증용" className="w-full h-full object-cover" />
-                      ) : (
-                        <Upload className="w-8 h-8 text-[#d4af37]/40" />
-                      )}
-                    </div>
-                    <button
-                      onClick={() => certInputRef.current?.click()}
-                      className="text-xs text-[#1a4d7a] border border-[#1a4d7a]/40 rounded px-3 py-1 hover:bg-[#1a4d7a]/10 transition"
-                    >
-                      {certImage ? '변경' : '업로드'}
-                    </button>
-                    <p className="text-[10px] text-slate-400 text-center">자격증 발급 시 사용</p>
-                    <input
-                      ref={certInputRef}
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleCertImageChange}
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
             <Card className="mb-6 border-[#d4af37]/20 shadow-lg">
               <CardHeader className="bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d] text-white rounded-t-lg">
                 <div className="flex items-center gap-3">

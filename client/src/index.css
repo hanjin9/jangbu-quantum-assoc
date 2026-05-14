@@ -242,9 +242,3 @@
 .animate-slide-in-right {
   animation: slideInRight 0.6s ease-out;
 }
-
-/* shimmer loading animation for video skeleton */
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(200%); }
-}

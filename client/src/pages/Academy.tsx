@@ -83,7 +83,7 @@ export default function Academy() {
         { id: 8, question: '에너지 보호의 방법은?', options: ['명상과 의도', '약물', '물리적 차단', '도망'], correct: 0, explanation: '명상과 긍정적 의도를 통해 자신의 에너지를 보호할 수 있습니다.' },
         { id: 9, question: '심화 기법 습득의 시간은?', options: ['지속적 학습', '단기 교육', '자동 습득', '경험 불필요'], correct: 0, explanation: '심화 기법은 지속적인 학습과 실습을 통해 습득됩니다.' },
       ],
-      passingScore: 60,
+      passingScore: 70,
       certificateId: 'CERT-003-2026',
     },
     {
@@ -101,7 +101,7 @@ export default function Academy() {
         { id: 8, question: '비밀 유지의 예외는?', options: ['법적 요구', '개인의 호기심', '동료의 요청', '가족의 요청'], correct: 0, explanation: '법적 요구가 있을 때만 비밀 유지의 예외가 인정됩니다.' },
         { id: 9, question: '전문가 윤리의 기초는?', options: ['정직과 투명성', '이익 추구', '권력 추구', '명성 추구'], correct: 0, explanation: '모든 전문가 윤리의 기초는 정직과 투명성입니다.' },
       ],
-      passingScore: 60,
+      passingScore: 65,
       certificateId: 'CERT-004-2026',
     },
     {
@@ -119,7 +119,7 @@ export default function Academy() {
         { id: 8, question: '실습 중 실수 처리는?', options: ['학습 기회로 활용', '숨김', '비난', '포기'], correct: 0, explanation: '실수는 숨기지 말고 학습의 기회로 삼아야 합니다.' },
         { id: 9, question: '임상 경험 후 다음 단계는?', options: ['독립 실무', '더 많은 실습', '포기', '다른 분야'], correct: 0, explanation: '충분한 임상 경험 후 독립적인 실무를 시작할 수 있습니다.' },
       ],
-      passingScore: 60,
+      passingScore: 75,
       certificateId: 'CERT-005-2026',
     },
     {
@@ -137,7 +137,7 @@ export default function Academy() {
         { id: 8, question: '재정 관리의 목표는?', options: ['지속 가능성', '단기 이익', '최대 수익', '최소 비용'], correct: 0, explanation: '장기적 재정 관리의 목표는 지속 가능성입니다.' },
         { id: 9, question: '마스터의 최종 목표는?', options: ['사회 기여', '개인 부유', '권력 추구', '명성 추구'], correct: 0, explanation: '마스터 과정을 마친 전문가의 최종 목표는 사회에 대한 기여입니다.' },
       ],
-      passingScore: 60,
+      passingScore: 80,
       certificateId: 'CERT-MASTER-2026',
     },
   ];
