@@ -363,13 +363,13 @@ export default function Home() {
             전문 양자요법 관리사와 함께 신체의 에너지 밸런스를 회복하고 건강한 삶을 시작하세요
           </p>
           <div className="flex gap-3 md:gap-4 justify-center flex-wrap text-sm md:text-base flex-col md:flex-row mt-28 md:mt-8">
-            <Button size="lg" className="bg-amber-500/20 border-2 border-amber-500 text-amber-400 hover:bg-amber-500/40 hover:border-amber-400 transition-all duration-300 font-bold px-8 md:px-12 py-6 md:py-8 text-lg md:text-2xl flex items-center justify-center" onClick={() => navigate('/consultation-booking')}>
+            <Button size="lg" className="bg-amber-500/20 border-2 border-amber-500 text-amber-300 hover:bg-amber-500/40 hover:border-amber-400 transition-all duration-300 font-bold px-8 md:px-12 py-6 md:py-8 text-lg md:text-2xl flex items-center justify-center" onClick={() => navigate('/consultation-booking')}>
               <Calendar className="w-5 h-5 mr-2" />상담 예약하기
             </Button>
-            <Button size="lg" className="bg-amber-500/20 border-2 border-amber-500 text-amber-400 hover:bg-amber-500/40 hover:border-amber-400 transition-all duration-300 font-bold px-8 md:px-12 py-6 md:py-8 text-lg md:text-2xl flex items-center justify-center" onClick={() => navigate('/checkout')}>
+            <Button size="lg" className="bg-orange-600/30 border-2 border-orange-500 text-orange-300 hover:bg-orange-600/50 hover:border-orange-400 transition-all duration-300 font-bold px-8 md:px-12 py-6 md:py-8 text-lg md:text-2xl flex items-center justify-center" onClick={() => navigate('/checkout')}>
               📝 회원 가입<ChevronRight className="w-5 h-5 ml-2" />
             </Button>
-            <Button size="lg" className="bg-amber-500/20 border-2 border-amber-500 text-amber-400 hover:bg-amber-500/40 hover:border-amber-400 transition-all duration-300 font-bold px-8 md:px-12 py-6 md:py-8 text-lg md:text-2xl flex items-center justify-center" onClick={() => navigate('/sms-login')}>
+            <Button size="lg" className="bg-amber-500/30 border-2 border-amber-400 text-amber-200 hover:bg-amber-500/50 hover:border-amber-300 transition-all duration-300 font-bold px-8 md:px-12 py-6 md:py-8 text-lg md:text-2xl flex items-center justify-center" onClick={() => navigate('/sms-login')}>
               🔐 로그인<ChevronRight className="w-5 h-5 ml-2" />
             </Button>
           </div>
