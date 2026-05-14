@@ -355,7 +355,7 @@ export default function Home() {
         >
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
-        <div className="relative z-10 text-center px-4 max-w-2xl pt-24 md:pt-32 pb-4 md:pb-16">
+        <div className="relative z-10 text-center px-4 max-w-2xl pt-24 md:pt-32 pb-16 md:pb-24">
           <h1 className="text-3xl md:text-7xl font-bold text-white mb-4 md:mb-6">
             양자 에너지로 <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">건강을 회복하세요</span>
           </h1>
