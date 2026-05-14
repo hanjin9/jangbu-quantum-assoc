@@ -73,7 +73,13 @@ export default function Home() {
       const observer = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
-            videoEl.muted = isMuted; // 현재 음소거 상태 반영
+            // 사용자가 한 번이라도 상호작용했으면 소리 ON으로 재생
+            if (userUnlocked) {
+              videoEl.muted = false; // 소리 ON
+              setIsMuted(false);
+            } else {
+              videoEl.muted = true; // 아직 상호작용 없으면 무음
+            }
             videoEl.play().catch(() => {
               // autoplay 실패 시 무음으로 재시도
               videoEl.muted = true;
@@ -98,7 +104,7 @@ export default function Home() {
       if (mobileObserver && mobileVideoRef.current) mobileObserver.unobserve(mobileVideoRef.current);
       if (desktopObserver && desktopVideoRef.current) desktopObserver.unobserve(desktopVideoRef.current);
     };
-  }, [isMuted]);
+  }, [isMuted, userUnlocked]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
