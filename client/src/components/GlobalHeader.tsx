@@ -24,6 +24,7 @@ export function GlobalHeader() {
   const [selectedLanguage, setSelectedLanguage] = useState('한국어');
   const [hoveredLanguage, setHoveredLanguage] = useState<string | null>(null);
   const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState<'settings' | 'dashboard' | null>(null);
 
 
   const languages = [
@@ -321,9 +322,18 @@ export function GlobalHeader() {
 
               {/* 설정 버튼 - 토글 방식 */}
               <button
-                onClick={() => setSettingsMenuOpen(!settingsMenuOpen)}
+                onClick={() => {
+                  if (settingsMenuOpen) {
+                    // 메뉴 열려있으면 모든 창 닫기
+                    setSettingsMenuOpen(false);
+                    setSelectedMenu(null);
+                  } else {
+                    // 메뉴 닫혀있으면 메뉴 열기
+                    setSettingsMenuOpen(true);
+                  }
+                }}
                 className={`p-1.5 rounded-lg transition flex-shrink-0 ${
-                  settingsMenuOpen
+                  settingsMenuOpen || selectedMenu
                     ? 'bg-[#d4af37]/20 text-[#d4af37]'
                     : 'hover:bg-accent text-[#d4af37]'
                 }`}
@@ -337,8 +347,9 @@ export function GlobalHeader() {
                 <div className="absolute right-0 top-16 w-64 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200">
                   <button
                     onClick={() => {
-                      navigate('/settings');
                       setSettingsMenuOpen(false);
+                      setSelectedMenu('settings');
+                      navigate('/settings');
                     }}
                     className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors flex items-center gap-2"
                   >
@@ -347,8 +358,9 @@ export function GlobalHeader() {
                   </button>
                   <button
                     onClick={() => {
-                      navigate('/dashboard');
                       setSettingsMenuOpen(false);
+                      setSelectedMenu('dashboard');
+                      navigate('/dashboard');
                     }}
                     className="w-full text-left px-4 py-2 text-sm text-slate-800 hover:text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors flex items-center gap-2"
                   >

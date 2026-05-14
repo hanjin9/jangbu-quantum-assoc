@@ -1,12 +1,20 @@
 import { Button } from '@/components/ui/button';
 import { useLocation } from 'wouter';
-import { ChevronRight, Calendar } from 'lucide-react';
+import { ChevronRight, Calendar, Volume2, VolumeX } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+
+// 모바일 영상 URL (9:16 세로, 1080x1920)
+const MOBILE_VIDEO_URL = "https://8888-ib5azwpfjv7fwu3zin6t1-bec5f8f5.sg1.manus.computer/upload/copy_de44592c2c9a60fc0a99a288a573000b.mp4";
+// 데스크톱 영상 URL (16:9 가로, 1920x1080)
+const DESKTOP_VIDEO_URL = "https://8888-ib5azwpfjv7fwu3zin6t1-bec5f8f5.sg1.manus.computer/upload/jangbu_intro_desktop.mp4";
 
 export default function Home() {
   const [, navigate] = useLocation();
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isMuted, setIsMuted] = useState(true); // 브라우저 정책상 처음엔 muted로 시작
+  const [hasInteracted, setHasInteracted] = useState(false);
+  const mobileVideoRef = useRef<HTMLVideoElement>(null);
+  const desktopVideoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -16,40 +24,54 @@ export default function Home() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Intersection Observer - 영상이 화면 중간에 올 때 자동 재생
+  // 소리 토글 함수
+  const toggleMute = () => {
+    const newMuted = !isMuted;
+    setIsMuted(newMuted);
+    setHasInteracted(true);
+    if (mobileVideoRef.current) mobileVideoRef.current.muted = newMuted;
+    if (desktopVideoRef.current) desktopVideoRef.current.muted = newMuted;
+  };
+
+  // Intersection Observer - 화면 중앙에 올 때 자동 재생, 벗어날 때 정지
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+    const setupObserver = (videoEl: HTMLVideoElement | null) => {
+      if (!videoEl) return null;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          // 영상이 화면에 보일 때 재생
-          video.play().catch(() => {
-            console.log('Autoplay failed');
-          });
-        } else {
-          // 영상이 화면에서 벗어날 때 정지
-          video.pause();
-        }
-      },
-      {
-        threshold: 0.5, // 50% 이상 보일 때 트리거
-      }
-    );
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            videoEl.muted = isMuted; // 현재 음소거 상태 반영
+            videoEl.play().catch(() => {
+              // autoplay 실패 시 무음으로 재시도
+              videoEl.muted = true;
+              setIsMuted(true);
+              videoEl.play().catch(() => console.log('Video autoplay failed'));
+            });
+          } else {
+            videoEl.pause();
+          }
+        },
+        { threshold: 0.4 }
+      );
 
-    observer.observe(video);
+      observer.observe(videoEl);
+      return observer;
+    };
+
+    const mobileObserver = setupObserver(mobileVideoRef.current);
+    const desktopObserver = setupObserver(desktopVideoRef.current);
 
     return () => {
-      observer.unobserve(video);
+      if (mobileObserver && mobileVideoRef.current) mobileObserver.unobserve(mobileVideoRef.current);
+      if (desktopObserver && desktopVideoRef.current) desktopObserver.unobserve(desktopVideoRef.current);
     };
-  }, []);
+  }, [isMuted]);
 
-  // 홈 화면
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
-      {/* Hero Section with RESPONSIVE Image */}
-      <section className="relative h-screen md:h-screen flex items-center justify-center overflow-hidden">
+      {/* Hero Section */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
@@ -65,7 +87,7 @@ export default function Home() {
         >
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
-        
+
         <div className="relative z-10 text-center px-4 max-w-2xl">
           <h1 className="text-3xl md:text-7xl font-bold text-white mb-4 md:mb-6">
             양자 에너지로 <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">건강을 회복하세요</span>
@@ -102,46 +124,68 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 협회 소개 영상 섹션 - 반응형 (모바일/데스크톱) + Intersection Observer 자동 재생 */}
+      {/* 협회 소개 영상 섹션 */}
       <section className="py-16 md:py-24 bg-slate-800/50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-amber-400">
             양자요법 협회 소개
           </h2>
-          
-          <div className="max-w-4xl mx-auto bg-black rounded-lg overflow-hidden shadow-2xl">
-            {/* 모바일: 9:16 세로 영상 */}
-            <div className="md:hidden relative w-full bg-black" style={{ paddingBottom: '177.78%' }}>
-              <video
-                ref={videoRef}
-                className="absolute inset-0 w-full h-full"
-                style={{
-                  objectFit: 'contain',
-                  backgroundColor: '#000'
-                }}
-                muted
-                playsInline
-              >
-                <source src="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/장부9_16_6716631c.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            </div>
 
-            {/* 데스크톱: 16:9 가로 영상 */}
-            <div className="hidden md:block relative w-full bg-black" style={{ paddingBottom: '56.25%' }}>
+          {/* 모바일: 9:16 세로 영상 (화면 가득) */}
+          <div className="md:hidden w-full max-w-sm mx-auto rounded-lg overflow-hidden shadow-2xl bg-black relative">
+            <div className="relative w-full" style={{ paddingBottom: '177.78%' }}>
               <video
-                ref={videoRef}
+                ref={mobileVideoRef}
                 className="absolute inset-0 w-full h-full"
-                style={{
-                  objectFit: 'contain',
-                  backgroundColor: '#000'
-                }}
+                style={{ objectFit: 'cover', backgroundColor: '#000' }}
                 muted
                 playsInline
+                loop
+                preload="metadata"
               >
-                <source src="https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/jangbu_intro_video_final_af147b37_7d4d8f22.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
+                <source src={MOBILE_VIDEO_URL} type="video/mp4" />
               </video>
+              {/* 소리 토글 버튼 */}
+              <button
+                onClick={toggleMute}
+                className="absolute bottom-4 right-4 z-10 bg-black/60 hover:bg-black/80 text-white rounded-full p-3 transition-all duration-200 border border-white/30"
+                aria-label={isMuted ? '소리 켜기' : '소리 끄기'}
+              >
+                {isMuted ? (
+                  <VolumeX className="w-6 h-6" />
+                ) : (
+                  <Volume2 className="w-6 h-6" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* 데스크톱: 16:9 가로 영상 */}
+          <div className="hidden md:block max-w-4xl mx-auto rounded-lg overflow-hidden shadow-2xl bg-black relative">
+            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+              <video
+                ref={desktopVideoRef}
+                className="absolute inset-0 w-full h-full"
+                style={{ objectFit: 'contain', backgroundColor: '#000' }}
+                muted
+                playsInline
+                loop
+                preload="metadata"
+              >
+                <source src={DESKTOP_VIDEO_URL} type="video/mp4" />
+              </video>
+              {/* 소리 토글 버튼 */}
+              <button
+                onClick={toggleMute}
+                className="absolute bottom-4 right-4 z-10 bg-black/60 hover:bg-black/80 text-white rounded-full p-3 transition-all duration-200 border border-white/30"
+                aria-label={isMuted ? '소리 켜기' : '소리 끄기'}
+              >
+                {isMuted ? (
+                  <VolumeX className="w-6 h-6" />
+                ) : (
+                  <Volume2 className="w-6 h-6" />
+                )}
+              </button>
             </div>
           </div>
 
@@ -153,7 +197,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section with Image */}
+      {/* Testimonials Section */}
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
           <h3 className="text-3xl font-bold text-center mb-12 text-[#1a4d7a]">고객 후기</h3>
