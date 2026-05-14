@@ -3,10 +3,147 @@ import { useLocation } from 'wouter';
 import { ChevronRight, Calendar, Play, Pause, Maximize, Minimize } from 'lucide-react';
 import { useEffect, useRef, useState, useCallback } from 'react';
 
-// ✅ CDN 영구 URL (manus-storage → storageProxy → CloudFront)
+// ✅ CDN 영구 URL
 const MOBILE_VIDEO_URL = "/manus-storage/copy_de44592c2c9a60fc0a99a288a573000b_37cb781d.mp4";
 const DESKTOP_VIDEO_URL = "/manus-storage/jangbu_intro_desktop_5b8c04a8.mp4";
 
+// 시간 포맷: 초 → mm:ss
+function formatTime(sec: number): string {
+  if (!isFinite(sec) || isNaN(sec)) return '0:00';
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+// ── YouTube 스타일 커스텀 컨트롤바 컴포넌트 ──
+interface VideoControlBarProps {
+  videoRef: React.RefObject<HTMLVideoElement | null>;
+  isPlaying: boolean;
+  isFullscreen: boolean;
+  onTogglePlay: () => void;
+  onToggleFullscreen: (e: React.MouseEvent | React.TouchEvent) => void;
+}
+
+function VideoControlBar({ videoRef, isPlaying, isFullscreen, onTogglePlay, onToggleFullscreen }: VideoControlBarProps) {
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const progressRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const onTimeUpdate = () => { if (!isDragging) setCurrentTime(video.currentTime); };
+    const onDurationChange = () => setDuration(video.duration || 0);
+    const onLoaded = () => setDuration(video.duration || 0);
+
+    video.addEventListener('timeupdate', onTimeUpdate);
+    video.addEventListener('durationchange', onDurationChange);
+    video.addEventListener('loadedmetadata', onLoaded);
+    return () => {
+      video.removeEventListener('timeupdate', onTimeUpdate);
+      video.removeEventListener('durationchange', onDurationChange);
+      video.removeEventListener('loadedmetadata', onLoaded);
+    };
+  }, [videoRef, isDragging]);
+
+  // 프로그레스바 클릭/드래그로 탐색
+  const seekTo = useCallback((clientX: number) => {
+    const bar = progressRef.current;
+    const video = videoRef.current;
+    if (!bar || !video || !duration) return;
+    const rect = bar.getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    video.currentTime = ratio * duration;
+    setCurrentTime(ratio * duration);
+  }, [videoRef, duration]);
+
+  const handleProgressMouseDown = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsDragging(true);
+    seekTo(e.clientX);
+    const onMove = (ev: MouseEvent) => seekTo(ev.clientX);
+    const onUp = () => { setIsDragging(false); window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  };
+
+  const handleProgressTouchStart = (e: React.TouchEvent) => {
+    e.stopPropagation();
+    setIsDragging(true);
+    seekTo(e.touches[0].clientX);
+    const onMove = (ev: TouchEvent) => seekTo(ev.touches[0].clientX);
+    const onEnd = () => { setIsDragging(false); window.removeEventListener('touchmove', onMove); window.removeEventListener('touchend', onEnd); };
+    window.addEventListener('touchmove', onMove, { passive: true });
+    window.addEventListener('touchend', onEnd);
+  };
+
+  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+
+  return (
+    <div
+      className="absolute bottom-0 left-0 right-0 z-30 px-3 pb-3 pt-8"
+      style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%)' }}
+      onClick={(e) => e.stopPropagation()}
+      onTouchEnd={(e) => e.stopPropagation()}
+    >
+      {/* 프로그레스 바 */}
+      <div
+        ref={progressRef}
+        className="w-full h-1 rounded-full bg-white/30 mb-2 cursor-pointer relative group/bar"
+        style={{ touchAction: 'none' }}
+        onMouseDown={handleProgressMouseDown}
+        onTouchStart={handleProgressTouchStart}
+      >
+        {/* 재생된 부분 (골드) */}
+        <div
+          className="absolute left-0 top-0 h-full rounded-full bg-amber-400 transition-none"
+          style={{ width: `${progress}%` }}
+        />
+        {/* 드래그 핸들 */}
+        <div
+          className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-amber-400 shadow-md opacity-0 group-hover/bar:opacity-100 transition-opacity"
+          style={{ left: `calc(${progress}% - 6px)` }}
+        />
+      </div>
+
+      {/* 하단 버튼 행 */}
+      <div className="flex items-center gap-2">
+        {/* 재생/정지 */}
+        <button
+          className="text-white hover:text-amber-400 transition-colors p-1"
+          style={{ touchAction: 'manipulation' }}
+          onClick={(e) => { e.stopPropagation(); onTogglePlay(); }}
+          onTouchEnd={(e) => { e.preventDefault(); e.stopPropagation(); onTogglePlay(); }}
+          aria-label={isPlaying ? '일시정지' : '재생'}
+        >
+          {isPlaying
+            ? <Pause className="w-5 h-5" />
+            : <Play className="w-5 h-5 ml-0.5" />}
+        </button>
+
+        {/* 시간 표시 */}
+        <span className="text-white text-xs font-mono select-none flex-1">
+          {formatTime(currentTime)} / {formatTime(duration)}
+        </span>
+
+        {/* 전체화면 */}
+        <button
+          className="text-white hover:text-amber-400 transition-colors p-1"
+          style={{ touchAction: 'manipulation' }}
+          onClick={onToggleFullscreen}
+          onTouchEnd={onToggleFullscreen}
+          aria-label={isFullscreen ? '전체화면 종료' : '전체화면'}
+        >
+          {isFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── 메인 홈 컴포넌트 ──
 export default function Home() {
   const [, navigate] = useLocation();
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
@@ -15,15 +152,16 @@ export default function Home() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showIcon, setShowIcon] = useState(false);
   const [showPauseIcon, setShowPauseIcon] = useState(true);
-
-  // 로딩 스켈레톤 상태
   const [mobileVideoLoaded, setMobileVideoLoaded] = useState(false);
   const [desktopVideoLoaded, setDesktopVideoLoaded] = useState(false);
+  const [videoEnded, setVideoEnded] = useState(false);
 
   const mobileVideoRef = useRef<HTMLVideoElement>(null);
   const desktopVideoRef = useRef<HTMLVideoElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
   const iconTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const activeVideoRef = isMobile ? mobileVideoRef : desktopVideoRef;
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -33,9 +171,7 @@ export default function Home() {
 
   // 전체화면 상태 동기화
   useEffect(() => {
-    const handleFsChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
+    const handleFsChange = () => setIsFullscreen(!!document.fullscreenElement);
     document.addEventListener('fullscreenchange', handleFsChange);
     document.addEventListener('webkitfullscreenchange', handleFsChange);
     return () => {
@@ -44,7 +180,7 @@ export default function Home() {
     };
   }, []);
 
-  // 사용자 첫 상호작용 시 소리 자동 ON
+  // 첫 상호작용 시 소리 ON
   useEffect(() => {
     const unlockAudio = () => {
       if (!userUnlocked) {
@@ -69,17 +205,39 @@ export default function Home() {
     };
   }, [userUnlocked]);
 
-  // Intersection Observer - 화면 중앙 진입 시 자동 재생
+  // 영상 종료 이벤트 → 처음으로 복귀 후 정지
+  useEffect(() => {
+    const setupEndedHandler = (videoEl: HTMLVideoElement | null) => {
+      if (!videoEl) return;
+      const onEnded = () => {
+        videoEl.currentTime = 0;
+        videoEl.pause();
+        setIsPlaying(false);
+        setVideoEnded(true);
+      };
+      videoEl.addEventListener('ended', onEnded);
+      return () => videoEl.removeEventListener('ended', onEnded);
+    };
+    const cleanM = setupEndedHandler(mobileVideoRef.current);
+    const cleanD = setupEndedHandler(desktopVideoRef.current);
+    return () => { cleanM?.(); cleanD?.(); };
+  }, []);
+
+  // Intersection Observer - 화면 진입 시 자동 재생 (1회만, 종료 후 재진입 시 재시작)
   useEffect(() => {
     const setupObserver = (videoEl: HTMLVideoElement | null) => {
       if (!videoEl) return null;
       const observer = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
+            // 종료 상태라면 처음부터 다시 재생
+            if (videoEl.ended || videoEl.currentTime >= videoEl.duration - 0.1) {
+              videoEl.currentTime = 0;
+            }
             videoEl.muted = !userUnlocked;
-            videoEl.play().then(() => setIsPlaying(true)).catch(() => {
+            videoEl.play().then(() => { setIsPlaying(true); setVideoEnded(false); }).catch(() => {
               videoEl.muted = true;
-              videoEl.play().then(() => setIsPlaying(true)).catch(() => {});
+              videoEl.play().then(() => { setIsPlaying(true); setVideoEnded(false); }).catch(() => {});
             });
           } else {
             videoEl.pause();
@@ -99,7 +257,7 @@ export default function Home() {
     };
   }, [userUnlocked]);
 
-  // YouTube 스타일 아이콘 피드백
+  // YouTube 스타일 중앙 아이콘 피드백
   const flashIcon = useCallback((pausing: boolean) => {
     setShowPauseIcon(pausing);
     setShowIcon(true);
@@ -109,9 +267,11 @@ export default function Home() {
 
   // 재생/정지 토글
   const doToggle = useCallback(() => {
-    const video = (isMobile ? mobileVideoRef : desktopVideoRef).current;
+    const video = activeVideoRef.current;
     if (!video) return;
-    if (video.paused) {
+    if (video.paused || video.ended) {
+      if (video.ended) video.currentTime = 0;
+      setVideoEnded(false);
       video.muted = false;
       video.play().then(() => { setIsPlaying(true); flashIcon(true); }).catch(() => {
         video.muted = true;
@@ -122,19 +282,17 @@ export default function Home() {
       setIsPlaying(false);
       flashIcon(false);
     }
-  }, [isMobile, flashIcon]);
+  }, [activeVideoRef, flashIcon]);
 
-  // 모바일 터치 핸들러 (300ms 딜레이 제거)
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
     e.preventDefault();
     e.stopPropagation();
     doToggle();
   }, [doToggle]);
 
-  // 데스크톱 클릭 핸들러
   const handleClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    if ('ontouchstart' in window) return; // 터치 디바이스에서 click 중복 방지
+    if ('ontouchstart' in window) return;
     doToggle();
   }, [doToggle]);
 
@@ -164,7 +322,6 @@ export default function Home() {
                 ? 'https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/hero-quantum-mobile-optimized-PwNNHSQ4X3DxpKS4qv3TLP.webp'
                 : 'https://d2xsxph8kpxj0f.cloudfront.net/310519663351563633/ZFmCugcMVdsgzLCVvZ8jeT/hero-quantum-main-6jjXaiPbmoCJLUoUaD8J3L.webp'
             })`,
-            backgroundPosition: 'center',
             backgroundAttachment: isMobile ? 'scroll' : 'fixed',
             backgroundSize: 'cover'
           }}
@@ -200,7 +357,10 @@ export default function Home() {
           </h2>
 
           {/* ── 모바일: 9:16 세로 영상 ── */}
-          <div className="md:hidden w-full max-w-sm mx-auto rounded-lg overflow-hidden shadow-2xl bg-black relative" ref={isMobile ? videoContainerRef : undefined}>
+          <div
+            className="md:hidden w-full max-w-sm mx-auto rounded-lg overflow-hidden shadow-2xl bg-black relative"
+            ref={isMobile ? videoContainerRef : undefined}
+          >
             <div
               className="relative w-full cursor-pointer"
               style={{ paddingBottom: '177.78%', touchAction: 'manipulation' }}
@@ -209,7 +369,6 @@ export default function Home() {
               {/* 로딩 스켈레톤 */}
               {!mobileVideoLoaded && (
                 <div className="absolute inset-0 z-20 bg-slate-800 flex flex-col items-center justify-center gap-3">
-                  {/* 골드 파동 애니메이션 */}
                   <div className="relative flex items-center justify-center">
                     <div className="w-16 h-16 rounded-full border-2 border-amber-400/30 animate-ping absolute" />
                     <div className="w-12 h-12 rounded-full border-2 border-amber-400/60 animate-ping absolute" style={{ animationDelay: '0.2s' }} />
@@ -218,9 +377,8 @@ export default function Home() {
                     </div>
                   </div>
                   <p className="text-amber-400/70 text-sm font-medium tracking-widest">영상 로딩 중...</p>
-                  {/* 스켈레톤 바 */}
                   <div className="w-32 h-1 bg-slate-700 rounded-full overflow-hidden mt-1">
-                    <div className="h-full bg-gradient-to-r from-amber-400/0 via-amber-400/60 to-amber-400/0 animate-[shimmer_1.5s_infinite]" style={{ width: '60%' }} />
+                    <div className="h-full bg-gradient-to-r from-amber-400/0 via-amber-400/60 to-amber-400/0" style={{ width: '60%', animation: 'shimmer 1.5s infinite' }} />
                   </div>
                 </div>
               )}
@@ -231,13 +389,21 @@ export default function Home() {
                 style={{ objectFit: 'cover', backgroundColor: '#000' }}
                 muted
                 playsInline
-                loop
                 preload="metadata"
                 onCanPlay={() => setMobileVideoLoaded(true)}
                 onLoadedData={() => setMobileVideoLoaded(true)}
               >
                 <source src={MOBILE_VIDEO_URL} type="video/mp4" />
               </video>
+
+              {/* 영상 종료 오버레이 - 재생 버튼 */}
+              {videoEnded && isMobile && (
+                <div className="absolute inset-0 flex items-center justify-center z-20 bg-black/50">
+                  <div className="bg-black/70 rounded-full p-6">
+                    <Play className="w-14 h-14 text-white ml-1" />
+                  </div>
+                </div>
+              )}
 
               {/* YouTube 스타일 중앙 아이콘 피드백 */}
               <div className={`absolute inset-0 flex items-center justify-center pointer-events-none z-10 transition-opacity duration-200 ${showIcon ? 'opacity-100' : 'opacity-0'}`}>
@@ -246,32 +412,24 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* 하단 버튼 그룹: 재생/정지 + 전체화면 */}
-              <div className="absolute bottom-4 right-4 z-20 flex gap-2 pointer-events-auto">
-                {/* 재생/정지 버튼 */}
-                <button
-                  className="bg-black/60 text-white rounded-full p-3 border border-white/30"
-                  style={{ touchAction: 'manipulation' }}
-                  onTouchEnd={(e) => { e.stopPropagation(); handleTouchEnd(e); }}
-                  aria-label={isPlaying ? '일시정지' : '재생'}
-                >
-                  {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-0.5" />}
-                </button>
-                {/* 전체화면 버튼 */}
-                <button
-                  className="bg-black/60 text-white rounded-full p-3 border border-white/30"
-                  style={{ touchAction: 'manipulation' }}
-                  onTouchEnd={toggleFullscreen}
-                  aria-label={isFullscreen ? '전체화면 종료' : '전체화면'}
-                >
-                  {isFullscreen ? <Minimize className="w-6 h-6" /> : <Maximize className="w-6 h-6" />}
-                </button>
-              </div>
+              {/* 하단 YouTube 컨트롤바 */}
+              {mobileVideoLoaded && (
+                <VideoControlBar
+                  videoRef={mobileVideoRef}
+                  isPlaying={isPlaying && isMobile}
+                  isFullscreen={isFullscreen}
+                  onTogglePlay={doToggle}
+                  onToggleFullscreen={toggleFullscreen}
+                />
+              )}
             </div>
           </div>
 
           {/* ── 데스크톱: 16:9 가로 영상 ── */}
-          <div className="hidden md:block max-w-4xl mx-auto rounded-lg overflow-hidden shadow-2xl bg-black relative" ref={!isMobile ? videoContainerRef : undefined}>
+          <div
+            className="hidden md:block max-w-4xl mx-auto rounded-lg overflow-hidden shadow-2xl bg-black relative"
+            ref={!isMobile ? videoContainerRef : undefined}
+          >
             <div
               className="relative w-full cursor-pointer group"
               style={{ paddingBottom: '56.25%' }}
@@ -289,7 +447,7 @@ export default function Home() {
                   </div>
                   <p className="text-amber-400/70 text-base font-medium tracking-widest">영상 로딩 중...</p>
                   <div className="w-48 h-1 bg-slate-700 rounded-full overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-amber-400/0 via-amber-400/60 to-amber-400/0 animate-[shimmer_1.5s_infinite]" style={{ width: '60%' }} />
+                    <div className="h-full bg-gradient-to-r from-amber-400/0 via-amber-400/60 to-amber-400/0" style={{ width: '60%', animation: 'shimmer 1.5s infinite' }} />
                   </div>
                 </div>
               )}
@@ -300,13 +458,21 @@ export default function Home() {
                 style={{ objectFit: 'contain', backgroundColor: '#000' }}
                 muted
                 playsInline
-                loop
                 preload="metadata"
                 onCanPlay={() => setDesktopVideoLoaded(true)}
                 onLoadedData={() => setDesktopVideoLoaded(true)}
               >
                 <source src={DESKTOP_VIDEO_URL} type="video/mp4" />
               </video>
+
+              {/* 영상 종료 오버레이 */}
+              {videoEnded && !isMobile && (
+                <div className="absolute inset-0 flex items-center justify-center z-20 bg-black/50">
+                  <div className="bg-black/70 rounded-full p-6">
+                    <Play className="w-16 h-16 text-white ml-1" />
+                  </div>
+                </div>
+              )}
 
               {/* 호버 아이콘 */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -322,23 +488,16 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* 하단 버튼 그룹: 재생/정지 + 전체화면 */}
-              <div className="absolute bottom-4 right-4 z-20 flex gap-2 pointer-events-auto">
-                <button
-                  className="bg-black/60 hover:bg-black/90 text-white rounded-full p-3 border border-white/30 transition-all"
-                  onClick={(e) => { e.stopPropagation(); handleClick(e); }}
-                  aria-label={isPlaying ? '일시정지' : '재생'}
-                >
-                  {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-0.5" />}
-                </button>
-                <button
-                  className="bg-black/60 hover:bg-black/90 text-white rounded-full p-3 border border-white/30 transition-all"
-                  onClick={toggleFullscreen}
-                  aria-label={isFullscreen ? '전체화면 종료' : '전체화면'}
-                >
-                  {isFullscreen ? <Minimize className="w-6 h-6" /> : <Maximize className="w-6 h-6" />}
-                </button>
-              </div>
+              {/* 하단 YouTube 컨트롤바 */}
+              {desktopVideoLoaded && (
+                <VideoControlBar
+                  videoRef={desktopVideoRef}
+                  isPlaying={isPlaying && !isMobile}
+                  isFullscreen={isFullscreen}
+                  onTogglePlay={doToggle}
+                  onToggleFullscreen={toggleFullscreen}
+                />
+              )}
             </div>
           </div>
 
