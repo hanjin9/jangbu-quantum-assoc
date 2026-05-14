@@ -362,7 +362,7 @@ export default function Home() {
           <p className="text-base md:text-xl text-gray-200 mb-6 md:mb-8">
             전문 양자요법 관리사와 함께 신체의 에너지 밸런스를 회복하고 건강한 삶을 시작하세요
           </p>
-          <div className="flex gap-3 md:gap-4 justify-center flex-wrap text-sm md:text-base flex-col md:flex-row mt-16 md:mt-8">
+          <div className="flex gap-3 md:gap-4 justify-center flex-wrap text-sm md:text-base flex-col md:flex-row mt-28 md:mt-8">
             <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-white px-8 md:px-12 py-6 md:py-8 text-lg md:text-2xl font-bold flex items-center justify-center" onClick={() => navigate('/sms-login')}>
               🔐 로그인<ChevronRight className="w-5 h-5 ml-2" />
             </Button>
