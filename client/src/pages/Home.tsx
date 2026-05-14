@@ -355,29 +355,29 @@ export default function Home() {
         >
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
-        <div className="relative z-10 text-center px-4 max-w-2xl pt-24 md:pt-32 pb-36 md:pb-40">
+        <div className="relative z-10 text-center px-4 max-w-2xl pt-24 md:pt-32 pb-20 md:pb-20">
           <h1 className="text-3xl md:text-7xl font-bold text-white mb-4 md:mb-6">
             양자 에너지로 <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">건강을 회복하세요</span>
           </h1>
           <p className="text-base md:text-xl text-gray-200 mb-6 md:mb-8">
             전문 양자요법 관리사와 함께 신체의 에너지 밸런스를 회복하고 건강한 삶을 시작하세요
           </p>
-          <div className="flex gap-3 md:gap-4 justify-center flex-wrap text-sm md:text-base flex-col md:flex-row mt-28 md:mt-8">
-            <Button size="lg" className="bg-amber-500/20 border-2 border-amber-500 text-amber-300 hover:bg-amber-500/40 hover:border-amber-400 transition-all duration-300 font-bold px-8 md:px-12 py-6 md:py-8 text-lg md:text-2xl flex items-center justify-center" onClick={() => navigate('/consultation-booking')}>
-              <Calendar className="w-5 h-5 mr-2" />상담 예약하기
-            </Button>
+          <div className="flex gap-3 md:gap-4 justify-center flex-wrap text-sm md:text-base flex-col md:flex-row mt-80 md:mt-16">
             <Button size="lg" className="bg-orange-600/30 border-2 border-orange-500 text-orange-300 hover:bg-orange-600/50 hover:border-orange-400 transition-all duration-300 font-bold px-8 md:px-12 py-6 md:py-8 text-lg md:text-2xl flex items-center justify-center" onClick={() => navigate('/checkout')}>
               📝 회원 가입<ChevronRight className="w-5 h-5 ml-2" />
             </Button>
             <Button size="lg" className="bg-amber-500/30 border-2 border-amber-400 text-amber-200 hover:bg-amber-500/50 hover:border-amber-300 transition-all duration-300 font-bold px-8 md:px-12 py-6 md:py-8 text-lg md:text-2xl flex items-center justify-center" onClick={() => navigate('/sms-login')}>
               🔐 로그인<ChevronRight className="w-5 h-5 ml-2" />
             </Button>
+            <Button size="lg" className="bg-amber-500/20 border-2 border-amber-500 text-amber-300 hover:bg-amber-500/40 hover:border-amber-400 transition-all duration-300 font-bold px-8 md:px-12 py-6 md:py-8 text-lg md:text-2xl flex items-center justify-center" onClick={() => navigate('/consultation-booking')}>
+              <Calendar className="w-5 h-5 mr-2" />상담 예약하기
+            </Button>
           </div>
         </div>
       </section>
 
       {/* 협회 소개 영상 섹션 */}
-      <section className="py-2 md:py-24 bg-slate-800/50">
+      <section className="py-0 md:py-12 bg-slate-800/50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 md:mb-12 text-amber-400">
             양자요법 협회 소개
@@ -543,15 +543,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
             {[
               {
-                title: '관리사들의',
-                icon: '👥',
-                path: '/community',
-                desc: '전국 양자요법 관리사들과 정보를 나누고 함께 성장하세요.',
-                color: 'from-blue-900/60 to-slate-800/80',
-                border: 'border-blue-500/40 hover:border-blue-400'
-              },
-              {
-                title: '온라인 시험 24시간(취형)',
+                title: '온라인 시험응시(24시간)',
                 icon: '📝',
                 path: '/exam',
                 desc: '공인 양자요법 관리사 자격증 취득을 위한 온라인 시험을 응시하세요.',
@@ -559,12 +551,20 @@ export default function Home() {
                 border: 'border-amber-500/40 hover:border-amber-400'
               },
               {
-                title: '자격증(온·오프라인) 발급 확인',
+                title: '자격증(온·오프라인) 발급 및 확인',
                 icon: '🏆',
                 path: '/verify-certificate',
                 desc: '발급된 자격증의 진위 여부를 즉시 확인할 수 있습니다.',
                 color: 'from-emerald-900/60 to-slate-800/80',
                 border: 'border-emerald-500/40 hover:border-emerald-400'
+              },
+              {
+                title: '공동 게시판 / 공지사항',
+                icon: '📋',
+                path: '/community',
+                desc: '전국 양자요법 관리사들과 정보를 나누고 함께 성장하세요.',
+                color: 'from-blue-900/60 to-slate-800/80',
+                border: 'border-blue-500/40 hover:border-blue-400'
               },
             ].map((feature, i) => (
               <button
