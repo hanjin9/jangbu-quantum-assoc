@@ -26,6 +26,7 @@ export function GlobalHeader() {
   const [hoveredLanguage, setHoveredLanguage] = useState<string | null>(null);
   const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState<'settings' | 'dashboard' | null>(null);
+  const [mobileMenuTimer, setMobileMenuTimer] = useState<NodeJS.Timeout | null>(null);
 
 
   const languages = [
@@ -85,10 +86,25 @@ export function GlobalHeader() {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   };
 
+  // 햄버거 메뉴 자동 닫힘 타이머 (3초)
+  const startMobileMenuTimer = () => {
+    if (mobileMenuTimer) clearTimeout(mobileMenuTimer);
+    const timer = setTimeout(() => {
+      setMobileMenuOpen(false);
+      setOpenSubmenu(null);
+    }, 3000);
+    setMobileMenuTimer(timer);
+  };
+
+  const clearMobileMenuTimer = () => {
+    if (mobileMenuTimer) clearTimeout(mobileMenuTimer);
+  };
+
   const handleNavClick = (path: string) => {
     navigate(path);
     setMobileMenuOpen(false);
     setOpenSubmenu(null);
+    if (mobileMenuTimer) clearTimeout(mobileMenuTimer);
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -455,7 +471,16 @@ export function GlobalHeader() {
 
               {/* 모바일 메뉴 버튼 - 20% 축소 */}
               <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                onClick={() => {
+                  const newState = !mobileMenuOpen;
+                  setMobileMenuOpen(newState);
+                  if (newState) {
+                    startMobileMenuTimer();
+                  } else {
+                    clearMobileMenuTimer();
+                    setOpenSubmenu(null);
+                  }
+                }}
                 className="md:hidden p-1 hover:bg-accent rounded-lg transition flex-shrink-0"
                 title="메뉴"
               >
@@ -472,7 +497,13 @@ export function GlobalHeader() {
 
       {/* Mobile Navigation - 애니메이션 추가 */}
       {mobileMenuOpen && (
-        <nav className="md:hidden bg-white border-b border-slate-200 animate-in slide-in-from-top-2 duration-300">
+        <nav
+          className="md:hidden bg-white border-b border-slate-200 animate-in slide-in-from-top-2 duration-300"
+          onTouchStart={clearMobileMenuTimer}
+          onTouchEnd={startMobileMenuTimer}
+          onMouseEnter={clearMobileMenuTimer}
+          onMouseLeave={startMobileMenuTimer}
+        >
           <div className="max-w-7xl mx-auto px-4 py-4 space-y-2">
             {navItems.map((item) => {
               const isActive = location === item.path;
