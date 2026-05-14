@@ -67,7 +67,8 @@ function Router() {
   }, [location]);
   
   return (
-    <Switch>
+    <div key={location} className="page-fade-in">
+      <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/about"} component={About} />
       <Route path={"/dashboard"} component={Dashboard} />
@@ -122,6 +123,7 @@ function Router() {
       <Route path="*" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
+    </div>
   );
 }
 
