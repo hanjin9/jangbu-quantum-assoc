@@ -27,6 +27,7 @@ export function GlobalHeader() {
   const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState<'settings' | 'dashboard' | null>(null);
   const [mobileMenuTimer, setMobileMenuTimer] = useState<NodeJS.Timeout | null>(null);
+  const [languageMenuTimer, setLanguageMenuTimer] = useState<NodeJS.Timeout | null>(null);
 
 
   const languages = [
@@ -82,6 +83,16 @@ export function GlobalHeader() {
     };
   }, [searchOpen, searchQuery]);
 
+  // 다국어 메뉴 자동 닫힘 (3초)
+  useEffect(() => {
+    if (mobileLanguageOpen) {
+      startLanguageMenuTimer();
+    }
+    return () => {
+      if (languageMenuTimer) clearTimeout(languageMenuTimer);
+    };
+  }, [mobileLanguageOpen]);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   };
@@ -100,11 +111,26 @@ export function GlobalHeader() {
     if (mobileMenuTimer) clearTimeout(mobileMenuTimer);
   };
 
+  // 다국어 메뉴 자동 닫힘 타이머 (3초)
+  const startLanguageMenuTimer = () => {
+    if (languageMenuTimer) clearTimeout(languageMenuTimer);
+    const timer = setTimeout(() => {
+      setMobileLanguageOpen(false);
+    }, 3000);
+    setLanguageMenuTimer(timer);
+  };
+
+  const clearLanguageMenuTimer = () => {
+    if (languageMenuTimer) clearTimeout(languageMenuTimer);
+  };
+
   const handleNavClick = (path: string) => {
     navigate(path);
     setMobileMenuOpen(false);
     setOpenSubmenu(null);
+    setMobileLanguageOpen(false);
     if (mobileMenuTimer) clearTimeout(mobileMenuTimer);
+    if (languageMenuTimer) clearTimeout(languageMenuTimer);
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -219,11 +245,24 @@ export function GlobalHeader() {
               </button>
 
               {/* 언어 선택 - 모바일 (지구본만 표시) */}
-              <div className="md:hidden relative">
+              <div 
+                className="md:hidden relative"
+                onMouseEnter={() => clearLanguageMenuTimer()}
+                onMouseLeave={() => {
+                  if (mobileLanguageOpen) startLanguageMenuTimer();
+                }}
+              >
                 <button
                   className="p-0.5 hover:bg-accent rounded-lg transition flex-shrink-0"
                   title="언어 선택"
-                  onClick={() => setMobileLanguageOpen(!mobileLanguageOpen)}
+                  onClick={() => {
+                    setMobileLanguageOpen(!mobileLanguageOpen);
+                    if (!mobileLanguageOpen) {
+                      startLanguageMenuTimer();
+                    } else {
+                      clearLanguageMenuTimer();
+                    }
+                  }}
                 >
                   <Globe className="h-5 w-5 text-[#d4af37]" />
                 </button>
@@ -232,15 +271,23 @@ export function GlobalHeader() {
                     {/* 배경 오버레이 - 터치 시 닫힘 */}
                     <div
                       className="fixed inset-0 z-40"
-                      onClick={() => setMobileLanguageOpen(false)}
+                      onClick={() => {
+                        setMobileLanguageOpen(false);
+                        clearLanguageMenuTimer();
+                      }}
                     />
-                    <div className="absolute left-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200 max-h-96 overflow-y-auto">
+                    <div 
+                      className="absolute left-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 animate-in fade-in duration-200 max-h-96 overflow-y-auto"
+                      onMouseEnter={() => clearLanguageMenuTimer()}
+                      onMouseLeave={() => startLanguageMenuTimer()}
+                    >
                       {languages.map((lang) => (
                         <button
                           key={lang.name}
                           onClick={() => {
                             setSelectedLanguage(lang.name);
                             setMobileLanguageOpen(false);
+                            clearLanguageMenuTimer();
                           }}
                           className={`w-full text-left px-4 py-2 text-sm transition-colors flex items-center gap-2 ${
                             selectedLanguage === lang.name
