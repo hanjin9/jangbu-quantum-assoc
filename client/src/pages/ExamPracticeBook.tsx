@@ -23,6 +23,7 @@ export default function ExamPracticeBook() {
   const [, navigate] = useLocation();
   const [selectedExam, setSelectedExam] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
+  const [difficultyFilter, setDifficultyFilter] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all');
   const questionsPerPage = 3;
 
   // 과목별 문제집 데이터
@@ -549,8 +550,54 @@ export default function ExamPracticeBook() {
             </p>
           </div>
 
+          {/* 필터링 버튼 */}
+          <div className="mb-8 flex flex-wrap gap-3">
+            <button
+              onClick={() => setDifficultyFilter('all')}
+              className={`px-4 py-2 rounded-lg font-semibold transition ${
+                difficultyFilter === 'all'
+                  ? 'bg-amber-500 text-white'
+                  : 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+              }`}
+            >
+              전체
+            </button>
+            <button
+              onClick={() => setDifficultyFilter('beginner')}
+              className={`px-4 py-2 rounded-lg font-semibold transition ${
+                difficultyFilter === 'beginner'
+                  ? 'bg-amber-500 text-white'
+                  : 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+              }`}
+            >
+              기초 과정
+            </button>
+            <button
+              onClick={() => setDifficultyFilter('intermediate')}
+              className={`px-4 py-2 rounded-lg font-semibold transition ${
+                difficultyFilter === 'intermediate'
+                  ? 'bg-amber-500 text-white'
+                  : 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+              }`}
+            >
+              중급 과정
+            </button>
+            <button
+              onClick={() => setDifficultyFilter('advanced')}
+              className={`px-4 py-2 rounded-lg font-semibold transition ${
+                difficultyFilter === 'advanced'
+                  ? 'bg-amber-500 text-white'
+                  : 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+              }`}
+            >
+              고급 과정
+            </button>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {Object.entries(examBooks).map(([key, exam]) => (
+            {Object.entries(examBooks)
+              .filter(([key]) => difficultyFilter === 'all' || key === difficultyFilter)
+              .map(([key, exam]) => (
               <div
                 key={key}
                 className="p-6 bg-slate-800 border-slate-700 hover:border-amber-500/50 transition cursor-pointer rounded-lg border"
