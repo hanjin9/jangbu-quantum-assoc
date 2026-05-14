@@ -11,8 +11,8 @@ const DESKTOP_VIDEO_URL = "https://8888-ib5azwpfjv7fwu3zin6t1-bec5f8f5.sg1.manus
 export default function Home() {
   const [, navigate] = useLocation();
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
-  const [isMuted, setIsMuted] = useState(true); // 브라우저 정책상 처음엔 muted로 시작
-  const [hasInteracted, setHasInteracted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true); // 브라우저 정책상 처음엔 muted로 시작 (상호작용 후 자동 해제)
+  const [userUnlocked, setUserUnlocked] = useState(false); // 사용자 상호작용 여부
   const mobileVideoRef = useRef<HTMLVideoElement>(null);
   const desktopVideoRef = useRef<HTMLVideoElement>(null);
 
@@ -24,11 +24,43 @@ export default function Home() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // 소리 토글 함수
+  // 사용자 첫 상호작용 시 소리 자동 ON
+  useEffect(() => {
+    const unlockAudio = () => {
+      if (!userUnlocked) {
+        setUserUnlocked(true);
+        setIsMuted(false); // 소리 ON으로 전환
+        if (mobileVideoRef.current) {
+          mobileVideoRef.current.muted = false;
+          mobileVideoRef.current.play().catch(() => {
+            mobileVideoRef.current!.muted = true;
+            setIsMuted(true);
+          });
+        }
+        if (desktopVideoRef.current) {
+          desktopVideoRef.current.muted = false;
+          desktopVideoRef.current.play().catch(() => {
+            desktopVideoRef.current!.muted = true;
+            setIsMuted(true);
+          });
+        }
+      }
+    };
+    // 스크롤, 터치, 클릭 중 하나라도 감지되면 소리 ON
+    window.addEventListener('scroll', unlockAudio, { once: true });
+    window.addEventListener('touchstart', unlockAudio, { once: true });
+    window.addEventListener('click', unlockAudio, { once: true });
+    return () => {
+      window.removeEventListener('scroll', unlockAudio);
+      window.removeEventListener('touchstart', unlockAudio);
+      window.removeEventListener('click', unlockAudio);
+    };
+  }, [userUnlocked]);
+
+  // 소리 토글 함수 (끄기/켜기)
   const toggleMute = () => {
     const newMuted = !isMuted;
     setIsMuted(newMuted);
-    setHasInteracted(true);
     if (mobileVideoRef.current) mobileVideoRef.current.muted = newMuted;
     if (desktopVideoRef.current) desktopVideoRef.current.muted = newMuted;
   };
