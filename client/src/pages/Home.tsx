@@ -339,8 +339,8 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
 
-      {/* Hero Section - 모바일: 상단바 바로 붙여서 */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden md:mt-0 -mt-16">
+      {/* Hero Section - 모바일: 상단바 바로 붙여서, 버튼 아래 1cm만 남기고 잡라내기 */}
+      <section className="relative flex items-center justify-center overflow-hidden md:mt-0 -mt-16">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
@@ -355,14 +355,14 @@ export default function Home() {
         >
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
-        <div className="relative z-10 text-center px-4 max-w-2xl">
+        <div className="relative z-10 text-center px-4 max-w-2xl pt-24 md:pt-32 pb-4 md:pb-16">
           <h1 className="text-3xl md:text-7xl font-bold text-white mb-4 md:mb-6">
             양자 에너지로 <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">건강을 회복하세요</span>
           </h1>
           <p className="text-base md:text-xl text-gray-200 mb-6 md:mb-8">
             전문 양자요법 관리사와 함께 신체의 에너지 밸런스를 회복하고 건강한 삶을 시작하세요
           </p>
-          <div className="flex gap-3 md:gap-4 justify-center flex-wrap text-sm md:text-base flex-col md:flex-row pb-2 md:pb-16">
+          <div className="flex gap-3 md:gap-4 justify-center flex-wrap text-sm md:text-base flex-col md:flex-row">
             <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-white px-8 md:px-12 py-6 md:py-8 text-lg md:text-2xl font-bold flex items-center justify-center" onClick={() => navigate('/sms-login')}>
               🔐 로그인<ChevronRight className="w-5 h-5 ml-2" />
             </Button>
