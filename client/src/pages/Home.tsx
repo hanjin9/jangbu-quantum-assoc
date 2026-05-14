@@ -30,21 +30,46 @@ function VideoControlBar({ videoRef, isPlaying, isFullscreen, onTogglePlay, onTo
   const [isDragging, setIsDragging] = useState(false);
   const progressRef = useRef<HTMLDivElement>(null);
 
+  // duration 폴링: loadedmetadata가 이미 지나간 경우 대비
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
+    const syncDuration = () => {
+      if (video.duration && isFinite(video.duration) && video.duration > 0) {
+        setDuration(video.duration);
+      }
+    };
+
+    // 이미 로드된 경우 즉시 읽기
+    syncDuration();
+
     const onTimeUpdate = () => { if (!isDragging) setCurrentTime(video.currentTime); };
-    const onDurationChange = () => setDuration(video.duration || 0);
-    const onLoaded = () => setDuration(video.duration || 0);
+    const onDurationChange = () => syncDuration();
+    const onLoaded = () => syncDuration();
+    const onCanPlay = () => syncDuration();
 
     video.addEventListener('timeupdate', onTimeUpdate);
     video.addEventListener('durationchange', onDurationChange);
     video.addEventListener('loadedmetadata', onLoaded);
+    video.addEventListener('canplay', onCanPlay);
+    video.addEventListener('canplaythrough', onCanPlay);
+
+    // 폴링: 0.5초마다 duration 확인 (일부 브라우저 대비)
+    const poll = setInterval(() => {
+      if (video.duration && isFinite(video.duration) && video.duration > 0) {
+        setDuration(video.duration);
+        clearInterval(poll);
+      }
+    }, 500);
+
     return () => {
+      clearInterval(poll);
       video.removeEventListener('timeupdate', onTimeUpdate);
       video.removeEventListener('durationchange', onDurationChange);
       video.removeEventListener('loadedmetadata', onLoaded);
+      video.removeEventListener('canplay', onCanPlay);
+      video.removeEventListener('canplaythrough', onCanPlay);
     };
   }, [videoRef, isDragging]);
 
@@ -88,55 +113,57 @@ function VideoControlBar({ videoRef, isPlaying, isFullscreen, onTogglePlay, onTo
       onClick={(e) => e.stopPropagation()}
       onTouchEnd={(e) => e.stopPropagation()}
     >
-      {/* 프로그레스 바 */}
+      {/* 프로그레스 바 - YouTube 스타일 빨간색 */}
       <div
         ref={progressRef}
-        className="w-full h-1 rounded-full bg-white/30 mb-2 cursor-pointer relative group/bar"
-        style={{ touchAction: 'none' }}
+        className="w-full rounded-full bg-white/30 mb-3 cursor-pointer relative group/bar"
+        style={{ touchAction: 'none', height: '5px' }}
         onMouseDown={handleProgressMouseDown}
         onTouchStart={handleProgressTouchStart}
       >
-        {/* 재생된 부분 (골드) */}
+        {/* 재생된 부분 (빨간색 - YouTube 동일) */}
         <div
-          className="absolute left-0 top-0 h-full rounded-full bg-amber-400 transition-none"
-          style={{ width: `${progress}%` }}
+          className="absolute left-0 top-0 h-full rounded-full transition-none"
+          style={{ width: `${progress}%`, backgroundColor: '#ff0000' }}
         />
-        {/* 드래그 핸들 */}
+        {/* 드래그 핸들 (빨간 원) */}
         <div
-          className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-amber-400 shadow-md opacity-0 group-hover/bar:opacity-100 transition-opacity"
-          style={{ left: `calc(${progress}% - 6px)` }}
+          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full shadow-md"
+          style={{ left: `calc(${progress}% - 8px)`, backgroundColor: '#ff0000', opacity: 1 }}
         />
       </div>
 
       {/* 하단 버튼 행 */}
-      <div className="flex items-center gap-2">
-        {/* 재생/정지 */}
+      <div className="flex items-center gap-3">
+        {/* 재생/정지 - 30% 크게 (w-5→w-7) */}
         <button
-          className="text-white hover:text-amber-400 transition-colors p-1"
+          className="text-white hover:text-red-400 transition-colors p-1 flex-shrink-0"
           style={{ touchAction: 'manipulation' }}
           onClick={(e) => { e.stopPropagation(); onTogglePlay(); }}
           onTouchEnd={(e) => { e.preventDefault(); e.stopPropagation(); onTogglePlay(); }}
           aria-label={isPlaying ? '일시정지' : '재생'}
         >
           {isPlaying
-            ? <Pause className="w-5 h-5" />
-            : <Play className="w-5 h-5 ml-0.5" />}
+            ? <Pause className="w-7 h-7" />
+            : <Play className="w-7 h-7 ml-0.5" />}
         </button>
 
-        {/* 시간 표시 */}
-        <span className="text-white text-xs font-mono select-none flex-1">
-          {formatTime(currentTime)} / {formatTime(duration)}
+        {/* 시간 표시 - 2배 크게 (text-xs→text-base) */}
+        <span className="text-white text-base font-mono select-none flex-1 font-bold tracking-wide">
+          {formatTime(currentTime)}
+          <span className="text-white/60 mx-1">/</span>
+          {formatTime(duration)}
         </span>
 
-        {/* 전체화면 */}
+        {/* 전체화면 - 30% 크게 (w-5→w-7) */}
         <button
-          className="text-white hover:text-amber-400 transition-colors p-1"
+          className="text-white hover:text-red-400 transition-colors p-1 flex-shrink-0"
           style={{ touchAction: 'manipulation' }}
           onClick={onToggleFullscreen}
           onTouchEnd={onToggleFullscreen}
           aria-label={isFullscreen ? '전체화면 종료' : '전체화면'}
         >
-          {isFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
+          {isFullscreen ? <Minimize className="w-7 h-7" /> : <Maximize className="w-7 h-7" />}
         </button>
       </div>
     </div>
